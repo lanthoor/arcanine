@@ -52,6 +52,7 @@ flowchart TD
 ### Limitations
 
 Scripts run in a sandboxed environment with:
+
 - **No File System Access**: Cannot read or write files
 - **No Network Access**: Cannot make external network calls (only the main request)
 - **Memory Limits**: Scripts are terminated if they exceed memory limits
@@ -63,17 +64,17 @@ Scripts run in a sandboxed environment with:
 
 ```typescript
 // Get environment variable
-const baseUrl = env.get("baseUrl");
+const baseUrl = env.get('baseUrl');
 // Returns: string | undefined
 
 // Set environment variable
-env.set("authToken", "abc123");
+env.set('authToken', 'abc123');
 
 // Delete environment variable
-env.delete("tempVar");
+env.delete('tempVar');
 
 // Check if variable exists
-if (env.get("apiKey")) {
+if (env.get('apiKey')) {
   // Variable exists
 }
 ```
@@ -82,13 +83,13 @@ if (env.get("apiKey")) {
 
 ```typescript
 // Get collection-level variable
-const lastRequestTime = collection.get("lastRequestTime");
+const lastRequestTime = collection.get('lastRequestTime');
 
 // Set collection-level variable
-collection.set("requestCount", "42");
+collection.set('requestCount', '42');
 
 // Delete collection-level variable
-collection.delete("tempData");
+collection.delete('tempData');
 ```
 
 ### Request Object
@@ -105,10 +106,10 @@ console.log(request.method);
 // e.g., "GET", "POST", etc.
 
 // Headers (Map)
-request.headers.set("X-Custom-Header", "value");
-request.headers.get("Authorization");
-request.headers.delete("X-Remove-This");
-request.headers.has("Content-Type");
+request.headers.set('X-Custom-Header', 'value');
+request.headers.get('Authorization');
+request.headers.delete('X-Remove-This');
+request.headers.has('Content-Type');
 
 // Iterate headers
 for (const [key, value] of request.headers) {
@@ -120,8 +121,8 @@ console.log(request.body);
 
 // Modify body
 request.body = JSON.stringify({
-  email: env.get("email"),
-  password: env.get("password")
+  email: env.get('email'),
+  password: env.get('password'),
 });
 ```
 
@@ -139,7 +140,7 @@ console.log(response.statusText);
 // e.g., "OK", "Not Found"
 
 // Headers (Map)
-const contentType = response.headers.get("Content-Type");
+const contentType = response.headers.get('Content-Type');
 
 // Iterate headers
 for (const [key, value] of response.headers) {
@@ -184,19 +185,19 @@ assert(response.status === 200, "Expected 200 OK");
 
 ```typescript
 // Log message
-console.log("Request executed");
+console.log('Request executed');
 
 // Log with variables
-console.log("Token:", env.get("token"));
+console.log('Token:', env.get('token'));
 
 // Error logging
-console.error("Failed to authenticate");
+console.error('Failed to authenticate');
 
 // Warning
-console.warn("Deprecated endpoint");
+console.warn('Deprecated endpoint');
 
 // Multiple arguments
-console.log("User:", data.user.name, "ID:", data.user.id);
+console.log('User:', data.user.name, 'ID:', data.user.id);
 ```
 
 ### Crypto
@@ -207,7 +208,7 @@ const requestId = crypto.randomUUID();
 // Returns: "550e8400-e29b-41d4-a716-446655440000"
 
 // Use in request
-request.headers.set("X-Request-ID", requestId);
+request.headers.set('X-Request-ID', requestId);
 ```
 
 ### Date/Time
@@ -224,7 +225,7 @@ console.log(timestamp);
 // 1701275700000
 
 // Format for header
-request.headers.set("X-Timestamp", now.toISOString());
+request.headers.set('X-Timestamp', now.toISOString());
 ```
 
 ## Pre-request Scripts
@@ -244,11 +245,11 @@ preRequestScript: |
   // Add timestamp to request
   const timestamp = new Date().toISOString();
   request.headers.set("X-Timestamp", timestamp);
-  
+
   // Add request ID
   const requestId = crypto.randomUUID();
   request.headers.set("X-Request-ID", requestId);
-  
+
   console.log(`Request ${requestId} at ${timestamp}`);
 ```
 
@@ -261,12 +262,12 @@ preRequestScript: |
   if (!apiKey) {
     throw new Error("API key not set in environment");
   }
-  
+
   const email = env.get("userEmail");
   if (!email || !email.includes("@")) {
     throw new Error("Invalid email address");
   }
-  
+
   console.log("✓ Validation passed");
 ```
 
@@ -281,7 +282,7 @@ preRequestScript: |
     timestamp: Date.now(),
     nonce: crypto.randomUUID()
   };
-  
+
   request.body = JSON.stringify(body);
   console.log("Generated request body:", body);
 ```
@@ -318,7 +319,7 @@ postResponseScript: |
   console.log(`Status: ${response.status} ${response.statusText}`);
   console.log(`Time: ${response.time}ms`);
   console.log(`Size: ${response.size} bytes`);
-  
+
   // Parse and log data
   if (response.status === 200) {
     const data = response.json();
@@ -360,7 +361,7 @@ postResponseScript: |
 ```yaml
 postResponseScript: |
   const data = response.json();
-  
+
   if (data.user) {
     // Save user data to environment
     env.set("userId", data.user.id);
@@ -382,10 +383,10 @@ postResponseScript: |
   const currentCount = collection.get("requestCount") || "0";
   const newCount = parseInt(currentCount) + 1;
   collection.set("requestCount", newCount.toString());
-  
+
   // Save last request time
   collection.set("lastRequestTime", new Date().toISOString());
-  
+
   console.log(`Total requests: ${newCount}`);
 ```
 
@@ -420,15 +421,15 @@ Tests validate that responses meet expected criteria. All assertions use the `as
 
 ```yaml
 tests:
-  - name: "Status code is 200"
+  - name: 'Status code is 200'
     script: |
       assert(response.status === 200, `Expected 200, got ${response.status}`);
-  
-  - name: "Response time is acceptable"
+
+  - name: 'Response time is acceptable'
     script: |
       assert(response.time < 1000, `Response took ${response.time}ms, expected < 1000ms`);
-  
-  - name: "Response has content"
+
+  - name: 'Response has content'
     script: |
       assert(response.size > 0, "Response body is empty");
 ```
@@ -437,15 +438,15 @@ tests:
 
 ```yaml
 tests:
-  - name: "Content-Type is JSON"
+  - name: 'Content-Type is JSON'
     script: |
       const contentType = response.headers.get("Content-Type");
       assert(
         contentType && contentType.includes("application/json"),
         `Expected JSON, got ${contentType}`
       );
-  
-  - name: "Has CORS headers"
+
+  - name: 'Has CORS headers'
     script: |
       assert(
         response.headers.has("Access-Control-Allow-Origin"),
@@ -457,7 +458,7 @@ tests:
 
 ```yaml
 tests:
-  - name: "Response is valid JSON"
+  - name: 'Response is valid JSON'
     script: |
       let data;
       try {
@@ -466,20 +467,20 @@ tests:
       } catch (error) {
         assert(false, `Invalid JSON: ${error.message}`);
       }
-  
-  - name: "Response has required fields"
+
+  - name: 'Response has required fields'
     script: |
       const data = response.json();
       assert(data.id, "Missing id field");
       assert(data.name, "Missing name field");
       assert(data.email, "Missing email field");
-  
-  - name: "User ID is a number"
+
+  - name: 'User ID is a number'
     script: |
       const data = response.json();
       assert(typeof data.id === "number", `ID should be number, got ${typeof data.id}`);
-  
-  - name: "Email is valid format"
+
+  - name: 'Email is valid format'
     script: |
       const data = response.json();
       assert(
@@ -492,22 +493,22 @@ tests:
 
 ```yaml
 tests:
-  - name: "Response is an array"
+  - name: 'Response is an array'
     script: |
       const data = response.json();
       assert(Array.isArray(data), "Response should be an array");
-  
-  - name: "Array is not empty"
+
+  - name: 'Array is not empty'
     script: |
       const data = response.json();
       assert(data.length > 0, "Array is empty");
-  
-  - name: "Array has expected length"
+
+  - name: 'Array has expected length'
     script: |
       const data = response.json();
       assert(data.length === 10, `Expected 10 items, got ${data.length}`);
-  
-  - name: "All items have required fields"
+
+  - name: 'All items have required fields'
     script: |
       const data = response.json();
       for (const item of data) {
@@ -520,22 +521,22 @@ tests:
 
 ```yaml
 tests:
-  - name: "Authentication successful"
+  - name: 'Authentication successful'
     script: |
       const data = response.json();
-      
+
       // Check status
       assert(response.status === 200, "Authentication failed");
-      
+
       // Check tokens
       assert(data.accessToken, "Missing access token");
       assert(data.refreshToken, "Missing refresh token");
       assert(typeof data.accessToken === "string", "Access token should be string");
-      
+
       // Check expiry
       assert(data.expiresIn, "Missing expiresIn");
       assert(data.expiresIn > 0, "Invalid expiry time");
-      
+
       // Check user data
       assert(data.user, "Missing user object");
       assert(data.user.id, "Missing user ID");
@@ -555,8 +556,8 @@ postResponseScript: |
 # Request 2: Get Profile (uses token from Request 1)
 request:
   headers:
-    - key: "Authorization"
-      value: "Bearer {{authToken}}"
+    - key: 'Authorization'
+      value: 'Bearer {{authToken}}'
 ```
 
 ### Pattern 2: Retry Logic
@@ -575,7 +576,7 @@ postResponseScript: |
 ```yaml
 postResponseScript: |
   const data = response.json();
-  
+
   if (data.nextPage) {
     env.set("nextPageUrl", data.nextPage);
     console.log(`Next page available: ${data.nextPage}`);
@@ -591,7 +592,7 @@ postResponseScript: |
 postResponseScript: |
   const remaining = response.headers.get("X-RateLimit-Remaining");
   const reset = response.headers.get("X-RateLimit-Reset");
-  
+
   if (remaining) {
     console.log(`Rate limit remaining: ${remaining}`);
     
@@ -599,7 +600,7 @@ postResponseScript: |
       console.warn("⚠ Rate limit nearly exhausted");
     }
   }
-  
+
   if (response.status === 429) {
     console.error("✗ Rate limit exceeded");
     if (reset) {
@@ -616,15 +617,15 @@ preRequestScript: |
   // Simple HMAC-style signing
   const timestamp = Date.now().toString();
   const nonce = crypto.randomUUID();
-  
+
   // Create signature payload
   const payload = `${request.method}:${request.url}:${timestamp}:${nonce}`;
-  
+
   // Add to headers
   request.headers.set("X-Timestamp", timestamp);
   request.headers.set("X-Nonce", nonce);
   request.headers.set("X-Payload", payload);
-  
+
   console.log("Request signed");
 ```
 
@@ -634,9 +635,9 @@ preRequestScript: |
 
 ```typescript
 // Good: Clear and focused
-const token = env.get("authToken");
+const token = env.get('authToken');
 if (token) {
-  request.headers.set("Authorization", `Bearer ${token}`);
+  request.headers.set('Authorization', `Bearer ${token}`);
 }
 
 // Avoid: Complex logic that's hard to debug
@@ -646,21 +647,21 @@ if (token) {
 
 ```typescript
 // Good
-const accessToken = env.get("accessToken");
-const userId = env.get("userId");
+const accessToken = env.get('accessToken');
+const userId = env.get('userId');
 
 // Bad
-const t = env.get("t");
-const id = env.get("id");
+const t = env.get('t');
+const id = env.get('id');
 ```
 
 ### 3. Add Console Logging
 
 ```typescript
 // Always log important operations
-console.log("✓ Token refreshed");
-console.log("⚠ No auth token found");
-console.error("✗ Authentication failed");
+console.log('✓ Token refreshed');
+console.log('⚠ No auth token found');
+console.error('✗ Authentication failed');
 ```
 
 ### 4. Handle Errors Gracefully
@@ -668,9 +669,9 @@ console.error("✗ Authentication failed");
 ```typescript
 try {
   const data = response.json();
-  env.set("userId", data.user.id);
+  env.set('userId', data.user.id);
 } catch (error) {
-  console.error("Failed to parse response:", error.message);
+  console.error('Failed to parse response:', error.message);
 }
 ```
 
@@ -679,22 +680,22 @@ try {
 ```yaml
 tests:
   # Good
-  - name: "Status code is 200 OK"
-  - name: "Response contains user data"
-  - name: "Email field matches expected format"
-  
+  - name: 'Status code is 200 OK'
+  - name: 'Response contains user data'
+  - name: 'Email field matches expected format'
+
   # Avoid
-  - name: "Test 1"
-  - name: "Check response"
+  - name: 'Test 1'
+  - name: 'Check response'
 ```
 
 ### 6. Validate Input
 
 ```typescript
 // Always validate before using
-const email = env.get("email");
-if (!email || !email.includes("@")) {
-  throw new Error("Invalid email address");
+const email = env.get('email');
+if (!email || !email.includes('@')) {
+  throw new Error('Invalid email address');
 }
 ```
 
@@ -702,12 +703,12 @@ if (!email || !email.includes("@")) {
 
 ```typescript
 // Set temporary variable
-env.set("tempRequestId", crypto.randomUUID());
+env.set('tempRequestId', crypto.randomUUID());
 
 // Use it...
 
 // Clean up
-env.delete("tempRequestId");
+env.delete('tempRequestId');
 ```
 
 ## Examples
@@ -720,11 +721,11 @@ preRequestScript: |
   // Validate credentials exist
   const email = env.get("userEmail");
   const password = env.get("userPassword");
-  
+
   if (!email || !password) {
     throw new Error("Missing credentials");
   }
-  
+
   console.log(`Logging in as: ${email}`);
 
 postResponseScript: |
@@ -753,15 +754,15 @@ postResponseScript: |
   }
 
 tests:
-  - name: "Status is 200"
+  - name: 'Status is 200'
     script: assert(response.status === 200);
-  
-  - name: "Has access token"
+
+  - name: 'Has access token'
     script: |
       const data = response.json();
       assert(data.accessToken, "Missing access token");
-  
-  - name: "Has user data"
+
+  - name: 'Has user data'
     script: |
       const data = response.json();
       assert(data.user && data.user.id, "Missing user data");
@@ -770,6 +771,7 @@ tests:
 ---
 
 For more information:
+
 - [Architecture Overview](README.md)
 - [YAML Schema Reference](yaml-schema.md)
 - [Authentication Guide](authentication.md)

@@ -26,6 +26,7 @@ Arcanine is a modern REST API client built with offline-first principles and git
 ## Technology Stack
 
 ### Frontend
+
 - **Svelte 5**: Reactive UI framework with minimal runtime overhead
 - **SvelteKit**: Application framework for routing and SSR
 - **TailwindCSS**: Utility-first CSS framework
@@ -33,6 +34,7 @@ Arcanine is a modern REST API client built with offline-first principles and git
 - **TypeScript**: Type-safe JavaScript
 
 ### Backend
+
 - **Tauri 2.x**: Cross-platform desktop framework using Rust
 - **Rust**: Systems programming language for performance and safety
 - **reqwest**: HTTP client library
@@ -41,11 +43,13 @@ Arcanine is a modern REST API client built with offline-first principles and git
 - **serde/serde_yaml**: Serialization/deserialization
 
 ### Script Runtime
+
 - **Deno Core**: Embedded JavaScript/TypeScript runtime
 - **V8**: JavaScript engine with sandboxed execution
 - **Custom APIs**: Exposed environment and request manipulation APIs
 
 ### Storage
+
 - **YAML**: Human-readable format for collections and environments
 - **SQLite**: Embedded database for request/response history
 - **File System**: Direct file operations for collection management
@@ -66,7 +70,7 @@ flowchart TB
             CodeEditor["Code Editor"]
             TestResults["Test Results"]
         end
-        
+
         subgraph Backend["Rust Backend (Business Logic)"]
             subgraph Commands["Command Layer (Tauri Commands)"]
                 RequestCmd["request_command"]
@@ -76,7 +80,7 @@ flowchart TB
                 ScriptCmd["script_command"]
                 AuthCmd["auth_command"]
             end
-            
+
             subgraph Services["Service Layer (Core Logic)"]
                 HTTPService["HTTPService"]
                 GraphQLService["GraphQLService"]
@@ -87,7 +91,7 @@ flowchart TB
                 AuthService["AuthService"]
                 FileWatcher["FileWatcher"]
             end
-            
+
             subgraph Storage["Storage Layer (Persistence)"]
                 YAMLStore["YAMLStore"]
                 SQLiteStore["SQLiteStore"]
@@ -95,7 +99,7 @@ flowchart TB
                 CacheManager["CacheManager"]
             end
         end
-        
+
         subgraph DenoRuntime["Deno Script Runtime (Sandboxed)"]
             PreRequestScripts["Pre-request Scripts"]
             PostResponseScripts["Post-response Scripts"]
@@ -105,13 +109,13 @@ flowchart TB
             AsyncOps["Async Operations"]
         end
     end
-    
+
     subgraph OS["Operating System"]
         FileSystemOS["File System"]
         NetworkStack["Network Stack"]
         ProcessMgmt["Process Management"]
     end
-    
+
     Frontend -->|"Tauri IPC<br/>(JSON-RPC over WebSocket)"| Commands
     Commands --> Services
     Services --> Storage
@@ -206,21 +210,25 @@ arcanine/
 ### 1. Frontend Layer (Svelte)
 
 #### Request Editor
+
 - **Purpose**: Compose and configure HTTP requests
 - **Components**: URL bar, method selector, headers editor, body editor, auth config
 - **Features**: Auto-completion, syntax highlighting, variable interpolation preview
 
 #### Response Viewer
+
 - **Purpose**: Display and analyze API responses
 - **Components**: Status display, headers viewer, body viewer, stats panel
 - **Features**: JSON/XML formatting, search, image preview, syntax highlighting
 
 #### Collection Tree
+
 - **Purpose**: Navigate and organize requests
 - **Components**: Tree view, drag-drop, context menu
 - **Features**: Hierarchical display, search, filtering, ordering management
 
 #### Environment Selector
+
 - **Purpose**: Manage multiple environments
 - **Components**: Dropdown selector, variable editor, secret manager
 - **Features**: Quick switching, variable preview, validation
@@ -228,6 +236,7 @@ arcanine/
 ### 2. Backend Layer (Rust)
 
 #### Command Layer
+
 Tauri commands that expose backend functionality to the frontend:
 
 ```rust
@@ -247,6 +256,7 @@ async fn execute_request(
 ```
 
 #### Service Layer
+
 Business logic implementation:
 
 - **HTTPService**: Handle HTTP requests using reqwest
@@ -258,6 +268,7 @@ Business logic implementation:
 - **AuthService**: Handle different authentication mechanisms
 
 #### Storage Layer
+
 Data persistence:
 
 - **YAMLStore**: Read/write YAML files for collections
@@ -319,7 +330,7 @@ sequenceDiagram
     participant ScriptPost as ScriptRunner (Post)
     participant Tests as ScriptRunner (Tests)
     participant History as SQLiteStore
-    
+
     User->>UI: Clicks "Send"
     UI->>Command: execute_request()
     Command->>Resolver: Resolve {{variables}}
@@ -349,7 +360,7 @@ sequenceDiagram
     participant Command as Tauri Command
     participant YAML as YAMLStore
     participant FS as FileSystem
-    
+
     User->>UI: Opens collection folder
     UI->>Command: load_collection(path)
     Command->>YAML: Read collection.yaml
@@ -357,12 +368,12 @@ sequenceDiagram
     FS-->>YAML: File content
     YAML->>FS: Scan for .request.yaml and folder.yaml
     FS-->>YAML: File list
-    
+
     loop For each folder
         YAML->>FS: Read folder.yaml
         YAML->>YAML: Recursively scan subfolder
     end
-    
+
     YAML->>YAML: Sort by 'order' field
     YAML->>YAML: Build tree structure
     YAML->>FS: Load environments/
@@ -398,6 +409,7 @@ flowchart TD
 **Decision**: Use Tauri instead of Electron
 
 **Rationale**:
+
 - **Size**: ~600KB vs ~150MB (250x smaller)
 - **Performance**: Native Rust backend vs Node.js
 - **Memory**: Lower memory footprint
@@ -405,6 +417,7 @@ flowchart TD
 - **Speed**: Faster startup and runtime performance
 
 **Trade-offs**:
+
 - Smaller ecosystem than Electron
 - Requires Rust knowledge for backend development
 - Less mature (but stable and production-ready)
@@ -414,12 +427,14 @@ flowchart TD
 **Decision**: Use Svelte 5 instead of React or Vue
 
 **Rationale**:
+
 - **Bundle Size**: Smallest framework, no virtual DOM overhead
 - **Performance**: Compile-time optimization, reactive by default
 - **Developer Experience**: Less boilerplate, cleaner syntax
 - **Speed**: Fastest framework in benchmarks
 
 **Trade-offs**:
+
 - Smaller community than React
 - Fewer third-party components
 - Less job market demand (but growing)
@@ -429,6 +444,7 @@ flowchart TD
 **Decision**: Use Deno runtime instead of Node.js
 
 **Rationale**:
+
 - **Security**: Sandboxed by default, no file system access unless granted
 - **Modern**: Native TypeScript, ESM modules
 - **No node_modules**: Simpler dependency management
@@ -436,6 +452,7 @@ flowchart TD
 - **Permissions**: Granular control over capabilities
 
 **Trade-offs**:
+
 - Smaller ecosystem than Node.js
 - Some npm packages may not work
 - Additional runtime to embed
@@ -445,12 +462,14 @@ flowchart TD
 **Decision**: Use YAML instead of JSON
 
 **Rationale**:
+
 - **Readability**: Comments, multi-line strings, cleaner syntax
 - **Git-friendly**: Better diff visualization
 - **Flexibility**: Less punctuation, easier to write
 - **Documentation**: Built-in comment support
 
 **Trade-offs**:
+
 - Slightly slower parsing than JSON
 - More prone to indentation errors
 - Less universal than JSON
@@ -460,6 +479,7 @@ flowchart TD
 **Decision**: Use SQLite instead of YAML files
 
 **Rationale**:
+
 - **Performance**: Fast queries and indexing
 - **Scalability**: Handle thousands of history entries
 - **Queries**: Complex filtering and searching
@@ -467,6 +487,7 @@ flowchart TD
 - **Standard**: Well-tested and stable
 
 **Trade-offs**:
+
 - Binary format (not human-readable)
 - Not git-friendly (but history shouldn't be versioned)
 - Requires schema migrations
@@ -476,6 +497,7 @@ flowchart TD
 **Decision**: Each request is a separate YAML file
 
 **Rationale**:
+
 - **Git-friendly**: Clear diffs, easy to track changes
 - **Isolation**: Changes don't affect other requests
 - **Scalability**: Large collections don't create huge files
@@ -483,6 +505,7 @@ flowchart TD
 - **Flexibility**: Easy to move/copy requests
 
 **Trade-offs**:
+
 - More files to manage
 - Slightly slower initial load
 - Requires directory scanning
@@ -492,12 +515,14 @@ flowchart TD
 **Decision**: Each element stores its own `order` field
 
 **Rationale**:
+
 - **Decentralization**: No parent-child coupling
 - **Git-friendly**: Moving items changes minimal files
 - **Simplicity**: Clear ownership of position
 - **Flexibility**: Easy reordering
 
 **Trade-offs**:
+
 - Requires full directory scan to determine order
 - Potential order conflicts (same order number)
 - More fields in each file
@@ -505,30 +530,35 @@ flowchart TD
 ## Performance Considerations
 
 ### 1. Collection Loading
+
 - **Lazy Loading**: Load folders on-demand, not all at once
 - **Caching**: Cache parsed YAML in memory
 - **Indexing**: Maintain in-memory index of all requests
 - **File Watching**: Use efficient file system watchers
 
 ### 2. Request Execution
+
 - **Async Operations**: All I/O is async (Tokio runtime)
 - **Connection Pooling**: Reuse HTTP connections
 - **Streaming**: Stream large responses instead of loading fully
 - **Cancellation**: Support request cancellation
 
 ### 3. UI Performance
+
 - **Virtual Scrolling**: Render only visible items in lists
 - **Code Editor**: Use Monaco with lazy loading
 - **Debouncing**: Debounce auto-save and validation
 - **Web Workers**: Offload heavy computations
 
 ### 4. History Storage
+
 - **Indexing**: Proper database indexes on common queries
 - **Pagination**: Load history in chunks
 - **Cleanup**: Configurable history retention policy
 - **Compression**: Compress large response bodies
 
 ### 5. Memory Management
+
 - **Response Limits**: Cap maximum response size
 - **Stream Processing**: Process large files in chunks
 - **Cache Eviction**: LRU cache for parsed collections
@@ -537,24 +567,28 @@ flowchart TD
 ## Security Considerations
 
 ### 1. Script Sandboxing
+
 - Deno's permission system (no FS access by default)
 - Limited APIs exposed to scripts
 - Timeout enforcement
 - Memory limits
 
 ### 2. Secret Management
+
 - Secrets stored in separate gitignored files
 - Never included in requests sent to backend
 - Optional encryption at rest
 - Clear warnings in UI
 
 ### 3. SSL/TLS
+
 - Certificate validation enabled by default
 - Support for custom CA certificates
 - Client certificate support
 - Warning for self-signed certificates
 
 ### 4. Data Privacy
+
 - All data stored locally
 - No telemetry by default
 - No cloud sync (unless explicitly enabled)
@@ -574,6 +608,7 @@ Future plugin system will allow:
 ---
 
 For more detailed information, see:
+
 - [YAML Schema Reference](yaml-schema.md)
 - [Scripting Guide](scripting.md)
 - [Authentication Guide](authentication.md)

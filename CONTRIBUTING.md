@@ -26,6 +26,7 @@ We pledge to make participation in our project and our community a harassment-fr
 ### Our Standards
 
 **Examples of behavior that contributes to creating a positive environment include:**
+
 - Using welcoming and inclusive language
 - Being respectful of differing viewpoints and experiences
 - Gracefully accepting constructive criticism
@@ -33,6 +34,7 @@ We pledge to make participation in our project and our community a harassment-fr
 - Showing empathy towards other community members
 
 **Examples of unacceptable behavior include:**
+
 - The use of sexualized language or imagery and unwelcome sexual attention or advances
 - Trolling, insulting/derogatory comments, and personal or political attacks
 - Public or private harassment
@@ -48,6 +50,7 @@ We pledge to make participation in our project and our community a harassment-fr
 - **Questions**: Use the `question` label or start a discussion
 
 Before creating an issue:
+
 1. Check if the issue already exists
 2. Use the issue templates provided
 3. Provide as much context as possible
@@ -70,6 +73,7 @@ A clear and concise description of what the bug is.
 
 **To Reproduce**
 Steps to reproduce the behavior:
+
 1. Go to '...'
 2. Click on '...'
 3. Scroll down to '...'
@@ -82,9 +86,10 @@ A clear and concise description of what you expected to happen.
 If applicable, add screenshots to help explain your problem.
 
 **Environment:**
- - OS: [e.g. macOS 13.0, Windows 11, Ubuntu 22.04]
- - Arcanine Version: [e.g. 1.0.0]
- - Collection Schema Version: [e.g. 1.0]
+
+- OS: [e.g. macOS 13.0, Windows 11, Ubuntu 22.04]
+- Arcanine Version: [e.g. 1.0.0]
+- Collection Schema Version: [e.g. 1.0]
 
 **Additional context**
 Add any other context about the problem here.
@@ -123,32 +128,37 @@ Unsure where to begin? Start by looking through `good first issue` and `help wan
 
 - **Rust** 1.70 or higher - [Install Rust](https://rustup.rs/)
 - **Node.js** 18 or higher - [Install Node.js](https://nodejs.org/)
-- **Deno** 1.37 or higher - [Install Deno](https://deno.land/)
 - **Git** - [Install Git](https://git-scm.com/)
+
+**Note**: Deno will be added in Phase 11 for scripting support.
 
 ### Setup Steps
 
 1. **Fork the repository**
+
    ```bash
    # Click the "Fork" button on GitHub
    ```
 
 2. **Clone your fork**
+
    ```bash
    git clone https://github.com/YOUR_USERNAME/arcanine.git
    cd arcanine
    ```
 
 3. **Add upstream remote**
+
    ```bash
    git remote add upstream https://github.com/lanthoor/arcanine.git
    ```
 
 4. **Install dependencies**
+
    ```bash
    # Install Node.js dependencies
    npm install
-   
+
    # Rust dependencies are managed by Cargo (no separate install needed)
    ```
 
@@ -160,30 +170,41 @@ Unsure where to begin? Start by looking through `good first issue` and `help wan
 ### Development Commands
 
 ```bash
-# Run application in development mode
+# Run frontend in development mode
+npm run dev
+
+# Run Tauri application in development mode
 npm run tauri dev
 
-# Build for production
+# Build frontend for production
+npm run build
+
+# Build Tauri application for production
 npm run tauri build
 
-# Run frontend tests
-npm run test
-
-# Run Rust tests
-cd src-tauri && cargo test
+# Type checking
+npm run check
+npm run check:watch  # Watch mode
 
 # Lint frontend code
 npm run lint
+npm run lint:fix  # Auto-fix issues
 
 # Format frontend code
 npm run format
+npm run format:check  # Check only
 
 # Format Rust code
 cd src-tauri && cargo fmt
 
 # Run Rust linter
 cd src-tauri && cargo clippy
+
+# Run Rust tests
+cd src-tauri && cargo test
 ```
+
+**Note**: Frontend tests will be added in Phase 1.2 with Vitest.
 
 ## Coding Standards
 
@@ -191,7 +212,15 @@ cd src-tauri && cargo clippy
 
 - **Style Guide**: Follow the [Airbnb JavaScript Style Guide](https://github.com/airbnb/javascript)
 - **Formatting**: Use Prettier (configured in `.prettierrc`)
-- **Linting**: Use ESLint (configured in `.eslintrc`)
+  - 2-space indentation
+  - Single quotes
+  - Trailing commas
+  - Svelte plugin enabled
+- **Linting**: Use ESLint (configured in `.eslintrc.cjs`)
+  - TypeScript ESLint parser
+  - Svelte plugin enabled
+- **TypeScript**: Strict mode enabled (`strict: true`)
+- **Styling**: TailwindCSS v4 with `@tailwindcss/postcss` plugin
 
 **Example:**
 
@@ -209,12 +238,12 @@ function getUserById(id: string): User | null {
 
 // Bad
 interface user {
-  id:string
-  name:string
-  email:string
+  id: string;
+  name: string;
+  email: string;
 }
 
-function get_user_by_id(id:string) {
+function get_user_by_id(id: string) {
   // Implementation
 }
 ```
@@ -223,6 +252,9 @@ function get_user_by_id(id:string) {
 
 - **Style Guide**: Follow the [Rust API Guidelines](https://rust-lang.github.io/api-guidelines/)
 - **Formatting**: Use `rustfmt` (run `cargo fmt`)
+  - Edition 2021
+  - Max line width: 100 characters
+  - Configured in `src-tauri/rustfmt.toml`
 - **Linting**: Use `clippy` (run `cargo clippy`)
 
 **Example:**
@@ -317,6 +349,7 @@ BREAKING CHANGE: Variable resolution now prioritizes environment variables over 
 ### Before Submitting
 
 1. **Update your fork**
+
    ```bash
    git fetch upstream
    git checkout main
@@ -324,6 +357,7 @@ BREAKING CHANGE: Variable resolution now prioritizes environment variables over 
    ```
 
 2. **Create a feature branch**
+
    ```bash
    git checkout -b feature/amazing-feature
    ```
@@ -334,12 +368,14 @@ BREAKING CHANGE: Variable resolution now prioritizes environment variables over 
    - Update documentation as needed
 
 4. **Test your changes**
+
    ```bash
    npm test
    cd src-tauri && cargo test
    ```
 
 5. **Commit your changes**
+
    ```bash
    git add .
    git commit -m "feat(scope): add amazing feature"
@@ -359,18 +395,22 @@ BREAKING CHANGE: Variable resolution now prioritizes environment variables over 
 
 ```markdown
 ## Description
+
 Brief description of changes
 
 ## Type of Change
+
 - [ ] Bug fix (non-breaking change which fixes an issue)
 - [ ] New feature (non-breaking change which adds functionality)
 - [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
 - [ ] Documentation update
 
 ## How Has This Been Tested?
+
 Describe the tests you ran
 
 ## Checklist
+
 - [ ] My code follows the style guidelines
 - [ ] I have performed a self-review
 - [ ] I have commented my code, particularly in hard-to-understand areas
@@ -390,6 +430,7 @@ Describe the tests you ran
 ### After Your PR is Merged
 
 1. Delete your feature branch
+
    ```bash
    git branch -d feature/amazing-feature
    git push origin --delete feature/amazing-feature
@@ -407,40 +448,51 @@ Understanding the project structure will help you navigate the codebase:
 
 ```
 arcanine/
-├── src/                    # Frontend (Svelte)
+├── src/                    # Frontend (Svelte 5 + TypeScript)
 │   ├── lib/
-│   │   ├── components/    # UI components
-│   │   ├── stores/        # State management
-│   │   └── services/      # Frontend services
-│   └── routes/            # SvelteKit routes
+│   │   ├── components/    # UI components (ThemeToggle.svelte)
+│   │   ├── i18n/          # Internationalization (locales/, index.ts)
+│   │   └── stores/        # State management (theme.ts)
+│   ├── routes/            # SvelteKit routes
+│   ├── app.css            # Global styles with CSS variables
+│   └── app.html           # HTML template
 │
-├── src-tauri/             # Backend (Rust)
+├── src-tauri/             # Backend (Rust + Tauri 2.x)
 │   ├── src/
-│   │   ├── commands/      # Tauri commands
-│   │   ├── models/        # Data structures
-│   │   ├── services/      # Business logic
-│   │   └── storage/       # Persistence layer
-│   └── Cargo.toml
+│   │   ├── commands/      # Tauri commands (to be added)
+│   │   ├── models/        # Data structures (to be added)
+│   │   ├── services/      # Business logic (to be added)
+│   │   └── main.rs        # Application entry point
+│   ├── Cargo.toml         # Rust dependencies
+│   ├── tauri.conf.json    # Tauri configuration
+│   └── rustfmt.toml       # Rust formatting config
 │
 ├── docs/                  # Documentation
-│   └── architecture/      # Architecture docs
+│   ├── architecture/      # Architecture docs
+│   └── plan/              # Development plan
 │
-└── tests/                 # Integration tests
+├── .prettierrc            # Prettier configuration
+├── .eslintrc.cjs          # ESLint configuration
+├── tailwind.config.js     # TailwindCSS configuration
+├── postcss.config.js      # PostCSS configuration
+├── tsconfig.json          # TypeScript configuration
+└── svelte.config.js       # Svelte configuration
 ```
 
 ## Testing
 
+**Note**: Comprehensive testing infrastructure will be added in Phase 1.2. For now:
+
 ### Frontend Tests
 
 ```bash
-# Run all frontend tests
-npm run test
+# Type checking (current)
+npm run check
 
-# Run tests in watch mode
-npm run test:watch
-
-# Run tests with coverage
-npm run test:coverage
+# Vitest will be added in Phase 1.2
+# npm run test
+# npm run test:watch
+# npm run test:coverage
 ```
 
 ### Backend Tests
@@ -454,18 +506,20 @@ cargo test test_name
 
 # Run tests with output
 cargo test -- --nocapture
+
+# Rust test framework is ready, tests will be added in Phase 1.3+
 ```
 
-### Integration Tests
+### Coverage Goals
 
-```bash
-# Run integration tests
-npm run test:integration
-```
+- Target: **90%+ test coverage** across all phases
+- Frontend: Vitest + Testing Library
+- Backend: Rust built-in test framework + Tarpaulin for coverage
+- CI/CD: GitHub Actions (Phase 1.2)
 
 ### Writing Tests
 
-**Frontend (Vitest):**
+**Frontend (Vitest - to be added in Phase 1.2):**
 
 ```typescript
 import { describe, it, expect } from 'vitest';
@@ -500,12 +554,13 @@ mod tests {
 ### Code Documentation
 
 - **Rust**: Use `///` for public APIs
+
   ```rust
   /// Executes an HTTP request
-  /// 
+  ///
   /// # Arguments
   /// * `request` - The request to execute
-  /// 
+  ///
   /// # Returns
   /// The HTTP response
   pub fn execute_request(request: Request) -> Response {
@@ -528,6 +583,7 @@ mod tests {
 ### Architecture Documentation
 
 When making significant changes, update relevant documentation in `docs/architecture/`:
+
 - Architecture overview
 - YAML schema
 - API documentation
@@ -536,6 +592,7 @@ When making significant changes, update relevant documentation in `docs/architec
 ## Recognition
 
 Contributors are recognized in:
+
 - GitHub contributors page
 - Release notes
 - README acknowledgments

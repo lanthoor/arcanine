@@ -1,0 +1,8 @@
+node_modules/
+.svelte-kit/
+build/
+dist/
+.vscode/
+target/
+*.config.js
+*.config.ts

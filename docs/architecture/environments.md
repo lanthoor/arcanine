@@ -47,32 +47,32 @@ my-collection/
 
 ```yaml
 # environments/development.yaml
-version: "1.0"
+version: '1.0'
 
-id: "dev-env-001"
-name: "Development"
-description: "Local development environment"
+id: 'dev-env-001'
+name: 'Development'
+description: 'Local development environment'
 
 variables:
-  baseUrl: "http://localhost:3000"
-  apiUrl: "{{baseUrl}}/api"
+  baseUrl: 'http://localhost:3000'
+  apiUrl: '{{baseUrl}}/api'
   timeout: 30000
   debugMode: true
 
-secretsFile: ".secrets/development.secrets.yaml"
+secretsFile: '.secrets/development.secrets.yaml'
 ```
 
 ### Secrets File
 
 ```yaml
 # environments/.secrets/development.secrets.yaml
-version: "1.0"
+version: '1.0'
 
 secrets:
-  apiKey: "sk_dev_xxxxxxxxxxxxx"
-  apiSecret: "secret_dev_xxxxxxxxxxxxx"
-  dbPassword: "dev_password_123"
-  jwtSecret: "jwt_secret_for_dev"
+  apiKey: 'sk_dev_xxxxxxxxxxxxx'
+  apiSecret: 'secret_dev_xxxxxxxxxxxxx'
+  dbPassword: 'dev_password_123'
+  jwtSecret: 'jwt_secret_for_dev'
 ```
 
 ## Variables
@@ -90,10 +90,10 @@ secrets:
 Use double curly braces for variable interpolation:
 
 ```yaml
-url: "{{baseUrl}}/users/{{userId}}"
+url: '{{baseUrl}}/users/{{userId}}'
 headers:
-  - key: "Authorization"
-    value: "Bearer {{accessToken}}"
+  - key: 'Authorization'
+    value: 'Bearer {{accessToken}}'
 ```
 
 ### Defining Variables
@@ -123,16 +123,16 @@ variables:
 ```yaml
 # In URLs
 request:
-  url: "{{baseUrl}}/users/{{userId}}"
+  url: '{{baseUrl}}/users/{{userId}}'
 
 # In headers
 headers:
-  - key: "X-API-Key"
-    value: "{{apiKey}}"
+  - key: 'X-API-Key'
+    value: '{{apiKey}}'
 
 # In body
 body:
-  type: "json"
+  type: 'json'
   content: |
     {
       "email": "{{userEmail}}",
@@ -158,31 +158,31 @@ preRequestScript: |
 
 ```yaml
 # environments/.secrets/production.secrets.yaml
-version: "1.0"
+version: '1.0'
 
 secrets:
   # API Keys
-  apiKey: "sk_live_xxxxxxxxxxxxx"
-  apiSecret: "secret_live_xxxxxxxxxxxxx"
-  
+  apiKey: 'sk_live_xxxxxxxxxxxxx'
+  apiSecret: 'secret_live_xxxxxxxxxxxxx'
+
   # Database
-  dbHost: "prod-db.example.com"
-  dbUsername: "prod_user"
-  dbPassword: "super_secret_password"
-  
+  dbHost: 'prod-db.example.com'
+  dbUsername: 'prod_user'
+  dbPassword: 'super_secret_password'
+
   # OAuth
-  oauthClientId: "prod-client-id"
-  oauthClientSecret: "prod-client-secret"
-  
+  oauthClientId: 'prod-client-id'
+  oauthClientSecret: 'prod-client-secret'
+
   # JWT
-  jwtSecret: "jwt-prod-secret-key"
-  refreshTokenSecret: "refresh-prod-secret"
-  
+  jwtSecret: 'jwt-prod-secret-key'
+  refreshTokenSecret: 'refresh-prod-secret'
+
   # Third-party Services
-  stripeSecretKey: "sk_live_xxxxxxxxxxxxx"
-  sendgridApiKey: "SG.xxxxxxxxxxxxx"
-  awsAccessKey: "AKIAXXXXXXXXXXXXX"
-  awsSecretKey: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  stripeSecretKey: 'sk_live_xxxxxxxxxxxxx'
+  sendgridApiKey: 'SG.xxxxxxxxxxxxx'
+  awsAccessKey: 'AKIAXXXXXXXXXXXXX'
+  awsSecretKey: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
 ```
 
 ### .gitignore Configuration
@@ -210,20 +210,20 @@ Create a template for team members:
 
 ```yaml
 # environments/.secrets/template.secrets.yaml (committed)
-version: "1.0"
+version: '1.0'
 
 secrets:
   # API Keys (get from https://dashboard.example.com/api-keys)
-  apiKey: "YOUR_API_KEY_HERE"
-  apiSecret: "YOUR_API_SECRET_HERE"
-  
+  apiKey: 'YOUR_API_KEY_HERE'
+  apiSecret: 'YOUR_API_SECRET_HERE'
+
   # Database (contact DevOps for credentials)
-  dbUsername: "YOUR_DB_USERNAME"
-  dbPassword: "YOUR_DB_PASSWORD"
-  
+  dbUsername: 'YOUR_DB_USERNAME'
+  dbPassword: 'YOUR_DB_PASSWORD'
+
   # OAuth (register app at https://oauth.example.com)
-  oauthClientId: "YOUR_CLIENT_ID"
-  oauthClientSecret: "YOUR_CLIENT_SECRET"
+  oauthClientId: 'YOUR_CLIENT_ID'
+  oauthClientSecret: 'YOUR_CLIENT_SECRET'
 ```
 
 ## Variable Resolution
@@ -274,10 +274,10 @@ postResponseScript: |
 
 # Next request can use these:
 request:
-  url: "{{baseUrl}}/users/{{userId}}"
+  url: '{{baseUrl}}/users/{{userId}}'
   headers:
-    - key: "Authorization"
-      value: "Bearer {{accessToken}}"
+    - key: 'Authorization'
+      value: 'Bearer {{accessToken}}'
 ```
 
 ## Environment Switching
@@ -301,7 +301,7 @@ settings:
   timeout: 60000  # Longer timeout for debugging
   ssl:
     validateCertificates: false  # Allow self-signed certs
-  
+
 # environments/production.yaml
 variables:
   baseUrl: "https://api.example.com"
@@ -338,41 +338,41 @@ variables:
 ```yaml
 variables:
   # Server Configuration
-  baseUrl: "https://api.example.com"
-  apiUrl: "{{baseUrl}}/api/{{apiVersion}}"
-  wsUrl: "wss://api.example.com"
-  
+  baseUrl: 'https://api.example.com'
+  apiUrl: '{{baseUrl}}/api/{{apiVersion}}'
+  wsUrl: 'wss://api.example.com'
+
   # Timeouts
   defaultTimeout: 5000
   longTimeout: 30000
-  
+
   # Feature Flags
   enableDebug: true
   enableMocks: false
-  
+
   # Test Data
-  testUserId: "user-123"
-  testEmail: "test@example.com"
+  testUserId: 'user-123'
+  testEmail: 'test@example.com'
 ```
 
 ### 3. Document Variables
 
 ```yaml
-name: "Development"
+name: 'Development'
 description: |
   Local development environment
-  
+
   ## Required Secrets
   - apiKey: Get from https://dashboard.example.com
   - dbPassword: Use local database password
-  
+
   ## Configuration
   - Base URL points to localhost:3000
   - SSL validation disabled for self-signed certs
   - Debug mode enabled
 
 variables:
-  baseUrl: "http://localhost:3000"
+  baseUrl: 'http://localhost:3000'
 ```
 
 ### 4. Use Consistent Naming
@@ -426,13 +426,13 @@ secrets:
 
 ```yaml
 # .secrets/template.secrets.yaml (committed)
-version: "1.0"
+version: '1.0'
 
 secrets:
   # Instructions for getting values
-  apiKey: "GET_FROM_DASHBOARD"
-  dbPassword: "ASK_DEVOPS_TEAM"
-  oauthClientSecret: "REGISTER_APP_FIRST"
+  apiKey: 'GET_FROM_DASHBOARD'
+  dbPassword: 'ASK_DEVOPS_TEAM'
+  oauthClientSecret: 'REGISTER_APP_FIRST'
 ```
 
 ### 7. Validate Required Variables
@@ -441,13 +441,13 @@ secrets:
 # In critical requests
 preRequestScript: |
   const required = ["apiKey", "baseUrl", "accessToken"];
-  
+
   for (const varName of required) {
     if (!env.get(varName)) {
       throw new Error(`Missing required variable: ${varName}`);
     }
   }
-  
+
   console.log("✓ All required variables present");
 ```
 
@@ -498,14 +498,14 @@ preRequestScript: |
 ```yaml
 variables:
   # Environment-specific URLs
-  authUrl: "https://auth.example.com"
-  apiUrl: "https://api.example.com"
-  wsUrl: "wss://ws.example.com"
-  
+  authUrl: 'https://auth.example.com'
+  apiUrl: 'https://api.example.com'
+  wsUrl: 'wss://ws.example.com'
+
   # Composed URLs
-  loginEndpoint: "{{authUrl}}/login"
-  usersEndpoint: "{{apiUrl}}/users"
-  chatEndpoint: "{{wsUrl}}/chat"
+  loginEndpoint: '{{authUrl}}/login'
+  usersEndpoint: '{{apiUrl}}/users'
+  chatEndpoint: '{{wsUrl}}/chat'
 ```
 
 ### Pattern 4: Database Configurations
@@ -597,12 +597,12 @@ settings:
 ### Development
 
 ```yaml
-name: "Development"
+name: 'Development'
 variables:
-  baseUrl: "http://localhost:3000"
+  baseUrl: 'http://localhost:3000'
   enableDebug: true
-  logLevel: "debug"
-  
+  logLevel: 'debug'
+
 settings:
   timeout: 60000
   ssl:
@@ -610,6 +610,7 @@ settings:
 ```
 
 **Use for:**
+
 - Local development
 - Debugging
 - Testing new features
@@ -617,12 +618,12 @@ settings:
 ### Staging
 
 ```yaml
-name: "Staging"
+name: 'Staging'
 variables:
-  baseUrl: "https://staging-api.example.com"
+  baseUrl: 'https://staging-api.example.com'
   enableDebug: false
-  logLevel: "info"
-  
+  logLevel: 'info'
+
 settings:
   timeout: 15000
   ssl:
@@ -630,6 +631,7 @@ settings:
 ```
 
 **Use for:**
+
 - Pre-production testing
 - QA validation
 - Integration testing
@@ -637,12 +639,12 @@ settings:
 ### Production
 
 ```yaml
-name: "Production"
+name: 'Production'
 variables:
-  baseUrl: "https://api.example.com"
+  baseUrl: 'https://api.example.com'
   enableDebug: false
-  logLevel: "error"
-  
+  logLevel: 'error'
+
 settings:
   timeout: 5000
   ssl:
@@ -652,6 +654,7 @@ settings:
 ```
 
 **Use for:**
+
 - Live API calls
 - Production debugging
 - Monitoring
@@ -665,7 +668,7 @@ settings:
 preRequestScript: |
   const varName = "baseUrl";
   const value = env.get(varName);
-  
+
   if (!value) {
     console.error(`Variable ${varName} not found`);
     console.log("Available variables:", Object.keys(env));
@@ -680,7 +683,7 @@ preRequestScript: |
 preRequestScript: |
   const secrets = ["apiKey", "apiSecret"];
   const missing = secrets.filter(s => !env.get(s));
-  
+
   if (missing.length > 0) {
     throw new Error(`Missing secrets: ${missing.join(", ")}`);
   }
@@ -700,6 +703,7 @@ preRequestScript: |
 ---
 
 For more information:
+
 - [Architecture Overview](README.md)
 - [YAML Schema Reference](yaml-schema.md)
 - [Collection Structure](collection-structure.md)

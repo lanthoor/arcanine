@@ -9,6 +9,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 ## Phase 1: Foundation & MVP Skeleton (Week 1)
 
 ### 1.1 Project Initialization with I18n & Theming
+
 1. Initialize Tauri 2.x project with Svelte 5 frontend
 2. Configure TypeScript with strict mode
 3. Set up i18n infrastructure (svelte-i18n or similar)
@@ -21,6 +22,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 10. Update README.md, CONTRIBUTING.md
 
 ### 1.2 Testing Infrastructure
+
 1. Install Vitest for frontend testing
 2. Configure Rust test framework
 3. Set up test coverage tools (c8, tarpaulin)
@@ -34,6 +36,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 11. Update README.md, CONTRIBUTING.md
 
 ### 1.3 Core Data Models (Minimal)
+
 1. Define basic `Request` struct (method, url, headers, body)
 2. Define basic `Response` struct (status, headers, body, time)
 3. Define `Collection` struct (name, requests list)
@@ -50,6 +53,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 ## Phase 2: MVP - Basic HTTP Client (Week 2)
 
 ### 2.1 Simple HTTP Service
+
 1. Add reqwest and tokio dependencies
 2. Create `HTTPService` struct
 3. Implement `execute_request()` for GET
@@ -62,6 +66,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 10. Test with real API endpoints
 
 ### 2.2 Request Storage (In-Memory First)
+
 1. Create in-memory request store
 2. Implement add/update/delete operations
 3. Implement list all requests
@@ -74,6 +79,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 10. Write comprehensive tests
 
 ### 2.3 Tauri Commands (MVP)
+
 1. Create `execute_request` command
 2. Create `save_request` command
 3. Create `list_requests` command
@@ -90,6 +96,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 ## Phase 3: MVP - Basic UI (Week 3)
 
 ### 3.1 Theme System Implementation
+
 1. Create CSS custom properties for themes
 2. Implement light theme colors
 3. Implement dark theme colors
@@ -102,6 +109,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 10. Document theme variables
 
 ### 3.2 I18n Setup
+
 1. Install i18n library
 2. Create language files (en.json initially)
 3. Set up translation keys structure
@@ -114,6 +122,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 10. Document translation workflow
 
 ### 3.3 Request List Component
+
 1. Create `RequestList.svelte` component
 2. Display list of requests
 3. Add request selection
@@ -126,6 +135,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 10. Add keyboard shortcuts
 
 ### 3.4 Simple Request Editor
+
 1. Create `RequestEditor.svelte` component
 2. Add method dropdown (GET, POST, PUT, DELETE, PATCH)
 3. Add URL input field
@@ -138,6 +148,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 10. Add validation
 
 ### 3.5 Basic Response Viewer
+
 1. Create `ResponseViewer.svelte` component
 2. Display status code with color coding
 3. Show response time
@@ -150,6 +161,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 10. Add copy functionality
 
 ### 3.6 Main App Layout
+
 1. Create app shell with sidebar
 2. Add request list in sidebar
 3. Add request editor in main area
@@ -166,6 +178,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 ## Phase 4: Persistence - File-Based Storage (Week 4)
 
 ### 4.1 YAML Storage Implementation
+
 1. Add serde_yaml dependency
 2. Create `YAMLStore` struct
 3. Implement save request to file
@@ -178,6 +191,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 10. Benchmark I/O performance
 
 ### 4.2 Collection File System
+
 1. Define collection directory structure
 2. Implement `collection.yaml` format
 3. Create collection loader
@@ -190,6 +204,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 10. Write comprehensive tests
 
 ### 4.3 File Management Commands
+
 1. Create `load_collection` Tauri command
 2. Create `save_collection` command
 3. Add `create_new_collection` command
@@ -202,6 +217,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 10. Write integration tests
 
 ### 4.4 UI Updates for Collections
+
 1. Add "Open Collection" menu item
 2. Add "New Collection" dialog
 3. Show collection name in UI
@@ -218,6 +234,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 ## Phase 5: Variables System (Week 5)
 
 ### 5.1 Variable Data Model
+
 1. Define `Variable` struct (name, value)
 2. Create collection variables map
 3. Add variables to collection model
@@ -230,6 +247,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 10. Write comprehensive tests
 
 ### 5.2 Variable Resolution Engine
+
 1. Create `VariableResolver` struct
 2. Implement regex for `{{varName}}` syntax
 3. Create variable extraction logic
@@ -242,6 +260,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 10. Write resolution tests
 
 ### 5.3 Variable Resolution in Requests
+
 1. Integrate resolver in HTTPService
 2. Resolve variables in URLs
 3. Resolve variables in headers
@@ -254,6 +273,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 10. Write integration tests
 
 ### 5.4 Variable Management UI
+
 1. Create `VariablesPanel.svelte` component
 2. Show list of collection variables
 3. Add create/edit/delete variable UI
@@ -270,6 +290,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 ## Phase 6: Environments System (Week 6)
 
 ### 6.1 Environment Data Model
+
 1. Define `Environment` struct
 2. Add variables map to environment
 3. Create environment file format
@@ -282,6 +303,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 10. Write comprehensive tests
 
 ### 6.2 Environment Storage
+
 1. Create `environments/` directory structure
 2. Implement environment YAML files
 3. Add environment loader
@@ -294,6 +316,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 10. Write storage tests
 
 ### 6.3 Variable Resolution with Environments
+
 1. Update resolver for environment variables
 2. Implement resolution order (collection → environment)
 3. Add environment-specific resolution
@@ -306,6 +329,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 10. Write comprehensive tests
 
 ### 6.4 Environment Management UI
+
 1. Create `EnvironmentSelector.svelte` dropdown
 2. Show active environment
 3. Add environment switching
@@ -322,6 +346,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 ## Phase 7: Secrets Management (Week 7)
 
 ### 7.1 Secrets Storage
+
 1. Define secrets file format (`.secrets.yaml`)
 2. Create gitignore for secrets files
 3. Implement secrets loader
@@ -334,6 +359,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 10. Write security tests
 
 ### 7.2 Secrets UI
+
 1. Add secrets indicator in variables panel
 2. Mask secret values in UI
 3. Add "Show/Hide" toggle for secrets
@@ -346,6 +372,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 10. Add accessibility for masked inputs
 
 ### 7.3 Template & Documentation
+
 1. Create `.secrets.template.yaml` example
 2. Add README for secrets setup
 3. Document secrets best practices
@@ -362,6 +389,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 ## Phase 8: Folders & Organization (Week 8)
 
 ### 8.1 Folder Data Model
+
 1. Define `Folder` struct with metadata
 2. Add `folder.yaml` format
 3. Support nested folders
@@ -374,6 +402,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 10. Write comprehensive tests
 
 ### 8.2 Folder File Operations
+
 1. Implement folder directory scanning
 2. Create recursive folder loader
 3. Build folder hierarchy tree
@@ -386,6 +415,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 10. Write file system tests
 
 ### 8.3 Collection Tree UI
+
 1. Create `CollectionTree.svelte` component
 2. Render hierarchical folder structure
 3. Add folder expand/collapse
@@ -398,6 +428,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 10. Add keyboard navigation
 
 ### 8.4 Folder Management
+
 1. Add "New Folder" action
 2. Implement drag-and-drop reordering
 3. Add context menu for folders
@@ -414,6 +445,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 ## Phase 9: Advanced Request Features (Week 9)
 
 ### 9.1 Query Parameters
+
 1. Add query params array to request model
 2. Implement query param builder
 3. Create query params editor UI
@@ -426,6 +458,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 10. Test edge cases
 
 ### 9.2 Multiple Body Types
+
 1. Support form-urlencoded body
 2. Support multipart/form-data
 3. Support XML body
@@ -438,6 +471,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 10. Add i18n strings
 
 ### 9.3 Authentication (Basic)
+
 1. Add auth type to request model
 2. Implement Bearer token auth
 3. Implement Basic authentication
@@ -450,6 +484,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 10. Document auth setup
 
 ### 9.4 Advanced Headers
+
 1. Add header enable/disable toggle
 2. Support header templates
 3. Add common headers dropdown
@@ -466,6 +501,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 ## Phase 10: Request History (Week 10)
 
 ### 10.1 SQLite History Setup
+
 1. Add sqlx dependency for SQLite
 2. Create database schema
 3. Create `history` table
@@ -478,6 +514,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 10. Write database tests
 
 ### 10.2 History Recording
+
 1. Implement `save_to_history()` function
 2. Capture request details
 3. Capture response data
@@ -490,6 +527,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 10. Benchmark performance
 
 ### 10.3 History Retrieval
+
 1. Implement `get_history()` with pagination
 2. Add filtering by request
 3. Add filtering by date range
@@ -502,6 +540,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 10. Write query tests
 
 ### 10.4 History UI
+
 1. Create `HistoryPanel.svelte` component
 2. Display history list
 3. Show request and response summary
@@ -518,6 +557,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 ## Phase 11: Scripts & Testing (Week 11)
 
 ### 11.1 Deno Runtime Integration
+
 1. Add deno_core dependency
 2. Initialize V8 isolate
 3. Create sandboxed runtime
@@ -530,6 +570,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 10. Benchmark performance
 
 ### 11.2 Script API - Core
+
 1. Expose `env.get()` function
 2. Expose `env.set()` function
 3. Expose `console.log()`
@@ -542,6 +583,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 10. Write API tests
 
 ### 11.3 Pre-request Scripts
+
 1. Add pre-request script field to model
 2. Execute script before request
 3. Allow request modification
@@ -554,6 +596,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 10. Write comprehensive tests
 
 ### 11.4 Post-response Scripts
+
 1. Add post-response script field
 2. Execute script after response
 3. Expose response object to script
@@ -566,6 +609,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 10. Write integration tests
 
 ### 11.5 Test Assertions
+
 1. Expose `assert()` function
 2. Add tests array to request model
 3. Execute test scripts after response
@@ -578,6 +622,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 10. Write testing tests
 
 ### 11.6 Script Editor UI
+
 1. Create `ScriptEditor.svelte` component
 2. Integrate Monaco editor
 3. Add syntax highlighting
@@ -594,6 +639,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 ## Phase 12: Response Processing (Week 12)
 
 ### 12.1 Enhanced Response Handling
+
 1. Implement JSON response parser
 2. Add JSON tree viewer
 3. Implement XML response parser
@@ -606,6 +652,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 10. Write comprehensive tests
 
 ### 12.2 Response Utilities
+
 1. Add "Copy response" button
 2. Add "Save to file" option
 3. Implement response formatting
@@ -618,6 +665,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 10. Polish UX
 
 ### 12.3 Response Statistics
+
 1. Display response time prominently
 2. Show response size
 3. Add header count
@@ -634,6 +682,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 ## Phase 13: Import/Export (Week 13)
 
 ### 13.1 Postman Import
+
 1. Create Postman v2.1 parser
 2. Map collection structure
 3. Convert request format
@@ -646,6 +695,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 10. Document import process
 
 ### 13.2 Export to Postman
+
 1. Implement Postman collection generator
 2. Map Arcanine to Postman format
 3. Convert scripts
@@ -658,6 +708,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 10. Document export process
 
 ### 13.3 cURL Import/Export
+
 1. Parse cURL command syntax
 2. Extract method, URL, headers, body
 3. Create request from cURL
@@ -670,6 +721,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 10. Document cURL support
 
 ### 13.4 OpenAPI Import (Basic)
+
 1. Parse OpenAPI 3.x YAML/JSON
 2. Extract paths and operations
 3. Generate requests from spec
@@ -686,6 +738,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 ## Phase 14: Additional Protocols (Week 14)
 
 ### 14.1 GraphQL Support
+
 1. Add GraphQL body type to model
 2. Create GraphQL request format
 3. Implement query execution
@@ -698,6 +751,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 10. Test with real GraphQL APIs
 
 ### 14.2 WebSocket Support (Basic)
+
 1. Add WebSocket connection type
 2. Implement connection handler
 3. Support sending messages
@@ -714,6 +768,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 ## Phase 15: Polish & Performance (Week 15)
 
 ### 15.1 Performance Optimization
+
 1. Benchmark collection loading
 2. Optimize YAML parsing
 3. Add virtual scrolling for large lists
@@ -726,6 +781,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 10. Document performance characteristics
 
 ### 15.2 Enhanced Theming
+
 1. Add more theme options (custom colors)
 2. Support high contrast mode
 3. Add theme presets (Ocean, Forest, etc.)
@@ -738,6 +794,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 10. Get design feedback
 
 ### 15.3 I18n Expansion
+
 1. Add Spanish translation (es.json)
 2. Add French translation (fr.json)
 3. Add German translation (de.json)
@@ -750,6 +807,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 10. Get native speaker review
 
 ### 15.4 Accessibility
+
 1. Add ARIA labels throughout
 2. Implement keyboard navigation
 3. Add focus indicators
@@ -762,6 +820,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 10. Document accessibility features
 
 ### 15.5 Error Handling & UX
+
 1. Improve error messages
 2. Add user-friendly error dialogs
 3. Implement error recovery
@@ -778,6 +837,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 ## Phase 16: Advanced Features (Week 16)
 
 ### 16.1 Advanced Authentication
+
 1. Implement OAuth 2.0 auth
 2. Support API Key auth
 3. Support Digest auth
@@ -790,6 +850,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 10. Document auth methods
 
 ### 16.2 Request Chaining
+
 1. Support response variable extraction
 2. Implement token refresh workflow
 3. Add request dependencies
@@ -802,6 +863,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 10. Document chaining
 
 ### 16.3 Bulk Operations
+
 1. Implement "Run folder" command
 2. Add parallel execution option
 3. Show bulk progress indicator
@@ -814,6 +876,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 10. Document bulk operations
 
 ### 16.4 Search & Filtering
+
 1. Implement global search
 2. Search in request names
 3. Search in URLs
@@ -830,6 +893,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 ## Phase 17: File Watching & Collaboration (Week 17)
 
 ### 17.1 File Watcher
+
 1. Add notify dependency
 2. Create FileWatcher service
 3. Watch collection directory
@@ -842,6 +906,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 10. Write watcher tests
 
 ### 17.2 Auto-Reload
+
 1. Implement collection reload on change
 2. Preserve UI state during reload
 3. Show reload notification
@@ -854,6 +919,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 10. Document collaboration workflow
 
 ### 17.3 Git Integration Helpers
+
 1. Add .gitignore template
 2. Create commit message helpers
 3. Show git status in UI (optional)
@@ -870,6 +936,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 ## Phase 18: Testing & Quality (Week 18)
 
 ### 18.1 Comprehensive Testing
+
 1. Audit unit test coverage (target 90%)
 2. Write missing unit tests
 3. Add integration tests
@@ -882,6 +949,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 10. Achieve coverage targets
 
 ### 18.2 Manual QA
+
 1. Create QA checklist
 2. Test all features manually
 3. Test theme switching
@@ -894,6 +962,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 10. Document known issues
 
 ### 18.3 Documentation
+
 1. Complete user guide
 2. Write API documentation
 3. Create video tutorials
@@ -910,6 +979,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 ## Phase 19: Release Preparation (Week 19)
 
 ### 19.1 Build & Package
+
 1. Configure production builds
 2. Optimize bundle size
 3. Set up code signing (macOS)
@@ -922,6 +992,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 10. Document build process
 
 ### 19.2 Release
+
 1. Create CHANGELOG.md
 2. Write release notes
 3. Update version numbers
@@ -938,12 +1009,14 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 ## Future Considerations
 
 ### Advanced Protocols
+
 - gRPC support with full streaming
 - Server-Sent Events (SSE)
 - MQTT protocol support
 - WebRTC support
 
 ### Developer Tools
+
 - Code generation (JavaScript, Python, Go, Rust, etc.)
 - API documentation generator from collections
 - Mock server built-in
@@ -951,6 +1024,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 - Performance profiling
 
 ### Team Collaboration
+
 - Shared workspaces
 - Request comments and reviews
 - Team activity feed
@@ -958,12 +1032,14 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 - Conflict resolution tools
 
 ### Cloud & Sync
+
 - Optional cloud backup (encrypted)
 - Cross-device sync
 - Team synchronization
 - Backup and restore
 
 ### Extensibility
+
 - Plugin system for custom protocols
 - Custom authentication methods
 - Custom script APIs
@@ -971,6 +1047,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 - Extension marketplace
 
 ### AI Integration
+
 - Request generation from descriptions
 - Automatic test generation
 - Smart variable suggestions
@@ -978,6 +1055,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 - Response validation suggestions
 
 ### Enterprise Features
+
 - Single Sign-On (SSO)
 - Role-Based Access Control (RBAC)
 - Audit logs and compliance
@@ -985,6 +1063,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 - Enterprise support
 
 ### Performance & Monitoring
+
 - APM integration
 - Request profiling
 - Performance monitoring
@@ -996,6 +1075,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 ## Success Metrics
 
 ### MVP (Phases 1-4)
+
 - ✅ Working HTTP client
 - ✅ File-based storage
 - ✅ Basic UI with themes and i18n
@@ -1003,6 +1083,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 - ✅ Documentation complete
 
 ### V1.0 (Phases 1-19)
+
 - ✅ All core features implemented
 - ✅ Multi-platform support
 - ✅ 90%+ test coverage
@@ -1011,6 +1092,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 - ✅ Positive user feedback
 
 ### Post V1.0
+
 - 📈 User adoption metrics
 - 📈 Community contributions
 - 📈 Plugin ecosystem growth

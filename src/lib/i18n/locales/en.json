@@ -1,0 +1,41 @@
+{
+  "app": {
+    "name": "Arcanine",
+    "description": "A modern, offline-first REST API client"
+  },
+  "menu": {
+    "file": "File",
+    "edit": "Edit",
+    "view": "View",
+    "help": "Help"
+  },
+  "actions": {
+    "new": "New",
+    "open": "Open",
+    "save": "Save",
+    "delete": "Delete",
+    "send": "Send",
+    "cancel": "Cancel",
+    "close": "Close"
+  },
+  "request": {
+    "title": "Request",
+    "method": "Method",
+    "url": "URL",
+    "headers": "Headers",
+    "body": "Body",
+    "response": "Response",
+    "status": "Status",
+    "time": "Time",
+    "size": "Size"
+  },
+  "theme": {
+    "light": "Light",
+    "dark": "Dark",
+    "toggle": "Toggle theme"
+  },
+  "language": {
+    "select": "Select language",
+    "english": "English"
+  }
+}

@@ -29,25 +29,25 @@ Arcanine supports importing and exporting collections from/to various formats, m
 
 ### Import Formats
 
-| Format | Version | Status | Notes |
-|--------|---------|--------|-------|
+| Format             | Version    | Status          | Notes                         |
+| ------------------ | ---------- | --------------- | ----------------------------- |
 | Postman Collection | v2.0, v2.1 | ✅ Full Support | Includes scripts, tests, auth |
-| Insomnia Workspace | v4 | ✅ Full Support | Includes environments |
-| OpenAPI/Swagger | 3.0, 3.1 | ✅ Full Support | Generates requests from spec |
-| HAR (HTTP Archive) | 1.2 | ⚠️ Partial | No authentication |
-| cURL Commands | - | ✅ Full Support | Single request import |
-| Arcanine YAML | 1.0 | ✅ Native | Full fidelity |
+| Insomnia Workspace | v4         | ✅ Full Support | Includes environments         |
+| OpenAPI/Swagger    | 3.0, 3.1   | ✅ Full Support | Generates requests from spec  |
+| HAR (HTTP Archive) | 1.2        | ⚠️ Partial      | No authentication             |
+| cURL Commands      | -          | ✅ Full Support | Single request import         |
+| Arcanine YAML      | 1.0        | ✅ Native       | Full fidelity                 |
 
 ### Export Formats
 
-| Format | Status | Notes |
-|--------|--------|-------|
-| Arcanine YAML | ✅ Full Support | Native format |
-| Postman Collection v2.1 | ✅ Full Support | For Postman users |
-| Insomnia v4 | ✅ Full Support | For Insomnia users |
-| OpenAPI 3.1 | ⚠️ Partial | Limited to HTTP requests |
-| cURL Commands | ✅ Full Support | Per-request export |
-| Markdown Documentation | ✅ Full Support | Human-readable docs |
+| Format                  | Status          | Notes                    |
+| ----------------------- | --------------- | ------------------------ |
+| Arcanine YAML           | ✅ Full Support | Native format            |
+| Postman Collection v2.1 | ✅ Full Support | For Postman users        |
+| Insomnia v4             | ✅ Full Support | For Insomnia users       |
+| OpenAPI 3.1             | ⚠️ Partial      | Limited to HTTP requests |
+| cURL Commands           | ✅ Full Support | Per-request export       |
+| Markdown Documentation  | ✅ Full Support | Human-readable docs      |
 
 ## Importing Collections
 
@@ -77,19 +77,20 @@ arcanine import postman \
 
 #### Postman Format Mapping
 
-| Postman | Arcanine | Notes |
-|---------|----------|-------|
-| Collection | Collection | Mapped to `collection.yaml` |
-| Folder | Folder | Creates `folder.yaml` |
-| Request | Request | Creates `.request.yaml` |
-| Environment | Environment | Creates `environments/*.yaml` |
-| Pre-request Script | Pre-request Script | Converted to Deno |
-| Test Script | Test | Converted to assertions |
-| Variables | Variables | Preserved |
+| Postman            | Arcanine           | Notes                         |
+| ------------------ | ------------------ | ----------------------------- |
+| Collection         | Collection         | Mapped to `collection.yaml`   |
+| Folder             | Folder             | Creates `folder.yaml`         |
+| Request            | Request            | Creates `.request.yaml`       |
+| Environment        | Environment        | Creates `environments/*.yaml` |
+| Pre-request Script | Pre-request Script | Converted to Deno             |
+| Test Script        | Test               | Converted to assertions       |
+| Variables          | Variables          | Preserved                     |
 
 #### Example Conversion
 
 **Postman:**
+
 ```json
 {
   "info": {
@@ -131,6 +132,7 @@ arcanine import postman \
 ```
 
 **Arcanine:**
+
 ```yaml
 # collection.yaml
 version: "1.0"
@@ -183,13 +185,13 @@ arcanine import insomnia \
 
 #### Insomnia Format Mapping
 
-| Insomnia | Arcanine | Notes |
-|----------|----------|-------|
-| Workspace | Collection | Root collection |
-| Folder | Folder | Hierarchical structure |
-| Request | Request | Full conversion |
-| Environment | Environment | Multiple environments |
-| Base Environment | Collection Variables | Global vars |
+| Insomnia         | Arcanine             | Notes                  |
+| ---------------- | -------------------- | ---------------------- |
+| Workspace        | Collection           | Root collection        |
+| Folder           | Folder               | Hierarchical structure |
+| Request          | Request              | Full conversion        |
+| Environment      | Environment          | Multiple environments  |
+| Base Environment | Collection Variables | Global vars            |
 
 ### From OpenAPI
 
@@ -240,6 +242,7 @@ arcanine import openapi \
 #### Example OpenAPI Import
 
 **OpenAPI:**
+
 ```yaml
 openapi: 3.1.0
 info:
@@ -261,6 +264,7 @@ paths:
 ```
 
 **Generated Arcanine Collection:**
+
 ```
 my-collection/
 ├── collection.yaml
@@ -381,7 +385,8 @@ arcanine export markdown \
 ```
 
 **Generated Markdown:**
-```markdown
+
+````markdown
 # My API Collection
 
 API endpoints for MyService
@@ -389,22 +394,27 @@ API endpoints for MyService
 ## Authentication
 
 ### Login
+
 `POST /auth/login`
 
 Authenticate user and get access token.
 
 **Headers:**
+
 - `Content-Type`: application/json
 
 **Body:**
+
 ```json
 {
   "email": "user@example.com",
   "password": "password123"
 }
 ```
+````
 
 **Response:**
+
 ```json
 {
   "accessToken": "eyJhbGc...",
@@ -414,7 +424,8 @@ Authenticate user and get access token.
   }
 }
 ```
-```
+
+````
 
 ## Format Conversion
 
@@ -429,41 +440,44 @@ pm.test("Status is 200", function() {
 });
 
 pm.environment.set("token", pm.response.json().token);
-```
+````
 
 **Arcanine:**
+
 ```javascript
 // Test
-assert(response.status === 200, "Expected status 200");
+assert(response.status === 200, 'Expected status 200');
 
 // Post-response script
 const data = response.json();
-env.set("token", data.token);
+env.set('token', data.token);
 ```
 
 #### Insomnia to Arcanine
 
 **Insomnia:**
+
 ```javascript
 const response = await insomnia.send();
-insomnia.environment.set("token", response.data.token);
+insomnia.environment.set('token', response.data.token);
 ```
 
 **Arcanine:**
+
 ```javascript
 // Happens automatically after request
 const data = response.json();
-env.set("token", data.token);
+env.set('token', data.token);
 ```
 
 ### Authentication Conversion
 
-| Source | Target | Conversion |
-|--------|--------|------------|
-| Postman Bearer | Arcanine Bearer | Direct mapping |
-| Postman OAuth2 | Arcanine OAuth2 | Configuration preserved |
-| Insomnia Basic | Arcanine Basic | Direct mapping |
-| OpenAPI Security | Arcanine Auth | Auto-detected |
+| Source           | Target          | Conversion              |
+| ---------------- | --------------- | ----------------------- |
+| Postman Bearer   | Arcanine Bearer | Direct mapping          |
+| Postman OAuth2   | Arcanine OAuth2 | Configuration preserved |
+| Insomnia Basic   | Arcanine Basic  | Direct mapping          |
+| OpenAPI Security | Arcanine Auth   | Auto-detected           |
 
 ## Migration Strategies
 
@@ -637,12 +651,14 @@ Source: postman_collection_v2.1.json
 Target: arcanine-collection/
 
 ### Changes Made:
+
 - Reorganized into feature-based folders
-- Converted pm.* APIs to Deno equivalents
+- Converted pm.\* APIs to Deno equivalents
 - Separated secrets into .secrets/ directory
 - Added comprehensive documentation
 
 ### Manual Adjustments Required:
+
 - Update team environment variables
 - Configure OAuth credentials
 - Review and test all scripts
@@ -679,6 +695,7 @@ git tag -a v1.0.0-imported -m "Imported from Postman"
 ---
 
 For more information:
+
 - [Architecture Overview](README.md)
 - [Collection Structure](collection-structure.md)
 - [Environment Management](environments.md)

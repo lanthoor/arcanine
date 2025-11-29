@@ -15,6 +15,7 @@ Complete guide to organizing and structuring collections in Arcanine.
 ## Overview
 
 Arcanine uses a file-based structure where:
+
 - Each request is a separate YAML file
 - Folders contain a `folder.yaml` metadata file
 - Collections have a `collection.yaml` root file
@@ -69,15 +70,15 @@ my-api-collection/
 
 ### File Types
 
-| File | Purpose | Required |
-|------|---------|----------|
-| `collection.yaml` | Collection metadata and global settings | Yes |
-| `folder.yaml` | Folder metadata and settings | Yes (for folders) |
-| `*.request.yaml` | Individual request definition | Yes (for requests) |
-| `environment.yaml` | Environment variables | Yes (in environments/) |
-| `.secrets.yaml` | Secret values (gitignored) | No |
-| `.gitignore` | Git ignore rules | Recommended |
-| `README.md` | Collection documentation | Recommended |
+| File               | Purpose                                 | Required               |
+| ------------------ | --------------------------------------- | ---------------------- |
+| `collection.yaml`  | Collection metadata and global settings | Yes                    |
+| `folder.yaml`      | Folder metadata and settings            | Yes (for folders)      |
+| `*.request.yaml`   | Individual request definition           | Yes (for requests)     |
+| `environment.yaml` | Environment variables                   | Yes (in environments/) |
+| `.secrets.yaml`    | Secret values (gitignored)              | No                     |
+| `.gitignore`       | Git ignore rules                        | Recommended            |
+| `README.md`        | Collection documentation                | Recommended            |
 
 ## Naming Conventions
 
@@ -96,6 +97,7 @@ api_v2/
 ```
 
 **Rules:**
+
 - Use kebab-case (lowercase with hyphens)
 - Be descriptive
 - Avoid spaces and special characters
@@ -117,6 +119,7 @@ AdminOps/
 ```
 
 **Rules:**
+
 - Use kebab-case
 - Be descriptive but concise
 - Group related requests logically
@@ -138,6 +141,7 @@ profile_update.request.yaml
 ```
 
 **Rules:**
+
 - Use kebab-case
 - Start with verb (get, post, create, update, delete)
 - Must end with `.request.yaml`
@@ -160,6 +164,7 @@ local.yaml
 ```
 
 **Rules:**
+
 - Use kebab-case
 - Be explicit about environment
 - Use `.yaml` extension (not `.yml`)
@@ -218,6 +223,7 @@ users/folder.yaml: order: 30
 ### Handling Order Conflicts
 
 If two items have the same order:
+
 - They will be sorted alphabetically by filename
 - Consider using decimal values: `order: 15.5`
 - Or reassign orders to maintain clarity
@@ -334,21 +340,21 @@ DeleteUser.request.yaml
 Document folder purpose in `folder.yaml`:
 
 ```yaml
-version: "1.0"
-name: "User Management"
+version: '1.0'
+name: 'User Management'
 order: 10
 
 documentation: |
   # User Management Endpoints
-  
+
   These endpoints handle all user-related operations:
   - User CRUD operations
   - Profile management
   - User preferences
-  
+
   ## Authentication
   All endpoints require Bearer token authentication.
-  
+
   ## Rate Limits
   - 100 requests per minute per user
   - 1000 requests per hour per user
@@ -430,11 +436,11 @@ api/
 # login.request.yaml
 documentation: |
   # Login Endpoint
-  
+
   ## Returns
   - accessToken: Use this for subsequent authenticated requests
   - refreshToken: Use this to refresh the access token
-  
+
   ## Next Steps
   After login, use the accessToken in the Authorization header:
   - See: get-profile.request.yaml
@@ -660,6 +666,7 @@ microservices/
 ---
 
 For more information:
+
 - [Architecture Overview](README.md)
 - [YAML Schema Reference](yaml-schema.md)
 - [Environment Management](environments.md)
