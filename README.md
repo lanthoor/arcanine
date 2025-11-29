@@ -187,8 +187,12 @@ npm run check
 npm run lint
 npm run format
 
-# Run Rust tests
-cd src-tauri && cargo test
+# Testing
+npm run test              # Frontend tests (watch mode)
+npm run test:run          # Frontend tests (single run)
+npm run test:coverage     # Frontend coverage report
+npm run test:rust         # Backend tests
+npm run test:rust:coverage # Backend coverage report
 ```
 
 [→ Complete development guide](CONTRIBUTING.md#development-setup)

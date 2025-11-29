@@ -75,6 +75,7 @@ export async function loadTranslations(localeCode: string): Promise<void> {
   }
 }
 
-export function setLocale(localeCode: string): void {
+export async function setLocale(localeCode: string): Promise<void> {
+  await loadTranslations(localeCode);
   locale.set(localeCode);
 }

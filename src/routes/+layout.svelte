@@ -2,7 +2,7 @@
   import { onMount } from 'svelte';
   import '../app.css';
   import { initializeTheme } from '$lib/stores/theme';
-  import { loadTranslations, locale } from '$lib/i18n';
+  import { loadTranslations } from '$lib/i18n';
 
   onMount(async () => {
     // Initialize theme system

@@ -200,11 +200,13 @@ cd src-tauri && cargo fmt
 # Run Rust linter
 cd src-tauri && cargo clippy
 
-# Run Rust tests
-cd src-tauri && cargo test
+# Run tests
+npm run test              # Frontend tests (watch mode)
+npm run test:run          # Frontend tests (single run)
+npm run test:coverage     # Frontend coverage
+npm run test:rust         # Backend tests
+npm run test:rust:coverage # Backend coverage
 ```
-
-**Note**: Frontend tests will be added in Phase 1.2 with Vitest.
 
 ## Coding Standards
 
@@ -216,7 +218,7 @@ cd src-tauri && cargo test
   - Single quotes
   - Trailing commas
   - Svelte plugin enabled
-- **Linting**: Use ESLint (configured in `.eslintrc.cjs`)
+- **Linting**: Use ESLint (configured in `eslint.config.js`)
   - TypeScript ESLint parser
   - Svelte plugin enabled
 - **TypeScript**: Strict mode enabled (`strict: true`)
@@ -481,41 +483,52 @@ arcanine/
 
 ## Testing
 
-**Note**: Comprehensive testing infrastructure will be added in Phase 1.2. For now:
-
 ### Frontend Tests
 
 ```bash
-# Type checking (current)
-npm run check
+# Run tests in watch mode
+npm run test
 
-# Vitest will be added in Phase 1.2
-# npm run test
-# npm run test:watch
-# npm run test:coverage
+# Run tests once
+npm run test:run
+
+# Run with UI
+npm run test:ui
+
+# Generate coverage report
+npm run test:coverage
 ```
+
+**Stack**: Vitest, Happy-DOM, @testing-library/svelte, @vitest/coverage-v8
 
 ### Backend Tests
 
 ```bash
 # Run all Rust tests
-cd src-tauri && cargo test
+npm run test:rust
 
 # Run specific test
-cargo test test_name
+cd src-tauri && cargo test test_name
 
 # Run tests with output
-cargo test -- --nocapture
+cd src-tauri && cargo test -- --nocapture
 
-# Rust test framework is ready, tests will be added in Phase 1.3+
+# Generate coverage report
+npm run test:rust:coverage
 ```
+
+**Stack**: Rust built-in test framework, cargo-tarpaulin for coverage
 
 ### Coverage Goals
 
 - Target: **90%+ test coverage** across all phases
-- Frontend: Vitest + Testing Library
-- Backend: Rust built-in test framework + Tarpaulin for coverage
-- CI/CD: GitHub Actions (Phase 1.2)
+- Frontend: Vitest + @testing-library/svelte + Happy-DOM + v8 coverage
+- Backend: Rust built-in test framework + cargo-tarpaulin
+- CI/CD: GitHub Actions with Codecov integration
+
+### Test Documentation
+
+See [Testing Documentation](docs/architecture/testing.md) for detailed testing guide.
 
 ### Writing Tests
 

@@ -1,17 +1,15 @@
 <script lang="ts">
   import { theme, toggleTheme } from '$lib/stores/theme';
   import { t } from '$lib/i18n';
-
-  $: currentTheme = $theme;
 </script>
 
 <button
-  on:click={toggleTheme}
+  onclick={toggleTheme}
   class="theme-toggle"
   aria-label={$t('theme.toggle')}
   title={$t('theme.toggle')}
 >
-  {#if currentTheme === 'light'}
+  {#if $theme === 'light'}
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="20"
