@@ -1,0 +1,20 @@
+# Nextest configuration for JUnit XML output
+
+[profile.ci]
+# Store test results in JUnit XML format
+junit = { path = "junit.xml" }
+
+# Continue running tests even if some fail
+fail-fast = false
+
+# Run tests with a single thread for better stability
+test-threads = 1
+
+# Show test output for failures
+failure-output = "immediate-final"
+
+# Show test output for successful tests too (for debugging)
+success-output = "never"
+
+# Retry flaky tests up to 2 times
+retries = 2

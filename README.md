@@ -8,6 +8,8 @@
 [![Built with Tauri](https://img.shields.io/badge/Built%20with-Tauri-24C8D8?logo=tauri)](https://tauri.app)
 [![Powered by Svelte](https://img.shields.io/badge/Powered%20by-Svelte-FF3E00?logo=svelte)](https://svelte.dev)
 
+[![codecov](https://codecov.io/github/lanthoor/arcanine/branch/main/graph/badge.svg?token=7F7EGPIEHI)](https://codecov.io/github/lanthoor/arcanine)
+
 [Features](#features) • [Installation](#installation) • [Quick Start](#quick-start) • [Documentation](#documentation)
 
 </div>

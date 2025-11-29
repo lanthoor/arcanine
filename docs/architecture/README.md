@@ -151,8 +151,9 @@ arcanine/
 │
 ├── src-tauri/                   # Backend (Rust)
 │   ├── src/
+│   │   ├── lib.rs               # Library exports
 │   │   ├── main.rs              # Application entry point
-│   │   ├── commands/            # Tauri command handlers
+│   │   ├── commands/            # Tauri command handlers (TODO)
 │   │   │   ├── mod.rs
 │   │   │   ├── request.rs       # HTTP/GraphQL/WS/gRPC
 │   │   │   ├── collection.rs    # Collection CRUD
@@ -160,12 +161,12 @@ arcanine/
 │   │   │   ├── history.rs       # History operations
 │   │   │   ├── script.rs        # Script execution
 │   │   │   └── auth.rs          # Authentication
-│   │   ├── models/              # Data structures
-│   │   │   ├── mod.rs
-│   │   │   ├── request.rs       # Request model
-│   │   │   ├── response.rs      # Response model
-│   │   │   ├── collection.rs    # Collection model
-│   │   │   └── environment.rs   # Environment model
+│   │   ├── models/              # Data structures ✅ COMPLETE
+│   │   │   ├── mod.rs           # Module exports
+│   │   │   ├── error.rs         # Error types and ModelResult
+│   │   │   ├── request.rs       # Request model with HttpMethod
+│   │   │   ├── response.rs      # Response model with Duration
+│   │   │   └── collection.rs    # Collection model with metadata
 │   │   ├── services/            # Business logic
 │   │   │   ├── mod.rs
 │   │   │   ├── http_service.rs  # HTTP client
@@ -609,6 +610,7 @@ Future plugin system will allow:
 
 For more detailed information, see:
 
+- [Data Models](data-models.md) - Request, Response, Collection models ✅
 - [YAML Schema Reference](yaml-schema.md)
 - [Scripting Guide](scripting.md)
 - [Authentication Guide](authentication.md)

@@ -31,7 +31,9 @@ yarn-error.log*
 
 # Test coverage
 coverage/
+coverage-rust/
 .nyc_output/
+test-results/
 
 # Build artifacts
 dist/
