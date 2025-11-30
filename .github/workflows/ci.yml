@@ -99,10 +99,18 @@ jobs:
         working-directory: src-tauri
         run: cargo test --verbose
 
+      - name: Cache cargo-nextest
+        id: cache-nextest
+        uses: actions/cache@v4
+        with:
+          path: ~/.cargo/bin/cargo-nextest
+          key: ${{ runner.os }}-cargo-nextest-0.9.86
+
       - name: Install cargo-nextest
+        if: steps.cache-nextest.outputs.cache-hit != 'true'
         uses: taiki-e/install-action@v2
         with:
-          tool: cargo-nextest
+          tool: cargo-nextest@0.9.86
 
       - name: Run tests with JUnit output
         working-directory: src-tauri
