@@ -243,11 +243,12 @@
 ### DevOps
 
 - **CI/CD**: GitHub Actions
-- **Coverage**: cargo-tarpaulin (cached, 80% enforced)
+- **Coverage**: cargo-tarpaulin (cached, 80% enforced, skip-clean optimization)
 - **Test Reporting**: JUnit XML (vitest + cargo-nextest)
 - **Test Results**: Codecov test-results-action@v1
 - **Permissions**: Least-privilege (contents:read)
 - **Concurrency**: Cancel-in-progress
+- **Optimization**: Parallel test execution, reused build artifacts
 
 ---
 
@@ -714,7 +715,8 @@ arcanine/
 - **Coverage**: Upload to Codecov (80% backend enforced)
 - **Test Results**: JUnit XML uploaded to Codecov
 - **Test Reporting**: cargo-nextest with retries (2x)
-- **Performance**: Tarpaulin caching saves ~5min per run
+- **Performance**: Tarpaulin caching + skip-clean saves ~5min per run
+- **Parallelization**: Full CPU core utilization for test execution
 - **Security**: Least-privilege permissions
 
 ---

@@ -133,7 +133,7 @@ jobs:
         # if: matrix.os == 'ubuntu-latest'
         working-directory: src-tauri
         run: |
-          cargo tarpaulin --out Lcov --output-dir ../coverage-rust --fail-under 80 -- --test-threads 1
+          cargo tarpaulin --skip-clean --out Lcov --output-dir ../coverage-rust --fail-under 80
 
       - name: Upload test results to Codecov
         if: ${{ !cancelled() }}
