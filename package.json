@@ -1,6 +1,6 @@
 {
   "name": "arcanine",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "",
   "type": "module",
   "scripts": {
@@ -15,7 +15,7 @@
     "test:run": "vitest run",
     "test:coverage": "vitest run --coverage",
     "test:rust": "cd src-tauri && cargo test",
-    "test:rust:coverage": "cd src-tauri && cargo tarpaulin --out Lcov --output-dir ../coverage-rust --fail-under 80",
+    "test:rust:coverage": "cd src-tauri && cargo tarpaulin --skip-clean --out Lcov --output-dir ../coverage-rust --fail-under 80",
     "test:rust:nextest": "cd src-tauri && cargo nextest run --profile ci",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
