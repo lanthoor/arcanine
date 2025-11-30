@@ -6,6 +6,46 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 
 ---
 
+## Development Guidelines
+
+### Pre-Commit Validation (Required for ALL Phases)
+
+Before committing any changes, **ALWAYS** run the following validation steps in order:
+
+1. **Frontend Linting**: `npm run lint`
+2. **Frontend Type Check**: `npm run check`
+3. **Frontend Tests**: `npm run test:run`
+4. **Frontend Coverage**: `npm run test:coverage` (verify 75%+ coverage)
+5. **Rust Formatting**: `cd src-tauri && cargo fmt --check`
+6. **Rust Linting**: `cd src-tauri && cargo clippy -- -D warnings`
+7. **Rust Tests**: `npm run test:rust`
+8. **Rust Coverage**: `npm run test:rust:coverage` (verify 80%+ coverage)
+9. **Build Verification**: `npm run build` (ensure no build errors)
+
+**Shortcuts**:
+
+- Frontend validation: `npm run lint && npm run check && npm run test:coverage`
+- Rust validation: `cd src-tauri && cargo fmt --check && cargo clippy -- -D warnings && cd .. && npm run test:rust:coverage`
+- Full validation: Run all steps above sequentially
+
+**Important**: Never commit code that fails any of these checks. CI will reject it.
+
+### Phase Completion Checklist
+
+For each phase, ensure:
+
+- ✅ All tasks completed
+- ✅ All validation steps pass
+- ✅ Coverage thresholds met (Frontend: 75%+, Rust: 80%+)
+- ✅ No linting or clippy warnings
+- ✅ Documentation updated
+- ✅ Version incremented appropriately
+- ✅ Git commit with conventional commit message
+- ✅ Changes pushed to feature branch
+- ✅ Pull request created and reviewed
+
+---
+
 ## Phase 1: Foundation & MVP Skeleton (Week 1)
 
 ### 1.1 Project Initialization with I18n & Theming
@@ -20,7 +60,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Set up package.json with dependencies
 9. Configure code formatters (Prettier, rustfmt)
 10. Update README.md, CONTRIBUTING.md
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ### 1.2 Testing Infrastructure
 
@@ -34,7 +74,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Target 90% coverage from start
 9. Create test utilities
 10. Document testing approach
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ### 1.3 Core Data Models (Minimal)
 
@@ -48,7 +88,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Create builder patterns
 9. Test all models (95% coverage)
 10. Document model structures
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ---
 
@@ -66,7 +106,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Measure response time
 9. Test each HTTP method
 10. Test with real API endpoints
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ### 2.2 Request Storage (In-Memory First)
 
@@ -80,7 +120,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Test edge cases
 9. Benchmark performance
 10. Write comprehensive tests
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ### 2.3 Tauri Commands (MVP)
 
@@ -94,7 +134,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Add request validation
 9. Test concurrent commands
 10. Write integration tests
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ---
 
@@ -112,7 +152,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Add smooth theme transitions
 9. Test on all components
 10. Document theme variables
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ### 3.2 I18n Setup
 
@@ -126,7 +166,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Persist language preference
 9. Test with missing keys
 10. Document translation workflow
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ### 3.3 Request List Component
 
@@ -140,7 +180,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Add i18n strings
 9. Test interactions
 10. Add keyboard shortcuts
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ### 3.4 Simple Request Editor
 
@@ -154,7 +194,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Add i18n labels
 9. Test form inputs
 10. Add validation
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ### 3.5 Basic Response Viewer
 
@@ -168,7 +208,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Add i18n strings
 9. Test various responses
 10. Add copy functionality
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ### 3.6 Main App Layout
 
@@ -182,7 +222,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Test layout on different sizes
 9. Add loading states
 10. Polish UI/UX
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ---
 
@@ -200,7 +240,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Test file operations
 9. Test malformed YAML handling
 10. Benchmark I/O performance
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ### 4.2 Collection File System
 
@@ -214,7 +254,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Test collection loading
 9. Test with large collections
 10. Write comprehensive tests
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ### 4.3 File Management Commands
 
@@ -228,7 +268,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Test on all platforms
 9. Add error recovery
 10. Write integration tests
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ### 4.4 UI Updates for Collections
 
@@ -242,7 +282,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Add i18n for dialogs
 9. Apply theming to dialogs
 10. Test full workflow
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ---
 
@@ -260,7 +300,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Add variable documentation
 9. Test edge cases
 10. Write comprehensive tests
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ### 5.2 Variable Resolution Engine
 
@@ -274,7 +314,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Test special characters
 9. Benchmark performance
 10. Write resolution tests
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ### 5.3 Variable Resolution in Requests
 
@@ -288,7 +328,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Test with real requests
 9. Handle circular references
 10. Write integration tests
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ### 5.4 Variable Management UI
 
@@ -302,7 +342,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Add i18n strings
 9. Test variable management
 10. Add keyboard shortcuts
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ---
 
@@ -320,7 +360,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Add validation
 9. Document environment structure
 10. Write comprehensive tests
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ### 6.2 Environment Storage
 
@@ -334,7 +374,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Handle missing environments
 9. Test environment switching
 10. Write storage tests
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ### 6.3 Variable Resolution with Environments
 
@@ -348,7 +388,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Test resolution order
 9. Benchmark performance
 10. Write comprehensive tests
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ### 6.4 Environment Management UI
 
@@ -362,7 +402,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Add i18n strings
 9. Test environment switching
 10. Add quick-switch keyboard shortcut
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ---
 
@@ -380,7 +420,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Handle missing secrets gracefully
 9. Add secrets documentation
 10. Write security tests
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ### 7.2 Secrets UI
 
@@ -394,7 +434,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Add i18n for security messages
 9. Test secrets handling
 10. Add accessibility for masked inputs
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ### 7.3 Template & Documentation
 
@@ -408,7 +448,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Create video tutorial script
 9. Test documentation clarity
 10. Get user feedback
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ---
 
@@ -426,7 +466,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Support root-level requests
 9. Document structure
 10. Write comprehensive tests
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ### 8.2 Folder File Operations
 
@@ -440,7 +480,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Handle nested folders
 9. Test ordering
 10. Write file system tests
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ### 8.3 Collection Tree UI
 
@@ -454,7 +494,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Add i18n strings
 9. Test tree rendering
 10. Add keyboard navigation
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ### 8.4 Folder Management
 
@@ -468,7 +508,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Add undo/redo
 9. Test with deep nesting
 10. Polish UX
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ---
 
@@ -486,7 +526,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Add i18n labels
 9. Test param handling
 10. Test edge cases
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ### 9.2 Multiple Body Types
 
@@ -500,7 +540,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Add syntax highlighting
 9. Apply theming to editors
 10. Add i18n strings
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ### 9.3 Authentication (Basic)
 
@@ -514,7 +554,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Add i18n for auth types
 9. Test with real APIs
 10. Document auth setup
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ### 9.4 Advanced Headers
 
@@ -528,7 +568,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Add i18n for headers
 9. Test header handling
 10. Add header documentation
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ---
 
@@ -546,7 +586,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Handle migrations
 9. Test concurrent access
 10. Write database tests
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ### 10.2 History Recording
 
@@ -560,7 +600,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Handle save errors
 9. Test with many requests
 10. Benchmark performance
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ### 10.3 History Retrieval
 
@@ -574,7 +614,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Test pagination
 9. Optimize query performance
 10. Write query tests
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ### 10.4 History UI
 
@@ -588,7 +628,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Apply theming to panel
 9. Add i18n strings
 10. Test history UI
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ---
 
@@ -606,7 +646,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Test timeout enforcement
 9. Test security restrictions
 10. Benchmark performance
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ### 11.2 Script API - Core
 
@@ -620,7 +660,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Test console output capture
 9. Document script API
 10. Write API tests
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ### 11.3 Pre-request Scripts
 
@@ -634,7 +674,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Test error handling
 9. Add script examples
 10. Write comprehensive tests
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ### 11.4 Post-response Scripts
 
@@ -648,7 +688,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Test with real responses
 9. Add script examples
 10. Write integration tests
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ### 11.5 Test Assertions
 
@@ -662,7 +702,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Test multiple assertions
 9. Create test examples
 10. Write testing tests
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ### 11.6 Script Editor UI
 
@@ -676,7 +716,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Apply theming to editor
 9. Add i18n strings
 10. Test editor functionality
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ---
 
@@ -694,7 +734,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Test each response type
 9. Add response search
 10. Write comprehensive tests
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ### 12.2 Response Utilities
 
@@ -708,7 +748,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Add i18n strings
 9. Test all utilities
 10. Polish UX
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ### 12.3 Response Statistics
 
@@ -722,7 +762,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Apply theming to stats
 9. Add i18n labels
 10. Create stats documentation
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ---
 
@@ -740,7 +780,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Add import UI dialog
 9. Test with real collections
 10. Document import process
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ### 13.2 Export to Postman
 
@@ -754,7 +794,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Test round-trip conversion
 9. Apply i18n to export
 10. Document export process
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ### 13.3 cURL Import/Export
 
@@ -768,7 +808,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Handle edge cases
 9. Add i18n strings
 10. Document cURL support
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ### 13.4 OpenAPI Import (Basic)
 
@@ -782,7 +822,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Test with real specs
 9. Add i18n for import
 10. Document OpenAPI import
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ---
 
@@ -800,7 +840,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Apply theming to editor
 9. Add i18n strings
 10. Test with real GraphQL APIs
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ### 14.2 WebSocket Support (Basic)
 
@@ -814,7 +854,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Handle disconnections
 9. Apply theming to panel
 10. Add i18n strings
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ---
 
@@ -832,7 +872,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Reduce bundle size
 9. Test with large collections (1000+ requests)
 10. Document performance characteristics
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ### 15.2 Enhanced Theming
 
@@ -846,7 +886,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Test accessibility
 9. Add theme documentation
 10. Get design feedback
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ### 15.3 I18n Expansion
 
@@ -860,7 +900,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Document translation contribution
 9. Add language-specific formats (dates, numbers)
 10. Get native speaker review
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ### 15.4 Accessibility
 
@@ -874,7 +914,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Add keyboard shortcuts panel
 9. Test with accessibility tools
 10. Document accessibility features
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ### 15.5 Error Handling & UX
 
@@ -888,7 +928,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Test all error paths
 9. Apply theming to errors
 10. Add i18n for errors
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ---
 
@@ -906,7 +946,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Apply theming to auth UI
 9. Add i18n strings
 10. Document auth methods
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ### 16.2 Request Chaining
 
@@ -920,7 +960,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Apply theming to chain UI
 9. Add i18n for chains
 10. Document chaining
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ### 16.3 Bulk Operations
 
@@ -934,7 +974,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Apply theming to bulk UI
 9. Add i18n strings
 10. Document bulk operations
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ### 16.4 Search & Filtering
 
@@ -948,7 +988,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Test search performance
 9. Apply theming to search
 10. Add i18n for search
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ---
 
@@ -966,7 +1006,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Handle watcher errors
 9. Add OS-specific optimizations
 10. Write watcher tests
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ### 17.2 Auto-Reload
 
@@ -980,7 +1020,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Add i18n for reload messages
 9. Test concurrent edits
 10. Document collaboration workflow
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ### 17.3 Git Integration Helpers
 
@@ -994,7 +1034,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Add i18n for git messages
 9. Create git tutorial
 10. Get team feedback
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ---
 
@@ -1012,7 +1052,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Test with real APIs
 9. Test error scenarios
 10. Achieve coverage targets
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ### 18.2 Manual QA
 
@@ -1026,7 +1066,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Get beta user feedback
 9. Fix identified bugs
 10. Document known issues
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ### 18.3 Documentation
 
@@ -1040,7 +1080,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Write contribution guide
 9. Review all docs
 10. Get documentation feedback
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ---
 
@@ -1058,7 +1098,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Set up auto-updater
 9. Test update mechanism
 10. Document build process
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ### 19.2 Release
 
@@ -1072,7 +1112,7 @@ A pragmatic step-by-step development plan starting with a working MVP, then incr
 8. Update website/docs
 9. Announce release
 10. Monitor feedback
-11. Update version, documentation and work log
+11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
 ---
 

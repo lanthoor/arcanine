@@ -1,0 +1,144 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  create-release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+      version: ${{ steps.get_version.outputs.version }}
+    steps:
+      - name: Get version from tag
+        id: get_version
+        run: echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+
+  build:
+    name: Build ${{ matrix.platform }}
+    needs: create-release
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: 'macos-latest'
+            args: '--target universal-apple-darwin'
+            target: 'universal-apple-darwin'
+            arch: 'universal'
+          - platform: 'ubuntu-latest'
+            args: ''
+            target: 'x86_64-unknown-linux-gnu'
+            arch: 'x86_64'
+          - platform: 'windows-latest'
+            args: ''
+            target: 'x86_64-pc-windows-msvc'
+            arch: 'x86_64'
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - name: Install Linux dependencies
+        if: matrix.platform == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+
+      - name: Cache Rust dependencies
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+
+      - name: Install dependencies (production only)
+        run: npm ci --omit=dev
+
+      - name: Install build dependencies
+        run: npm install --no-save @sveltejs/adapter-static @sveltejs/kit vite
+
+      - name: Build frontend
+        run: npm run build
+
+      - name: Build Tauri app
+        run: npm run tauri build -- ${{ matrix.args }}
+
+      - name: Upload macOS artifacts
+        if: matrix.platform == 'macos-latest'
+        run: |
+          # Upload DMG
+          DMG_PATH=$(find src-tauri/target/${{ matrix.target }}/release/bundle/dmg -name "*.dmg" | head -n 1)
+          if [ -n "$DMG_PATH" ]; then
+            gh release upload ${{ github.ref_name }} "$DMG_PATH" --clobber
+          fi
+          
+          # Upload .app as tarball
+          APP_PATH="src-tauri/target/${{ matrix.target }}/release/bundle/macos/arcanine.app"
+          TAR_PATH="arcanine-${{ needs.create-release.outputs.version }}-macos-${{ matrix.arch }}.tar.gz"
+          tar -czf "$TAR_PATH" -C "$(dirname "$APP_PATH")" "$(basename "$APP_PATH")"
+          gh release upload ${{ github.ref_name }} "$TAR_PATH" --clobber
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Linux artifacts
+        if: matrix.platform == 'ubuntu-latest'
+        run: |
+          # Upload .deb
+          DEB_PATH=$(find src-tauri/target/${{ matrix.target }}/release/bundle/deb -name "*.deb" | head -n 1)
+          if [ -n "$DEB_PATH" ]; then
+            gh release upload ${{ github.ref_name }} "$DEB_PATH" --clobber
+          fi
+          
+          # Upload AppImage
+          APPIMAGE_PATH=$(find src-tauri/target/${{ matrix.target }}/release/bundle/appimage -name "*.AppImage" | head -n 1)
+          if [ -n "$APPIMAGE_PATH" ]; then
+            gh release upload ${{ github.ref_name }} "$APPIMAGE_PATH" --clobber
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Windows artifacts
+        if: matrix.platform == 'windows-latest'
+        shell: bash
+        run: |
+          # Upload MSI
+          MSI_PATH=$(find src-tauri/target/${{ matrix.target }}/release/bundle/msi -name "*.msi" | head -n 1)
+          if [ -n "$MSI_PATH" ]; then
+            gh release upload ${{ github.ref_name }} "$MSI_PATH" --clobber
+          fi
+          
+          # Upload NSIS installer
+          NSIS_PATH=$(find src-tauri/target/${{ matrix.target }}/release/bundle/nsis -name "*-setup.exe" | head -n 1)
+          if [ -n "$NSIS_PATH" ]; then
+            gh release upload ${{ github.ref_name }} "$NSIS_PATH" --clobber
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
