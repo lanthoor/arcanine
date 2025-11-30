@@ -192,6 +192,55 @@
 
 ---
 
+## Development Workflow
+
+### Pre-Commit Validation (Required)
+
+All code changes **MUST** pass these validation steps before committing:
+
+**Frontend Validation:**
+
+```bash
+npm run lint              # ESLint check
+npm run check             # TypeScript/Svelte check
+npm run test:coverage     # Tests with coverage (≥75%)
+```
+
+**Backend Validation:**
+
+```bash
+cd src-tauri && cargo fmt --check  # Rust formatting check
+cd src-tauri && cargo clippy -- -D warnings  # Rust linting
+npm run test:rust:coverage  # Rust tests with coverage (≥80%)
+```
+
+**Build Verification:**
+
+```bash
+npm run build  # Ensure production build succeeds
+```
+
+**Quick Validation Scripts:**
+
+- All frontend: `npm run lint && npm run check && npm run test:coverage`
+- All backend: `cd src-tauri && cargo fmt --check && cargo clippy -- -D warnings && cd .. && npm run test:rust:coverage`
+- Full validation: Run all steps above sequentially
+
+### Quality Gates
+
+| Check             | Threshold  | Enforced |
+| ----------------- | ---------- | -------- |
+| Frontend Coverage | ≥75%       | ✅ CI    |
+| Backend Coverage  | ≥80%       | ✅ CI    |
+| ESLint            | 0 errors   | ✅ CI    |
+| Clippy            | 0 warnings | ✅ CI    |
+| TypeScript        | 0 errors   | ✅ CI    |
+| Build             | Success    | ✅ CI    |
+
+**Note**: Pre-commit hooks automatically run formatters (Prettier, rustfmt) but validation must be run manually.
+
+---
+
 ## Development Metrics
 
 ### Overall Progress
