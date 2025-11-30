@@ -78,6 +78,8 @@ impl Default for HTTPService {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use wiremock::matchers::{body_string, header, method, path};
+    use wiremock::{Mock, MockServer, ResponseTemplate};
 
     #[tokio::test]
     async fn test_http_service_creation() {
@@ -87,9 +89,17 @@ mod tests {
 
     #[tokio::test]
     async fn test_get_request() {
+        let mock_server = MockServer::start().await;
+
+        Mock::given(method("GET"))
+            .and(path("/get"))
+            .respond_with(ResponseTemplate::new(200).set_body_string(r#"{"status":"ok"}"#))
+            .mount(&mock_server)
+            .await;
+
         let service = HTTPService::new().unwrap();
-        let request =
-            Request::new("Test GET", "https://httpbin.org/get").with_method(HttpMethod::Get);
+        let request = Request::new("Test GET", &format!("{}/get", mock_server.uri()))
+            .with_method(HttpMethod::Get);
 
         let response = service.execute_request(&request).await;
         assert!(response.is_ok());
@@ -101,8 +111,18 @@ mod tests {
 
     #[tokio::test]
     async fn test_post_request() {
+        let mock_server = MockServer::start().await;
+
+        Mock::given(method("POST"))
+            .and(path("/post"))
+            .and(header("content-type", "application/json"))
+            .and(body_string(r#"{"test": "data"}"#))
+            .respond_with(ResponseTemplate::new(200).set_body_string(r#"{"received":true}"#))
+            .mount(&mock_server)
+            .await;
+
         let service = HTTPService::new().unwrap();
-        let request = Request::new("Test POST", "https://httpbin.org/post")
+        let request = Request::new("Test POST", &format!("{}/post", mock_server.uri()))
             .with_method(HttpMethod::Post)
             .with_header("Content-Type", "application/json")
             .with_body(r#"{"test": "data"}"#);
@@ -117,8 +137,17 @@ mod tests {
 
     #[tokio::test]
     async fn test_put_request() {
+        let mock_server = MockServer::start().await;
+
+        Mock::given(method("PUT"))
+            .and(path("/put"))
+            .and(header("content-type", "application/json"))
+            .respond_with(ResponseTemplate::new(200).set_body_string(r#"{"updated":true}"#))
+            .mount(&mock_server)
+            .await;
+
         let service = HTTPService::new().unwrap();
-        let request = Request::new("Test PUT", "https://httpbin.org/put")
+        let request = Request::new("Test PUT", &format!("{}/put", mock_server.uri()))
             .with_method(HttpMethod::Put)
             .with_header("Content-Type", "application/json")
             .with_body(r#"{"test": "data"}"#);
@@ -133,8 +162,16 @@ mod tests {
 
     #[tokio::test]
     async fn test_delete_request() {
+        let mock_server = MockServer::start().await;
+
+        Mock::given(method("DELETE"))
+            .and(path("/delete"))
+            .respond_with(ResponseTemplate::new(200).set_body_string(r#"{"deleted":true}"#))
+            .mount(&mock_server)
+            .await;
+
         let service = HTTPService::new().unwrap();
-        let request = Request::new("Test DELETE", "https://httpbin.org/delete")
+        let request = Request::new("Test DELETE", &format!("{}/delete", mock_server.uri()))
             .with_method(HttpMethod::Delete);
 
         let response = service.execute_request(&request).await;
@@ -147,8 +184,17 @@ mod tests {
 
     #[tokio::test]
     async fn test_patch_request() {
+        let mock_server = MockServer::start().await;
+
+        Mock::given(method("PATCH"))
+            .and(path("/patch"))
+            .and(header("content-type", "application/json"))
+            .respond_with(ResponseTemplate::new(200).set_body_string(r#"{"patched":true}"#))
+            .mount(&mock_server)
+            .await;
+
         let service = HTTPService::new().unwrap();
-        let request = Request::new("Test PATCH", "https://httpbin.org/patch")
+        let request = Request::new("Test PATCH", &format!("{}/patch", mock_server.uri()))
             .with_method(HttpMethod::Patch)
             .with_header("Content-Type", "application/json")
             .with_body(r#"{"test": "data"}"#);
@@ -163,8 +209,20 @@ mod tests {
 
     #[tokio::test]
     async fn test_request_with_headers() {
+        let mock_server = MockServer::start().await;
+
+        Mock::given(method("GET"))
+            .and(path("/headers"))
+            .and(header("x-custom-header", "test-value"))
+            .and(header("user-agent", "Arcanine/0.1.0"))
+            .respond_with(ResponseTemplate::new(200).set_body_string(
+                r#"{"headers":{"X-Custom-Header":"test-value","User-Agent":"Arcanine/0.1.0"}}"#,
+            ))
+            .mount(&mock_server)
+            .await;
+
         let service = HTTPService::new().unwrap();
-        let request = Request::new("Test Headers", "https://httpbin.org/headers")
+        let request = Request::new("Test Headers", &format!("{}/headers", mock_server.uri()))
             .with_method(HttpMethod::Get)
             .with_header("X-Custom-Header", "test-value")
             .with_header("User-Agent", "Arcanine/0.1.0");
@@ -180,21 +238,48 @@ mod tests {
 
     #[tokio::test]
     async fn test_response_captures_headers() {
+        let mock_server = MockServer::start().await;
+
+        Mock::given(method("GET"))
+            .and(path("/get"))
+            .respond_with(
+                ResponseTemplate::new(200)
+                    .set_body_string(r#"{"status":"ok"}"#)
+                    .insert_header("content-type", "application/json"),
+            )
+            .mount(&mock_server)
+            .await;
+
         let service = HTTPService::new().unwrap();
-        let request = Request::new("Test Response Headers", "https://httpbin.org/get")
-            .with_method(HttpMethod::Get);
+        let request = Request::new(
+            "Test Response Headers",
+            &format!("{}/get", mock_server.uri()),
+        )
+        .with_method(HttpMethod::Get);
 
         let response = service.execute_request(&request).await.unwrap();
 
-        // httpbin.org returns content-type header
+        // Mock server returns content-type header
         assert!(response.headers.contains_key("content-type"));
     }
 
     #[tokio::test]
     async fn test_response_timing() {
+        let mock_server = MockServer::start().await;
+
+        Mock::given(method("GET"))
+            .and(path("/delay"))
+            .respond_with(
+                ResponseTemplate::new(200)
+                    .set_body_string(r#"{"delayed":true}"#)
+                    .set_delay(std::time::Duration::from_secs(1)),
+            )
+            .mount(&mock_server)
+            .await;
+
         let service = HTTPService::new().unwrap();
-        let request =
-            Request::new("Test Timing", "https://httpbin.org/delay/1").with_method(HttpMethod::Get);
+        let request = Request::new("Test Timing", &format!("{}/delay", mock_server.uri()))
+            .with_method(HttpMethod::Get);
 
         let response = service.execute_request(&request).await.unwrap();
 
