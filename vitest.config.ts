@@ -3,7 +3,14 @@ import { svelte } from '@sveltejs/vite-plugin-svelte';
 import { resolve } from 'path';
 
 export default defineConfig({
-  plugins: [svelte({ hot: !process.env.VITEST, compilerOptions: { runes: true } })],
+  plugins: [
+    svelte({
+      hot: !process.env.VITEST,
+      compilerOptions: {
+        runes: true,
+      },
+    }),
+  ],
   test: {
     globals: true,
     environment: 'jsdom',

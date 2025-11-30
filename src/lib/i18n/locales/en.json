@@ -113,6 +113,16 @@
       "oauth2": "OAuth 2.0"
     }
   },
+  "requestList": {
+    "title": "Requests",
+    "requests": "Requests",
+    "newRequest": "New Request",
+    "empty": "No requests yet",
+    "emptyHint": "Click \"New Request\" to create your first request",
+    "method": "Method",
+    "delete": "Delete {name}",
+    "confirmDelete": "Are you sure you want to delete \"{name}\"?"
+  },
   "headers": {
     "key": "Key",
     "value": "Value",
