@@ -60,17 +60,39 @@
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
     cursor: pointer;
-    transition: all var(--transition-base);
+    transition:
+      background-color var(--transition-base),
+      border-color var(--transition-base),
+      transform var(--transition-base),
+      color var(--transition-base),
+      box-shadow var(--transition-base);
     color: var(--color-text);
   }
 
   .theme-toggle:hover {
     background-color: var(--color-primary);
-    color: white;
+    border-color: var(--color-primary);
+    color: var(--color-text-inverse);
     transform: scale(1.05);
+    box-shadow: var(--shadow-md);
   }
 
   .theme-toggle:active {
     transform: scale(0.95);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .theme-toggle:focus-visible {
+    outline: 2px solid var(--color-border-focus);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px var(--color-focus-ring);
+  }
+
+  .theme-toggle svg {
+    transition: transform var(--transition-base);
+  }
+
+  .theme-toggle:hover svg {
+    transform: rotate(15deg);
   }
 </style>

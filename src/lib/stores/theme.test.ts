@@ -230,4 +230,40 @@ describe('Theme Store', () => {
     expect(document.documentElement.classList.contains('dark')).toBe(true);
     expect(localStorage.getItem('arcanine-theme')).toBe('dark');
   });
+
+  it('handles theme initialization with saved dark preference', () => {
+    document.documentElement.className = '';
+    localStorage.setItem('arcanine-theme', 'dark');
+    applyTheme('dark');
+    expect(document.documentElement.classList.contains('dark')).toBe(true);
+  });
+
+  it('handles theme initialization with saved light preference', () => {
+    localStorage.setItem('arcanine-theme', 'light');
+    theme.set('light');
+    initializeTheme();
+    expect(document.documentElement.classList.contains('dark')).toBe(false);
+  });
+
+  it('preserves localStorage after toggle', () => {
+    theme.set('light');
+    applyTheme('light');
+    expect(localStorage.getItem('arcanine-theme')).toBe('light');
+
+    toggleTheme();
+    expect(localStorage.getItem('arcanine-theme')).toBe('dark');
+    expect(get(theme)).toBe('dark');
+  });
+
+  it('correctly updates classList when toggling', () => {
+    theme.set('light');
+    applyTheme('light');
+    expect(document.documentElement.classList.contains('dark')).toBe(false);
+
+    toggleTheme();
+    expect(document.documentElement.classList.contains('dark')).toBe(true);
+
+    toggleTheme();
+    expect(document.documentElement.classList.contains('dark')).toBe(false);
+  });
 });
