@@ -1,0 +1,111 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  create-release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+      version: ${{ steps.get_version.outputs.version }}
+    steps:
+      - name: Get version from tag
+        id: get_version
+        run: echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+
+  build-macos:
+    name: Build macOS App
+    needs: create-release
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-darwin,x86_64-apple-darwin
+
+      - name: Cache Rust dependencies
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build frontend
+        run: npm run build
+
+      - name: Build Tauri app (Universal Binary)
+        run: npm run tauri build -- --target universal-apple-darwin
+
+      - name: Create DMG
+        run: |
+          # The universal .app bundle is in src-tauri/target/universal-apple-darwin/release/bundle/macos/
+          APP_PATH="src-tauri/target/universal-apple-darwin/release/bundle/macos/arcanine.app"
+          DMG_PATH="arcanine-${{ needs.create-release.outputs.version }}-macos-universal.dmg"
+          
+          # Create a temporary directory for DMG contents
+          mkdir -p dmg
+          cp -r "$APP_PATH" dmg/
+          
+          # Create symbolic link to Applications folder
+          ln -s /Applications dmg/Applications
+          
+          # Create DMG
+          hdiutil create -volname "Arcanine" -srcfolder dmg -ov -format UDZO "$DMG_PATH"
+          
+          echo "DMG_PATH=$DMG_PATH" >> $GITHUB_ENV
+
+      - name: Upload DMG to Release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create-release.outputs.upload_url }}
+          asset_path: ${{ env.DMG_PATH }}
+          asset_name: arcanine-${{ needs.create-release.outputs.version }}-macos-universal.dmg
+          asset_content_type: application/x-apple-diskimage
+
+      - name: Create tarball
+        run: |
+          TAR_PATH="arcanine-${{ needs.create-release.outputs.version }}-macos-universal.tar.gz"
+          tar -czf "$TAR_PATH" -C "src-tauri/target/universal-apple-darwin/release/bundle/macos" "arcanine.app"
+          echo "TAR_PATH=$TAR_PATH" >> $GITHUB_ENV
+
+      - name: Upload tarball to Release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create-release.outputs.upload_url }}
+          asset_path: ${{ env.TAR_PATH }}
+          asset_name: arcanine-${{ needs.create-release.outputs.version }}-macos-universal.tar.gz
+          asset_content_type: application/gzip
