@@ -45,6 +45,13 @@ jobs:
       - name: Run tests with coverage
         run: npm run test:coverage
 
+      - name: Upload frontend coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-frontend
+          path: coverage/lcov.info
+          retention-days: 1
+
   test-backend:
     name: Test Backend
     runs-on: ${{ matrix.os }}
@@ -118,6 +125,13 @@ jobs:
         working-directory: src-tauri
         run: |
           cargo tarpaulin --skip-clean --out Lcov --output-dir ../coverage-rust --fail-under 80
+
+      - name: Upload backend coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-backend-${{ matrix.os }}
+          path: coverage-rust/lcov.info
+          retention-days: 1
   
   sonarqube:
     name: SonarQube
@@ -129,6 +143,19 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+
+      - name: Download frontend coverage
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-frontend
+          path: coverage
+
+      - name: Download backend coverage
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-backend-macos-latest
+          path: coverage-rust
+
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v6
         env:

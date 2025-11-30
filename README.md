@@ -8,7 +8,11 @@
 [![Built with Tauri](https://img.shields.io/badge/Built%20with-Tauri-24C8D8?logo=tauri)](https://tauri.app)
 [![Powered by Svelte](https://img.shields.io/badge/Powered%20by-Svelte-FF3E00?logo=svelte)](https://svelte.dev)
 
-[![codecov](https://codecov.io/github/lanthoor/arcanine/branch/main/graph/badge.svg?token=7F7EGPIEHI)](https://codecov.io/github/lanthoor/arcanine)
+[![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=lanthoor_arcanine)](https://sonarcloud.io/summary/new_code?id=lanthoor_arcanine)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=lanthoor_arcanine&metric=coverage)](https://sonarcloud.io/summary/new_code?id=lanthoor_arcanine)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=lanthoor_arcanine&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=lanthoor_arcanine)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=lanthoor_arcanine&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=lanthoor_arcanine)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=lanthoor_arcanine&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=lanthoor_arcanine)
 
 [Features](#features) • [Installation](#installation) • [Quick Start](#quick-start) • [Documentation](#documentation)
 
