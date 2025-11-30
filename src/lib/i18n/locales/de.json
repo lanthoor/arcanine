@@ -150,6 +150,25 @@
       "bodyInvalidJson": "Ungültiges JSON-Format"
     }
   },
+  "responseViewer": {
+    "status": "Status",
+    "time": "Zeit",
+    "headers": "Antwort-Header",
+    "body": "Antwort-Body",
+    "empty": "Noch keine Antwort",
+    "emptyHint": "Senden Sie eine Anfrage, um die Antwort zu sehen",
+    "noHeaders": "Keine Header in der Antwort",
+    "noBody": "Kein Body in der Antwort",
+    "copyBody": "Body kopieren",
+    "copyHeaders": "Header kopieren",
+    "copied": "Kopiert!",
+    "format": "Formatieren",
+    "raw": "Roh",
+    "formatJson": "JSON formatieren",
+    "showRaw": "Roh anzeigen",
+    "expandHeaders": "Header erweitern",
+    "collapseHeaders": "Header reduzieren"
+  },
   "headers": {
     "key": "Schlüssel",
     "value": "Wert",
