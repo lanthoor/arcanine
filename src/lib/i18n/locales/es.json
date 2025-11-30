@@ -113,6 +113,16 @@
       "oauth2": "OAuth 2.0"
     }
   },
+  "requestList": {
+    "title": "Solicitudes",
+    "requests": "Solicitudes",
+    "newRequest": "Nueva Solicitud",
+    "empty": "Aún no hay solicitudes",
+    "emptyHint": "Haga clic en \"Nueva Solicitud\" para crear su primera solicitud",
+    "method": "Método",
+    "delete": "Eliminar {name}",
+    "confirmDelete": "¿Está seguro de que desea eliminar \"{name}\"?"
+  },
   "headers": {
     "key": "Clave",
     "value": "Valor",

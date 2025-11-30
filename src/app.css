@@ -62,6 +62,20 @@
   --color-focus-ring: rgba(37, 99, 235, 0.3);
   --color-disabled-overlay: rgba(0, 0, 0, 0.12);
 
+  /* Light theme - HTTP Method colors */
+  --color-method-get: #16a34a;
+  --color-method-post: #2563eb;
+  --color-method-put: #ea580c;
+  --color-method-delete: #dc2626;
+  --color-method-patch: #7c3aed;
+  --color-method-head: #64748b;
+  --color-method-options: #0ea5e9;
+
+  /* Light theme - Danger color */
+  --color-danger: #dc2626;
+  --color-danger-hover: #b91c1c;
+  --color-danger-alpha: rgba(220, 38, 38, 0.1);
+
   /* Spacing */
   --spacing-xs: 0.25rem;
   --spacing-sm: 0.5rem;
@@ -158,6 +172,20 @@
   --color-active-overlay: rgba(255, 255, 255, 0.16);
   --color-focus-ring: rgba(59, 130, 246, 0.4);
   --color-disabled-overlay: rgba(255, 255, 255, 0.12);
+
+  /* Dark theme - HTTP Method colors */
+  --color-method-get: #22c55e;
+  --color-method-post: #3b82f6;
+  --color-method-put: #f97316;
+  --color-method-delete: #ef4444;
+  --color-method-patch: #8b5cf6;
+  --color-method-head: #94a3b8;
+  --color-method-options: #38bdf8;
+
+  /* Dark theme - Danger color */
+  --color-danger: #ef4444;
+  --color-danger-hover: #f87171;
+  --color-danger-alpha: rgba(239, 68, 68, 0.15);
 
   /* Dark theme - Shadows (deeper for elevation) */
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);

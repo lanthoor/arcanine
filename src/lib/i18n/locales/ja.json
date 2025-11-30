@@ -107,11 +107,21 @@
     },
     "auth": {
       "none": "認証なし",
-      "basic": "ベーシック認証",
+      "basic": "基本認証",
       "bearer": "ベアラートークン",
       "apiKey": "APIキー",
       "oauth2": "OAuth 2.0"
     }
+  },
+  "requestList": {
+    "title": "リクエスト",
+    "requests": "リクエスト",
+    "newRequest": "新規リクエスト",
+    "empty": "リクエストがありません",
+    "emptyHint": "\"新規リクエスト\"をクリックして最初のリクエストを作成",
+    "method": "メソッド",
+    "delete": "{name}を削除",
+    "confirmDelete": "\"{name}\"を削除してもよろしいですか？"
   },
   "headers": {
     "key": "キー",

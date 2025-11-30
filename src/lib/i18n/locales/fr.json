@@ -113,6 +113,16 @@
       "oauth2": "OAuth 2.0"
     }
   },
+  "requestList": {
+    "title": "Requêtes",
+    "requests": "Requêtes",
+    "newRequest": "Nouvelle Requête",
+    "empty": "Aucune requête pour le moment",
+    "emptyHint": "Cliquez sur \"Nouvelle Requête\" pour créer votre première requête",
+    "method": "Méthode",
+    "delete": "Supprimer {name}",
+    "confirmDelete": "Êtes-vous sûr de vouloir supprimer \"{name}\" ?"
+  },
   "headers": {
     "key": "Clé",
     "value": "Valeur",

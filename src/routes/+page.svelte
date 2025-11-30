@@ -1,16 +1,73 @@
 <script lang="ts">
-  import { invoke } from '@tauri-apps/api/core';
   import ThemeToggle from '$lib/components/ThemeToggle.svelte';
   import LanguageSwitcher from '$lib/components/LanguageSwitcher.svelte';
+  import RequestList from '$lib/components/RequestList.svelte';
   import { t } from '$lib/i18n';
-  import { theme } from '$lib/stores/theme';
 
-  let name = $state('');
-  let greetMsg = $state('');
+  type Request = {
+    id: string;
+    name: string;
+    method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'HEAD' | 'OPTIONS';
+    url: string;
+  };
 
-  async function greet(event: Event) {
-    event.preventDefault();
-    greetMsg = await invoke('greet', { name });
+  // Sample requests for demonstration
+  let requests = $state<Request[]>([
+    {
+      id: '1',
+      name: 'Get Users',
+      method: 'GET',
+      url: 'https://api.example.com/users',
+    },
+    {
+      id: '2',
+      name: 'Create User',
+      method: 'POST',
+      url: 'https://api.example.com/users',
+    },
+    {
+      id: '3',
+      name: 'Update User',
+      method: 'PUT',
+      url: 'https://api.example.com/users/123',
+    },
+    {
+      id: '4',
+      name: 'Delete User',
+      method: 'DELETE',
+      url: 'https://api.example.com/users/123',
+    },
+    {
+      id: '5',
+      name: 'Patch User Profile',
+      method: 'PATCH',
+      url: 'https://api.example.com/users/123/profile',
+    },
+  ]);
+
+  let selectedId = $state<string | null>(null);
+
+  function handleSelect(request: Request) {
+    console.log('Selected request:', request);
+  }
+
+  function handleNewRequest() {
+    const newId = String(requests.length + 1);
+    const newRequest: Request = {
+      id: newId,
+      name: 'New Request',
+      method: 'GET',
+      url: 'https://api.example.com/',
+    };
+    requests = [...requests, newRequest];
+    selectedId = newId;
+  }
+
+  function handleDelete(request: Request) {
+    requests = requests.filter((r) => r.id !== request.id);
+    if (selectedId === request.id) {
+      selectedId = null;
+    }
   }
 </script>
 
@@ -23,36 +80,13 @@
 </div>
 
 <main class="container">
-  <div class="welcome-section">
-    <h2>Welcome to {$t('app.name')}</h2>
-    <p class="description">{$t('app.description')}</p>
-  </div>
-
-  <div class="theme-demo">
-    <h3>Theme System Demo</h3>
-    <p>Current theme: <strong>{$theme}</strong></p>
-    <p>Click the theme toggle button above to switch between light and dark modes.</p>
-
-    <div class="color-palette">
-      <div class="color-box" style="background-color: var(--color-primary)">Primary</div>
-      <div class="color-box" style="background-color: var(--color-secondary)">Secondary</div>
-      <div class="color-box" style="background-color: var(--color-accent)">Accent</div>
-      <div class="color-box" style="background-color: var(--color-success)">Success</div>
-      <div class="color-box" style="background-color: var(--color-warning)">Warning</div>
-      <div class="color-box" style="background-color: var(--color-error)">Error</div>
-    </div>
-  </div>
-
-  <div class="greet-section">
-    <h3>Tauri Integration Demo</h3>
-    <form class="row" onsubmit={greet}>
-      <input id="greet-input" placeholder="Enter a name..." bind:value={name} />
-      <button type="submit">Greet</button>
-    </form>
-    {#if greetMsg}
-      <p class="greet-msg">{greetMsg}</p>
-    {/if}
-  </div>
+  <RequestList
+    {requests}
+    bind:selectedId
+    onselect={handleSelect}
+    onnewrequest={handleNewRequest}
+    ondelete={handleDelete}
+  />
 </main>
 
 <style>
@@ -78,116 +112,7 @@
   }
 
   .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: var(--spacing-xl);
-  }
-
-  .welcome-section {
-    text-align: center;
-    margin-bottom: var(--spacing-xl);
-  }
-
-  .welcome-section h2 {
-    color: var(--color-primary);
-    margin-bottom: var(--spacing-md);
-  }
-
-  .description {
-    color: var(--color-text-secondary);
-    font-size: 1.1rem;
-  }
-
-  .theme-demo {
-    background-color: var(--color-surface);
+    height: calc(100vh - 70px);
     padding: var(--spacing-lg);
-    border-radius: var(--radius-lg);
-    margin-bottom: var(--spacing-xl);
-    border: 1px solid var(--color-border);
-  }
-
-  .theme-demo h3 {
-    margin-top: 0;
-    color: var(--color-text);
-  }
-
-  .color-palette {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: var(--spacing-md);
-    margin-top: var(--spacing-lg);
-  }
-
-  .color-box {
-    padding: var(--spacing-lg);
-    border-radius: var(--radius-md);
-    text-align: center;
-    color: white;
-    font-weight: 600;
-    box-shadow: var(--shadow-md);
-  }
-
-  .greet-section {
-    background-color: var(--color-surface);
-    padding: var(--spacing-lg);
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--color-border);
-  }
-
-  .greet-section h3 {
-    margin-top: 0;
-    color: var(--color-text);
-  }
-
-  .row {
-    display: flex;
-    gap: var(--spacing-md);
-    justify-content: center;
-    margin-top: var(--spacing-md);
-  }
-
-  input,
-  button {
-    border-radius: var(--radius-md);
-    border: 1px solid var(--color-border);
-    padding: 0.6em 1.2em;
-    font-size: 1em;
-    font-weight: 500;
-    font-family: inherit;
-    color: var(--color-text);
-    background-color: var(--color-background);
-    transition: all var(--transition-base);
-  }
-
-  button {
-    cursor: pointer;
-    background-color: var(--color-primary);
-    color: white;
-    border-color: var(--color-primary);
-  }
-
-  button:hover {
-    opacity: 0.9;
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-md);
-  }
-
-  button:active {
-    transform: translateY(0);
-  }
-
-  input:focus {
-    outline: 2px solid var(--color-primary);
-    outline-offset: 2px;
-  }
-
-  .greet-msg {
-    margin-top: var(--spacing-md);
-    padding: var(--spacing-md);
-    background-color: var(--color-success);
-    color: white;
-    border-radius: var(--radius-md);
-    text-align: center;
-    font-weight: 600;
   }
 </style>
