@@ -123,6 +123,33 @@
     "delete": "Delete {name}",
     "confirmDelete": "Are you sure you want to delete \"{name}\"?"
   },
+  "requestEditor": {
+    "name": "Name",
+    "namePlaceholder": "Enter request name",
+    "method": "Method",
+    "url": "URL",
+    "urlPlaceholder": "https://api.example.com",
+    "headers": "Headers",
+    "headerKey": "Header Key",
+    "headerValue": "Header Value",
+    "addHeader": "Add Header",
+    "removeHeader": "Remove Header",
+    "noHeaders": "No headers added yet",
+    "body": "Request Body",
+    "bodyPlaceholder": "Enter JSON body",
+    "formatJson": "Format JSON",
+    "send": "Send Request",
+    "sending": "Sending...",
+    "cancel": "Cancel",
+    "errors": {
+      "nameRequired": "Name is required",
+      "urlRequired": "URL is required",
+      "urlInvalid": "Invalid URL format",
+      "urlInvalidProtocol": "URL must use http or https protocol",
+      "urlInvalidHostname": "URL must include a valid hostname",
+      "bodyInvalidJson": "Invalid JSON format"
+    }
+  },
   "headers": {
     "key": "Key",
     "value": "Value",

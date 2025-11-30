@@ -220,7 +220,6 @@
     flex-direction: column;
     height: 100%;
     background-color: var(--color-background);
-    border-right: 1px solid var(--color-border);
   }
 
   .request-list-header {

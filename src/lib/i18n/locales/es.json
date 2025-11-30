@@ -118,10 +118,37 @@
     "requests": "Solicitudes",
     "newRequest": "Nueva Solicitud",
     "empty": "Aún no hay solicitudes",
-    "emptyHint": "Haga clic en \"Nueva Solicitud\" para crear su primera solicitud",
+    "emptyHint": "Haz clic en \"Nueva Solicitud\" para crear tu primera solicitud",
     "method": "Método",
     "delete": "Eliminar {name}",
-    "confirmDelete": "¿Está seguro de que desea eliminar \"{name}\"?"
+    "confirmDelete": "¿Estás seguro de que deseas eliminar \"{name}\"?"
+  },
+  "requestEditor": {
+    "name": "Nombre",
+    "namePlaceholder": "Ingrese el nombre de la solicitud",
+    "method": "Método",
+    "url": "URL",
+    "urlPlaceholder": "https://api.ejemplo.com",
+    "headers": "Encabezados",
+    "headerKey": "Clave del Encabezado",
+    "headerValue": "Valor del Encabezado",
+    "addHeader": "Agregar Encabezado",
+    "removeHeader": "Eliminar Encabezado",
+    "noHeaders": "Aún no se han agregado encabezados",
+    "body": "Cuerpo de la Solicitud",
+    "bodyPlaceholder": "Ingrese el cuerpo JSON",
+    "formatJson": "Formatear JSON",
+    "send": "Enviar Solicitud",
+    "sending": "Enviando...",
+    "cancel": "Cancelar",
+    "errors": {
+      "nameRequired": "El nombre es obligatorio",
+      "urlRequired": "La URL es obligatoria",
+      "urlInvalid": "Formato de URL inválido",
+      "urlInvalidProtocol": "La URL debe usar el protocolo http o https",
+      "urlInvalidHostname": "La URL debe incluir un nombre de host válido",
+      "bodyInvalidJson": "Formato JSON inválido"
+    }
   },
   "headers": {
     "key": "Clave",
