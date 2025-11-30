@@ -31,10 +31,25 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ],
+    "resources": [],
+    "externalBin": [],
     "macOS": {
       "minimumSystemVersion": "10.15",
       "frameworks": [],
       "exceptionDomain": ""
+    },
+    "linux": {
+      "deb": {
+        "depends": []
+      },
+      "appimage": {
+        "bundleMediaFramework": false
+      }
+    },
+    "windows": {
+      "certificateThumbprint": null,
+      "digestAlgorithm": "sha256",
+      "timestampUrl": ""
     }
   }
 }

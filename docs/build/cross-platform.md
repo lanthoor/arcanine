@@ -1,8 +1,8 @@
-# macOS Build Guide
+# Cross-Platform Build Guide
 
 ## Overview
 
-Arcanine can be built as a native macOS application using Tauri. The build system supports both local development builds and automated GitHub Actions releases.
+Arcanine can be built as a native application for macOS, Linux, and Windows using Tauri. The build system supports both local development builds and automated GitHub Actions releases.
 
 ## Prerequisites
 
@@ -54,7 +54,9 @@ npm run tauri build -- --target universal-apple-darwin
 
 ## Build Artifacts
 
-### Application Bundle (.app)
+### macOS
+
+**Application Bundle (.app)**
 
 Located at: `src-tauri/target/release/bundle/macos/arcanine.app`
 
@@ -62,13 +64,50 @@ Located at: `src-tauri/target/release/bundle/macos/arcanine.app`
 - Can be dragged to Applications folder
 - Double-click to launch
 
-### Disk Image (.dmg)
+**Disk Image (.dmg)**
 
 Located at: `src-tauri/target/release/bundle/dmg/arcanine_<version>_<arch>.dmg`
 
 - Installer package for distribution
 - Opens with application and Applications folder shortcut
 - Users can drag-and-drop to install
+
+### Linux
+
+**Debian Package (.deb)**
+
+Located at: `src-tauri/target/release/bundle/deb/arcanine_<version>_<arch>.deb`
+
+- Install with: `sudo dpkg -i arcanine_*.deb`
+- For Ubuntu, Debian, and derivatives
+- Integrates with system package manager
+
+**AppImage**
+
+Located at: `src-tauri/target/release/bundle/appimage/arcanine_<version>_<arch>.AppImage`
+
+- Self-contained executable
+- No installation required
+- Make executable: `chmod +x arcanine_*.AppImage`
+- Run directly: `./arcanine_*.AppImage`
+
+### Windows
+
+**MSI Installer (.msi)**
+
+Located at: `src-tauri/target/release/bundle/msi/arcanine_<version>_<arch>.msi`
+
+- Standard Windows installer
+- Double-click to install
+- Integrates with Windows Add/Remove Programs
+
+**NSIS Installer (.exe)**
+
+Located at: `src-tauri/target/release/bundle/nsis/arcanine_<version>_<arch>-setup.exe`
+
+- Alternative installer format
+- Smaller size than MSI
+- More customization options
 
 ## Testing the Build
 
@@ -100,18 +139,30 @@ git push origin v0.2.2
 ### Workflow Features
 
 - **Automatic Release Creation**: Creates GitHub release with tag
-- **Universal Binary**: Builds for both Intel and Apple Silicon
-- **Multiple Formats**: Generates both `.app` and `.dmg`
-- **Automatic Upload**: Uploads artifacts to GitHub release
+- **Multi-Platform Builds**: macOS (universal), Linux (x86_64), Windows (x86_64)
+- **Multiple Formats**: 
+  - macOS: .app bundle + .dmg installer
+  - Linux: .deb package + AppImage
+  - Windows: .msi installer + NSIS .exe
+- **Automatic Upload**: Uploads all artifacts to GitHub release
 - **Version Detection**: Extracts version from tag (e.g., `v0.2.2` → `0.2.2`)
+- **Optimized Builds**: Production-only dependencies, minimal bundle size
+
+### Build Matrices
+
+| Platform | Runner | Target | Architectures | Formats |
+|----------|--------|--------|---------------|---------|
+| macOS | macos-latest | universal-apple-darwin | Intel + Apple Silicon | .dmg, .tar.gz |
+| Linux | ubuntu-latest | x86_64-unknown-linux-gnu | x86_64 | .deb, .AppImage |
+| Windows | windows-latest | x86_64-pc-windows-msvc | x86_64 | .msi, .exe |
 
 ### Build Environment
 
-GitHub Actions uses:
-- `macos-latest` runner (macOS 14)
+Each platform uses:
 - Official `dtolnay/rust-toolchain` action
-- Installs required targets automatically
-- Caches dependencies for faster builds
+- Node.js 22 with npm caching
+- Production-only npm dependencies (`--omit=dev`)
+- Rust dependency caching via `Swatinem/rust-cache`
 
 ## Build Configuration
 
@@ -186,9 +237,28 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
 ### Bundle Sizes
 
-- **Application Bundle**: ~10-15 MB
-- **DMG Installer**: ~3 MB (compressed)
-- **Universal Binary**: ~20-25 MB (both architectures)
+**macOS** (measured on Apple Silicon):
+- **Application Bundle**: 8.5 MB (single architecture)
+- **DMG Installer**: 3.0 MB (compressed)
+- **Universal Binary**: ~17 MB (estimated, both architectures)
+
+**Linux** (estimated):
+- **AppImage**: ~12-15 MB (self-contained)
+- **DEB Package**: ~8-10 MB (requires system libraries)
+
+**Windows** (estimated):
+- **MSI Installer**: ~10-12 MB
+- **NSIS Installer**: ~8-10 MB (more compressed)
+
+### Build Optimizations
+
+The build system includes several optimizations to minimize bundle size:
+
+1. **Production Dependencies Only**: `npm ci --omit=dev` excludes dev dependencies
+2. **.taurignore**: Excludes source files, tests, and documentation from bundles
+3. **.npmrc**: Disables audit and fund messages, optimizes cache
+4. **Frontend Build**: Static adapter with tree-shaking and minification
+5. **Rust Release Mode**: Full optimizations with LTO and strip enabled
 
 ## Distribution
 

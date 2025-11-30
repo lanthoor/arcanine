@@ -34,10 +34,26 @@ jobs:
           draft: false
           prerelease: false
 
-  build-macos:
-    name: Build macOS App
+  build:
+    name: Build ${{ matrix.platform }}
     needs: create-release
-    runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: 'macos-latest'
+            args: '--target universal-apple-darwin'
+            target: 'universal-apple-darwin'
+            arch: 'universal'
+          - platform: 'ubuntu-latest'
+            args: ''
+            target: 'x86_64-unknown-linux-gnu'
+            arch: 'x86_64'
+          - platform: 'windows-latest'
+            args: ''
+            target: 'x86_64-pc-windows-msvc'
+            arch: 'x86_64'
+    runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@v6
 
@@ -50,62 +66,79 @@ jobs:
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
         with:
-          targets: aarch64-apple-darwin,x86_64-apple-darwin
+          targets: ${{ matrix.target }}
+
+      - name: Install Linux dependencies
+        if: matrix.platform == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
 
       - name: Cache Rust dependencies
         uses: Swatinem/rust-cache@v2
         with:
           workspaces: src-tauri
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Install dependencies (production only)
+        run: npm ci --omit=dev
+
+      - name: Install build dependencies
+        run: npm install --no-save @sveltejs/adapter-static @sveltejs/kit vite
 
       - name: Build frontend
         run: npm run build
 
-      - name: Build Tauri app (Universal Binary)
-        run: npm run tauri build -- --target universal-apple-darwin
+      - name: Build Tauri app
+        run: npm run tauri build -- ${{ matrix.args }}
 
-      - name: Create DMG
+      - name: Upload macOS artifacts
+        if: matrix.platform == 'macos-latest'
         run: |
-          # The universal .app bundle is in src-tauri/target/universal-apple-darwin/release/bundle/macos/
-          APP_PATH="src-tauri/target/universal-apple-darwin/release/bundle/macos/arcanine.app"
-          DMG_PATH="arcanine-${{ needs.create-release.outputs.version }}-macos-universal.dmg"
+          # Upload DMG
+          DMG_PATH=$(find src-tauri/target/${{ matrix.target }}/release/bundle/dmg -name "*.dmg" | head -n 1)
+          if [ -n "$DMG_PATH" ]; then
+            gh release upload ${{ github.ref_name }} "$DMG_PATH" --clobber
+          fi
           
-          # Create a temporary directory for DMG contents
-          mkdir -p dmg
-          cp -r "$APP_PATH" dmg/
-          
-          # Create symbolic link to Applications folder
-          ln -s /Applications dmg/Applications
-          
-          # Create DMG
-          hdiutil create -volname "Arcanine" -srcfolder dmg -ov -format UDZO "$DMG_PATH"
-          
-          echo "DMG_PATH=$DMG_PATH" >> $GITHUB_ENV
-
-      - name: Upload DMG to Release
-        uses: actions/upload-release-asset@v1
+          # Upload .app as tarball
+          APP_PATH="src-tauri/target/${{ matrix.target }}/release/bundle/macos/arcanine.app"
+          TAR_PATH="arcanine-${{ needs.create-release.outputs.version }}-macos-${{ matrix.arch }}.tar.gz"
+          tar -czf "$TAR_PATH" -C "$(dirname "$APP_PATH")" "$(basename "$APP_PATH")"
+          gh release upload ${{ github.ref_name }} "$TAR_PATH" --clobber
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ needs.create-release.outputs.upload_url }}
-          asset_path: ${{ env.DMG_PATH }}
-          asset_name: arcanine-${{ needs.create-release.outputs.version }}-macos-universal.dmg
-          asset_content_type: application/x-apple-diskimage
 
-      - name: Create tarball
+      - name: Upload Linux artifacts
+        if: matrix.platform == 'ubuntu-latest'
         run: |
-          TAR_PATH="arcanine-${{ needs.create-release.outputs.version }}-macos-universal.tar.gz"
-          tar -czf "$TAR_PATH" -C "src-tauri/target/universal-apple-darwin/release/bundle/macos" "arcanine.app"
-          echo "TAR_PATH=$TAR_PATH" >> $GITHUB_ENV
-
-      - name: Upload tarball to Release
-        uses: actions/upload-release-asset@v1
+          # Upload .deb
+          DEB_PATH=$(find src-tauri/target/${{ matrix.target }}/release/bundle/deb -name "*.deb" | head -n 1)
+          if [ -n "$DEB_PATH" ]; then
+            gh release upload ${{ github.ref_name }} "$DEB_PATH" --clobber
+          fi
+          
+          # Upload AppImage
+          APPIMAGE_PATH=$(find src-tauri/target/${{ matrix.target }}/release/bundle/appimage -name "*.AppImage" | head -n 1)
+          if [ -n "$APPIMAGE_PATH" ]; then
+            gh release upload ${{ github.ref_name }} "$APPIMAGE_PATH" --clobber
+          fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ needs.create-release.outputs.upload_url }}
-          asset_path: ${{ env.TAR_PATH }}
-          asset_name: arcanine-${{ needs.create-release.outputs.version }}-macos-universal.tar.gz
-          asset_content_type: application/gzip
+
+      - name: Upload Windows artifacts
+        if: matrix.platform == 'windows-latest'
+        shell: bash
+        run: |
+          # Upload MSI
+          MSI_PATH=$(find src-tauri/target/${{ matrix.target }}/release/bundle/msi -name "*.msi" | head -n 1)
+          if [ -n "$MSI_PATH" ]; then
+            gh release upload ${{ github.ref_name }} "$MSI_PATH" --clobber
+          fi
+          
+          # Upload NSIS installer
+          NSIS_PATH=$(find src-tauri/target/${{ matrix.target }}/release/bundle/nsis -name "*-setup.exe" | head -n 1)
+          if [ -n "$NSIS_PATH" ]; then
+            gh release upload ${{ github.ref_name }} "$NSIS_PATH" --clobber
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

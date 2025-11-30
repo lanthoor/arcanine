@@ -1,0 +1,43 @@
+# Development files
+node_modules/
+.git/
+.github/
+.vscode/
+coverage/
+coverage-rust/
+
+# Test files
+*.test.ts
+*.test.js
+*.spec.ts
+*.spec.js
+**/__tests__/
+
+# Development configs
+.eslintrc.*
+.prettierrc
+.prettierignore
+vitest.config.ts
+tsconfig.json
+vite.config.ts
+
+# Documentation
+docs/
+*.md
+!README.md
+
+# Source files (only include built output)
+src/
+!build/
+
+# Dev dependencies artifacts
+.svelte-kit/
+playwright-report/
+test-results/
+
+# macOS
+.DS_Store
+
+# Logs
+*.log
+npm-debug.log*
