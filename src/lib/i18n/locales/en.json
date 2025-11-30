@@ -150,6 +150,25 @@
       "bodyInvalidJson": "Invalid JSON format"
     }
   },
+  "responseViewer": {
+    "status": "Status",
+    "time": "Time",
+    "headers": "Response Headers",
+    "body": "Response Body",
+    "empty": "No response yet",
+    "emptyHint": "Send a request to see the response",
+    "noHeaders": "No headers in response",
+    "noBody": "No body in response",
+    "copyBody": "Copy body",
+    "copyHeaders": "Copy headers",
+    "copied": "Copied!",
+    "format": "Format",
+    "raw": "Raw",
+    "formatJson": "Format JSON",
+    "showRaw": "Show raw",
+    "expandHeaders": "Expand headers",
+    "collapseHeaders": "Collapse headers"
+  },
   "headers": {
     "key": "Key",
     "value": "Value",

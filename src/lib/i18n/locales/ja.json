@@ -150,6 +150,25 @@
       "bodyInvalidJson": "無効なJSON形式"
     }
   },
+  "responseViewer": {
+    "status": "ステータス",
+    "time": "時間",
+    "headers": "レスポンスヘッダー",
+    "body": "レスポンスボディ",
+    "empty": "まだレスポンスがありません",
+    "emptyHint": "リクエストを送信してレスポンスを表示します",
+    "noHeaders": "レスポンスにヘッダーがありません",
+    "noBody": "レスポンスにボディがありません",
+    "copyBody": "ボディをコピー",
+    "copyHeaders": "ヘッダーをコピー",
+    "copied": "コピーしました！",
+    "format": "フォーマット",
+    "raw": "Raw",
+    "formatJson": "JSONをフォーマット",
+    "showRaw": "Rawを表示",
+    "expandHeaders": "ヘッダーを展開",
+    "collapseHeaders": "ヘッダーを折りたたむ"
+  },
   "headers": {
     "key": "キー",
     "value": "値",
