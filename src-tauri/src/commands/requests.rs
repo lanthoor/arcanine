@@ -145,12 +145,14 @@ mod tests {
     use super::*;
     use crate::models::HttpMethod;
     use std::collections::HashMap;
+    use wiremock::matchers::{method, path};
+    use wiremock::{Mock, MockServer, ResponseTemplate};
 
-    fn create_test_request() -> Request {
+    async fn create_test_request(mock_server: &MockServer) -> Request {
         Request {
             name: "Test Request".to_string(),
             method: HttpMethod::Get,
-            url: "https://httpbin.org/get".to_string(),
+            url: format!("{}/get", mock_server.uri()),
             headers: HashMap::new(),
             body: None,
         }
@@ -158,10 +160,18 @@ mod tests {
 
     #[tokio::test]
     async fn test_execute_request_success() {
+        let mock_server = MockServer::start().await;
+
+        Mock::given(method("GET"))
+            .and(path("/get"))
+            .respond_with(ResponseTemplate::new(200).set_body_string(r#"{"status":"ok"}"#))
+            .mount(&mock_server)
+            .await;
+
         let service = Arc::new(TokioMutex::new(
             HTTPService::new().expect("Failed to create HTTP service"),
         ));
-        let request = create_test_request();
+        let request = create_test_request(&mock_server).await;
 
         let result = execute_request_impl(request, &service).await;
 
@@ -175,8 +185,13 @@ mod tests {
         let service = Arc::new(TokioMutex::new(
             HTTPService::new().expect("Failed to create HTTP service"),
         ));
-        let mut request = create_test_request();
-        request.url = "invalid-url".to_string();
+        let request = Request {
+            name: "Invalid".to_string(),
+            method: HttpMethod::Get,
+            url: "invalid-url".to_string(),
+            headers: HashMap::new(),
+            body: None,
+        };
 
         let result = execute_request_impl(request, &service).await;
 
@@ -187,7 +202,13 @@ mod tests {
     #[test]
     fn test_save_request_success() {
         let store = Arc::new(Mutex::new(RequestStore::new()));
-        let request = create_test_request();
+        let request = Request {
+            name: "Test".to_string(),
+            method: HttpMethod::Get,
+            url: "https://example.com".to_string(),
+            headers: HashMap::new(),
+            body: None,
+        };
 
         let result = save_request_impl(request, &store);
 
@@ -201,8 +222,13 @@ mod tests {
     #[test]
     fn test_save_request_invalid() {
         let store = Arc::new(Mutex::new(RequestStore::new()));
-        let mut request = create_test_request();
-        request.name = "".to_string(); // Invalid empty name
+        let request = Request {
+            name: "".to_string(),
+            method: HttpMethod::Get,
+            url: "https://example.com".to_string(),
+            headers: HashMap::new(),
+            body: None,
+        };
 
         let result = save_request_impl(request, &store);
 
@@ -213,7 +239,13 @@ mod tests {
     #[test]
     fn test_save_request_duplicate() {
         let store = Arc::new(Mutex::new(RequestStore::new()));
-        let request = create_test_request();
+        let request = Request {
+            name: "Test".to_string(),
+            method: HttpMethod::Get,
+            url: "https://example.com".to_string(),
+            headers: HashMap::new(),
+            body: None,
+        };
 
         // Save once
         let result1 = save_request_impl(request.clone(), &store);
@@ -240,12 +272,22 @@ mod tests {
         let store = Arc::new(Mutex::new(RequestStore::new()));
 
         // Add multiple requests
-        let mut req1 = create_test_request();
-        req1.name = "Request 1".to_string();
+        let req1 = Request {
+            name: "Request 1".to_string(),
+            method: HttpMethod::Get,
+            url: "https://example.com/1".to_string(),
+            headers: HashMap::new(),
+            body: None,
+        };
         save_request_impl(req1, &store).unwrap();
 
-        let mut req2 = create_test_request();
-        req2.name = "Request 2".to_string();
+        let req2 = Request {
+            name: "Request 2".to_string(),
+            method: HttpMethod::Get,
+            url: "https://example.com/2".to_string(),
+            headers: HashMap::new(),
+            body: None,
+        };
         save_request_impl(req2, &store).unwrap();
 
         let result = list_requests_impl(&store);
@@ -257,7 +299,13 @@ mod tests {
     #[test]
     fn test_delete_request_success() {
         let store = Arc::new(Mutex::new(RequestStore::new()));
-        let request = create_test_request();
+        let request = Request {
+            name: "Test".to_string(),
+            method: HttpMethod::Get,
+            url: "https://example.com".to_string(),
+            headers: HashMap::new(),
+            body: None,
+        };
         let name = request.name.clone();
 
         // Save first
@@ -295,16 +343,27 @@ mod tests {
 
     #[tokio::test]
     async fn test_concurrent_execute_requests() {
+        let mock_server = MockServer::start().await;
+
+        Mock::given(method("GET"))
+            .and(path("/get"))
+            .respond_with(ResponseTemplate::new(200).set_body_string(r#"{"status":"ok"}"#))
+            .expect(5)
+            .mount(&mock_server)
+            .await;
+
         let service = Arc::new(TokioMutex::new(
             HTTPService::new().expect("Failed to create HTTP service"),
         ));
 
         // Create multiple requests
         let requests: Vec<Request> = (0..5)
-            .map(|i| {
-                let mut req = create_test_request();
-                req.name = format!("Request {}", i);
-                req
+            .map(|i| Request {
+                name: format!("Request {}", i),
+                method: HttpMethod::Get,
+                url: format!("{}/get", mock_server.uri()),
+                headers: HashMap::new(),
+                body: None,
             })
             .collect();
 
@@ -338,8 +397,13 @@ mod tests {
         for i in 0..10 {
             let store_clone = Arc::clone(&store);
             let handle = thread::spawn(move || {
-                let mut req = create_test_request();
-                req.name = format!("Request {}", i);
+                let req = Request {
+                    name: format!("Request {}", i),
+                    method: HttpMethod::Get,
+                    url: format!("https://example.com/{}", i),
+                    headers: HashMap::new(),
+                    body: None,
+                };
                 save_request_impl(req, &store_clone)
             });
             handles.push(handle);
@@ -366,8 +430,13 @@ mod tests {
 
         // Pre-populate with 10 requests
         for i in 0..10 {
-            let mut req = create_test_request();
-            req.name = format!("Request {}", i);
+            let req = Request {
+                name: format!("Request {}", i),
+                method: HttpMethod::Get,
+                url: format!("https://example.com/{}", i),
+                headers: HashMap::new(),
+                body: None,
+            };
             save_request_impl(req, &store).unwrap();
         }
 
@@ -396,6 +465,14 @@ mod tests {
 
     #[tokio::test]
     async fn test_integration_save_execute_list_delete() {
+        let mock_server = MockServer::start().await;
+
+        Mock::given(method("GET"))
+            .and(path("/get"))
+            .respond_with(ResponseTemplate::new(200).set_body_string(r#"{"status":"ok"}"#))
+            .mount(&mock_server)
+            .await;
+
         // Setup
         let http_service = Arc::new(TokioMutex::new(
             HTTPService::new().expect("Failed to create HTTP service"),
@@ -403,7 +480,13 @@ mod tests {
         let store = Arc::new(Mutex::new(RequestStore::new()));
 
         // 1. Save a request
-        let request = create_test_request();
+        let request = Request {
+            name: "Test Request".to_string(),
+            method: HttpMethod::Get,
+            url: format!("{}/get", mock_server.uri()),
+            headers: HashMap::new(),
+            body: None,
+        };
         save_request_impl(request.clone(), &store).unwrap();
 
         // 2. List requests and verify
@@ -418,8 +501,13 @@ mod tests {
         assert!(response.status >= 200 && response.status < 300);
 
         // 4. Save another request
-        let mut request2 = create_test_request();
-        request2.name = "Test Request 2".to_string();
+        let request2 = Request {
+            name: "Test Request 2".to_string(),
+            method: HttpMethod::Get,
+            url: format!("{}/get", mock_server.uri()),
+            headers: HashMap::new(),
+            body: None,
+        };
         save_request_impl(request2, &store).unwrap();
 
         // 5. List again
@@ -443,14 +531,24 @@ mod tests {
         let store = Arc::new(Mutex::new(RequestStore::new()));
 
         // Test invalid URL in execute
-        let mut bad_request = create_test_request();
-        bad_request.url = "not-a-url".to_string();
+        let bad_request = Request {
+            name: "Bad".to_string(),
+            method: HttpMethod::Get,
+            url: "not-a-url".to_string(),
+            headers: HashMap::new(),
+            body: None,
+        };
         let result = execute_request_impl(bad_request, &http_service).await;
         assert!(result.is_err());
 
         // Test invalid name in save
-        let mut bad_request = create_test_request();
-        bad_request.name = "".to_string();
+        let bad_request = Request {
+            name: "".to_string(),
+            method: HttpMethod::Get,
+            url: "https://example.com".to_string(),
+            headers: HashMap::new(),
+            body: None,
+        };
         let result = save_request_impl(bad_request, &store);
         assert!(result.is_err());
 
