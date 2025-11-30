@@ -39,6 +39,12 @@ impl Response {
         self
     }
 
+    /// Sets multiple headers at once
+    pub fn with_headers(mut self, headers: HashMap<String, String>) -> Self {
+        self.headers = headers;
+        self
+    }
+
     /// Checks if the response status is successful (2xx)
     pub fn is_success(&self) -> bool {
         (200..300).contains(&self.status)
