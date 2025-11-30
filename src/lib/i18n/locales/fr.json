@@ -123,6 +123,33 @@
     "delete": "Supprimer {name}",
     "confirmDelete": "Êtes-vous sûr de vouloir supprimer \"{name}\" ?"
   },
+  "requestEditor": {
+    "name": "Nom",
+    "namePlaceholder": "Entrez le nom de la requête",
+    "method": "Méthode",
+    "url": "URL",
+    "urlPlaceholder": "https://api.exemple.com",
+    "headers": "En-têtes",
+    "headerKey": "Clé de l'En-tête",
+    "headerValue": "Valeur de l'En-tête",
+    "addHeader": "Ajouter un En-tête",
+    "removeHeader": "Supprimer l'En-tête",
+    "noHeaders": "Aucun en-tête ajouté pour le moment",
+    "body": "Corps de la Requête",
+    "bodyPlaceholder": "Entrez le corps JSON",
+    "formatJson": "Formater JSON",
+    "send": "Envoyer la Requête",
+    "sending": "Envoi en cours...",
+    "cancel": "Annuler",
+    "errors": {
+      "nameRequired": "Le nom est requis",
+      "urlRequired": "L'URL est requise",
+      "urlInvalid": "Format d'URL invalide",
+      "urlInvalidProtocol": "L'URL doit utiliser le protocole http ou https",
+      "urlInvalidHostname": "L'URL doit inclure un nom d'hôte valide",
+      "bodyInvalidJson": "Format JSON invalide"
+    }
+  },
   "headers": {
     "key": "Clé",
     "value": "Valeur",

@@ -117,11 +117,38 @@
     "title": "リクエスト",
     "requests": "リクエスト",
     "newRequest": "新規リクエスト",
-    "empty": "リクエストがありません",
-    "emptyHint": "\"新規リクエスト\"をクリックして最初のリクエストを作成",
+    "empty": "まだリクエストがありません",
+    "emptyHint": "\"新規リクエスト\"をクリックして最初のリクエストを作成してください",
     "method": "メソッド",
     "delete": "{name}を削除",
-    "confirmDelete": "\"{name}\"を削除してもよろしいですか？"
+    "confirmDelete": "本当に\"{name}\"を削除しますか？"
+  },
+  "requestEditor": {
+    "name": "名前",
+    "namePlaceholder": "リクエスト名を入力",
+    "method": "メソッド",
+    "url": "URL",
+    "urlPlaceholder": "https://api.example.com",
+    "headers": "ヘッダー",
+    "headerKey": "ヘッダーキー",
+    "headerValue": "ヘッダー値",
+    "addHeader": "ヘッダーを追加",
+    "removeHeader": "ヘッダーを削除",
+    "noHeaders": "まだヘッダーが追加されていません",
+    "body": "リクエストボディ",
+    "bodyPlaceholder": "JSONボディを入力",
+    "formatJson": "JSONをフォーマット",
+    "send": "リクエストを送信",
+    "sending": "送信中...",
+    "cancel": "キャンセル",
+    "errors": {
+      "nameRequired": "名前は必須です",
+      "urlRequired": "URLは必須です",
+      "urlInvalid": "無効なURL形式",
+      "urlInvalidProtocol": "URLはhttpまたはhttpsプロトコルを使用する必要があります",
+      "urlInvalidHostname": "URLには有効なホスト名を含める必要があります",
+      "bodyInvalidJson": "無効なJSON形式"
+    }
   },
   "headers": {
     "key": "キー",

@@ -123,6 +123,33 @@
     "delete": "{name} löschen",
     "confirmDelete": "Möchten Sie \"{name}\" wirklich löschen?"
   },
+  "requestEditor": {
+    "name": "Name",
+    "namePlaceholder": "Anfragenamen eingeben",
+    "method": "Methode",
+    "url": "URL",
+    "urlPlaceholder": "https://api.beispiel.com",
+    "headers": "Header",
+    "headerKey": "Header-Schlüssel",
+    "headerValue": "Header-Wert",
+    "addHeader": "Header hinzufügen",
+    "removeHeader": "Header entfernen",
+    "noHeaders": "Noch keine Header hinzugefügt",
+    "body": "Anfragekörper",
+    "bodyPlaceholder": "JSON-Körper eingeben",
+    "formatJson": "JSON formatieren",
+    "send": "Anfrage senden",
+    "sending": "Wird gesendet...",
+    "cancel": "Abbrechen",
+    "errors": {
+      "nameRequired": "Name ist erforderlich",
+      "urlRequired": "URL ist erforderlich",
+      "urlInvalid": "Ungültiges URL-Format",
+      "urlInvalidProtocol": "URL muss das http- oder https-Protokoll verwenden",
+      "urlInvalidHostname": "URL muss einen gültigen Hostnamen enthalten",
+      "bodyInvalidJson": "Ungültiges JSON-Format"
+    }
+  },
   "headers": {
     "key": "Schlüssel",
     "value": "Wert",
