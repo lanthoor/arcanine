@@ -8,7 +8,7 @@
 [![Built with Tauri](https://img.shields.io/badge/Built%20with-Tauri-24C8D8?logo=tauri)](https://tauri.app)
 [![Powered by Svelte](https://img.shields.io/badge/Powered%20by-Svelte-FF3E00?logo=svelte)](https://svelte.dev)
 
-[![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=lanthoor_arcanine)](https://sonarcloud.io/summary/new_code?id=lanthoor_arcanine)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=lanthoor_arcanine&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=lanthoor_arcanine)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=lanthoor_arcanine&metric=coverage)](https://sonarcloud.io/summary/new_code?id=lanthoor_arcanine)
 [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=lanthoor_arcanine&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=lanthoor_arcanine)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=lanthoor_arcanine&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=lanthoor_arcanine)
