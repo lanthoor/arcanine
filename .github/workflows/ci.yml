@@ -61,7 +61,7 @@ jobs:
       matrix:
         os: 
             - macos-latest
-            # - ubuntu-latest
+            - ubuntu-latest
             # - windows-latest
     steps:
       - uses: actions/checkout@v6
@@ -121,15 +121,16 @@ jobs:
         run: cargo install cargo-tarpaulin --version 0.34.1
 
       - name: Generate coverage
-        # if: matrix.os == 'ubuntu-latest'
+        if: matrix.os == 'ubuntu-latest'
         working-directory: src-tauri
         run: |
           cargo tarpaulin --skip-clean --out Lcov --output-dir ../coverage-rust --fail-under 80
 
       - name: Upload backend coverage
+        if: matrix.os == 'ubuntu-latest'
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-backend-${{ matrix.os }}
+          name: coverage-backend
           path: coverage-rust/lcov.info
           retention-days: 1
   
@@ -149,11 +150,11 @@ jobs:
         with:
           name: coverage-frontend
           path: coverage
-
       - name: Download backend coverage
         uses: actions/download-artifact@v4
         with:
-          name: coverage-backend-macos-latest
+          name: coverage-backend
+          path: coverage-rustend-macos-latest
           path: coverage-rust
 
       - name: SonarQube Scan
