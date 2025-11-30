@@ -45,22 +45,6 @@ jobs:
       - name: Run tests with coverage
         run: npm run test:coverage
 
-      - name: Upload test results to Codecov
-        if: ${{ !cancelled() }}
-        uses: codecov/test-results-action@v1
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./test-results/junit.xml
-          flags: frontend
-
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v5
-        with:
-          files: ./coverage/lcov.info
-          flags: frontend
-          name: frontend-coverage
-          token: ${{ secrets.CODECOV_TOKEN }}
-
   test-backend:
     name: Test Backend
     runs-on: ${{ matrix.os }}
@@ -134,23 +118,21 @@ jobs:
         working-directory: src-tauri
         run: |
           cargo tarpaulin --skip-clean --out Lcov --output-dir ../coverage-rust --fail-under 80
-
-      - name: Upload test results to Codecov
-        if: ${{ !cancelled() }}
-        uses: codecov/test-results-action@v1
+  
+  sonarqube:
+    name: SonarQube
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    needs: [test-frontend, test-backend]
+    steps:
+      - uses: actions/checkout@v4
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./src-tauri/target/nextest/ci/junit.xml
-          flags: backend
-
-      - name: Upload coverage to Codecov
-        # if: matrix.os == 'ubuntu-latest'
-        uses: codecov/codecov-action@v5
-        with:
-          files: ./coverage-rust/lcov.info
-          flags: backend
-          name: backend-coverage
-          token: ${{ secrets.CODECOV_TOKEN }}
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v6
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   build:
     name: Build Application
