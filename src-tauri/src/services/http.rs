@@ -98,7 +98,7 @@ mod tests {
             .await;
 
         let service = HTTPService::new().unwrap();
-        let request = Request::new("Test GET", &format!("{}/get", mock_server.uri()))
+        let request = Request::new("Test GET", format!("{}/get", mock_server.uri()))
             .with_method(HttpMethod::Get);
 
         let response = service.execute_request(&request).await;
@@ -122,7 +122,7 @@ mod tests {
             .await;
 
         let service = HTTPService::new().unwrap();
-        let request = Request::new("Test POST", &format!("{}/post", mock_server.uri()))
+        let request = Request::new("Test POST", format!("{}/post", mock_server.uri()))
             .with_method(HttpMethod::Post)
             .with_header("Content-Type", "application/json")
             .with_body(r#"{"test": "data"}"#);
@@ -147,7 +147,7 @@ mod tests {
             .await;
 
         let service = HTTPService::new().unwrap();
-        let request = Request::new("Test PUT", &format!("{}/put", mock_server.uri()))
+        let request = Request::new("Test PUT", format!("{}/put", mock_server.uri()))
             .with_method(HttpMethod::Put)
             .with_header("Content-Type", "application/json")
             .with_body(r#"{"test": "data"}"#);
@@ -171,7 +171,7 @@ mod tests {
             .await;
 
         let service = HTTPService::new().unwrap();
-        let request = Request::new("Test DELETE", &format!("{}/delete", mock_server.uri()))
+        let request = Request::new("Test DELETE", format!("{}/delete", mock_server.uri()))
             .with_method(HttpMethod::Delete);
 
         let response = service.execute_request(&request).await;
@@ -194,7 +194,7 @@ mod tests {
             .await;
 
         let service = HTTPService::new().unwrap();
-        let request = Request::new("Test PATCH", &format!("{}/patch", mock_server.uri()))
+        let request = Request::new("Test PATCH", format!("{}/patch", mock_server.uri()))
             .with_method(HttpMethod::Patch)
             .with_header("Content-Type", "application/json")
             .with_body(r#"{"test": "data"}"#);
@@ -222,7 +222,7 @@ mod tests {
             .await;
 
         let service = HTTPService::new().unwrap();
-        let request = Request::new("Test Headers", &format!("{}/headers", mock_server.uri()))
+        let request = Request::new("Test Headers", format!("{}/headers", mock_server.uri()))
             .with_method(HttpMethod::Get)
             .with_header("X-Custom-Header", "test-value")
             .with_header("User-Agent", "Arcanine/0.1.0");
@@ -253,7 +253,7 @@ mod tests {
         let service = HTTPService::new().unwrap();
         let request = Request::new(
             "Test Response Headers",
-            &format!("{}/get", mock_server.uri()),
+            format!("{}/get", mock_server.uri()),
         )
         .with_method(HttpMethod::Get);
 
@@ -278,7 +278,7 @@ mod tests {
             .await;
 
         let service = HTTPService::new().unwrap();
-        let request = Request::new("Test Timing", &format!("{}/delay", mock_server.uri()))
+        let request = Request::new("Test Timing", format!("{}/delay", mock_server.uri()))
             .with_method(HttpMethod::Get);
 
         let response = service.execute_request(&request).await.unwrap();
