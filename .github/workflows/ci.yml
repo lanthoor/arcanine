@@ -154,7 +154,6 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: coverage-backend
-          path: coverage-rustend-macos-latest
           path: coverage-rust
 
       - name: SonarQube Scan
