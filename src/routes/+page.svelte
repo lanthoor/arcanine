@@ -1,6 +1,7 @@
 <script lang="ts">
   import { invoke } from '@tauri-apps/api/core';
   import ThemeToggle from '$lib/components/ThemeToggle.svelte';
+  import LanguageSwitcher from '$lib/components/LanguageSwitcher.svelte';
   import { t } from '$lib/i18n';
   import { theme } from '$lib/stores/theme';
 
@@ -15,7 +16,10 @@
 
 <div class="app-header">
   <h1>{$t('app.name')}</h1>
-  <ThemeToggle />
+  <div class="header-controls">
+    <LanguageSwitcher />
+    <ThemeToggle />
+  </div>
 </div>
 
 <main class="container">
@@ -65,6 +69,12 @@
     margin: 0;
     font-size: 1.5rem;
     color: var(--color-text);
+  }
+
+  .header-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-4);
   }
 
   .container {
