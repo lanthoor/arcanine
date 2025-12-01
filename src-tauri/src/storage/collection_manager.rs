@@ -295,18 +295,37 @@ impl CollectionManager {
         let mut fixed = collection.clone();
 
         // Check metadata
-        if fixed.metadata.version.is_none() {
-            issues.push("Missing version metadata".to_string());
-            if fix_issues {
-                fixed.metadata.version = Some("1.0.0".to_string());
-            }
-        }
+        Self::validate_metadata(&mut fixed, &mut issues, fix_issues);
 
         // Check for duplicate request names
+        Self::validate_duplicate_names(&mut fixed, &mut issues, fix_issues);
+
+        // Validate each request
+        Self::validate_requests(&mut fixed, &mut issues, fix_issues);
+
+        (fixed, issues)
+    }
+
+    /// Validate and fix metadata fields
+    fn validate_metadata(collection: &mut Collection, issues: &mut Vec<String>, fix_issues: bool) {
+        if collection.metadata.version.is_none() {
+            issues.push("Missing version metadata".to_string());
+            if fix_issues {
+                collection.metadata.version = Some("1.0.0".to_string());
+            }
+        }
+    }
+
+    /// Validate and fix duplicate request names
+    fn validate_duplicate_names(
+        collection: &mut Collection,
+        issues: &mut Vec<String>,
+        fix_issues: bool,
+    ) {
         let mut seen_names = std::collections::HashMap::new();
         let mut fixed_requests = Vec::new();
 
-        for (idx, request) in fixed.requests.iter().enumerate() {
+        for (idx, request) in collection.requests.iter().enumerate() {
             if let Some(&first_idx) = seen_names.get(&request.name) {
                 issues.push(format!(
                     "Duplicate request name '{}' at indices {} and {}",
@@ -327,11 +346,13 @@ impl CollectionManager {
         }
 
         if fix_issues && !issues.is_empty() {
-            fixed.requests = fixed_requests;
+            collection.requests = fixed_requests;
         }
+    }
 
-        // Validate each request
-        let valid_requests: Vec<Request> = fixed
+    /// Validate individual requests and remove invalid ones
+    fn validate_requests(collection: &mut Collection, issues: &mut Vec<String>, fix_issues: bool) {
+        let valid_requests: Vec<Request> = collection
             .requests
             .iter()
             .filter(|r| {
@@ -346,10 +367,8 @@ impl CollectionManager {
             .collect();
 
         if fix_issues {
-            fixed.requests = valid_requests;
+            collection.requests = valid_requests;
         }
-
-        (fixed, issues)
     }
 
     /// Migrate a collection to ensure it has all required metadata
