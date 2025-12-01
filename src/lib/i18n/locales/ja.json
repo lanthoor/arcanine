@@ -163,11 +163,16 @@
     "copyHeaders": "ヘッダーをコピー",
     "copied": "コピーしました！",
     "format": "フォーマット",
-    "raw": "Raw",
+    "raw": "生データ",
     "formatJson": "JSONをフォーマット",
-    "showRaw": "Rawを表示",
+    "showRaw": "生データを表示",
     "expandHeaders": "ヘッダーを展開",
-    "collapseHeaders": "ヘッダーを折りたたむ"
+    "collapseHeaders": "ヘッダーを折りたたむ",
+    "clear": "レスポンスをクリア",
+    "tabs": {
+      "body": "ボディ",
+      "headers": "ヘッダー"
+    }
   },
   "headers": {
     "key": "キー",
@@ -382,8 +387,35 @@
     "mainContent": "メインコンテンツ",
     "loadingContent": "コンテンツを読み込み中"
   },
+  "response": {
+    "title": "レスポンス",
+    "clear": "クリア"
+  },
+  "toolbar": {
+    "showSidebar": "サイドバーを表示",
+    "hideSidebar": "サイドバーを非表示",
+    "preferences": "環境設定"
+  },
+  "preferences": {
+    "title": "環境設定",
+    "close": "閉じる",
+    "appearance": "外観",
+    "theme": "テーマ",
+    "language": "言語",
+    "selectLanguage": "言語を選択"
+  },
+  "tabs": {
+    "close": "タブを閉じる",
+    "untitled": "無題",
+    "noActiveTab": "アクティブなタブがありません",
+    "selectOrCreateRequest": "サイドバーからリクエストを選択するか、新しいリクエストを作成してください"
+  },
+  "layout": {
+    "switchToVertical": "縦レイアウトに切り替え",
+    "switchToHorizontal": "横レイアウトに切り替え"
+  },
   "test": {
-    "param": "こんにちは、{name}",
-    "greeting": "こんにちは、{name}さん！"
+    "param": "こんにちは {name}",
+    "greeting": "こんにちは、{name}！"
   }
 }

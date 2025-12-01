@@ -155,7 +155,7 @@
     "time": "Tiempo",
     "headers": "Encabezados de Respuesta",
     "body": "Cuerpo de Respuesta",
-    "empty": "Aún no hay respuesta",
+    "empty": "Sin respuesta aún",
     "emptyHint": "Envíe una solicitud para ver la respuesta",
     "noHeaders": "Sin encabezados en la respuesta",
     "noBody": "Sin cuerpo en la respuesta",
@@ -167,7 +167,12 @@
     "formatJson": "Formatear JSON",
     "showRaw": "Mostrar sin formato",
     "expandHeaders": "Expandir encabezados",
-    "collapseHeaders": "Contraer encabezados"
+    "collapseHeaders": "Contraer encabezados",
+    "clear": "Borrar respuesta",
+    "tabs": {
+      "body": "Cuerpo",
+      "headers": "Encabezados"
+    }
   },
   "headers": {
     "key": "Clave",
@@ -381,6 +386,33 @@
     "navigationMenu": "Menú de navegación",
     "mainContent": "Contenido principal",
     "loadingContent": "Cargando contenido"
+  },
+  "response": {
+    "title": "Respuesta",
+    "clear": "Limpiar"
+  },
+  "toolbar": {
+    "showSidebar": "Mostrar Barra Lateral",
+    "hideSidebar": "Ocultar Barra Lateral",
+    "preferences": "Preferencias"
+  },
+  "preferences": {
+    "title": "Preferencias",
+    "close": "Cerrar",
+    "appearance": "Apariencia",
+    "theme": "Tema",
+    "language": "Idioma",
+    "selectLanguage": "Seleccionar Idioma"
+  },
+  "tabs": {
+    "close": "Cerrar Pestaña",
+    "untitled": "Sin Título",
+    "noActiveTab": "Sin Pestaña Activa",
+    "selectOrCreateRequest": "Seleccione una solicitud de la barra lateral o cree una nueva"
+  },
+  "layout": {
+    "switchToVertical": "Cambiar a Diseño Vertical",
+    "switchToHorizontal": "Cambiar a Diseño Horizontal"
   },
   "test": {
     "param": "Hola {name}",

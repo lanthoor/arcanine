@@ -20,11 +20,13 @@
   type Props = {
     request?: Request;
     onsubmit?: (request: Request) => void;
-    oncancel?: () => void;
     loading?: boolean;
   };
 
-  let { request = $bindable(), onsubmit, oncancel, loading = false }: Props = $props();
+  let { request = $bindable(), onsubmit, loading = false }: Props = $props();
+
+  // Active tab state
+  let activeTab = $state<'headers' | 'body'>('headers');
 
   // Form state
   let name = $state(request?.name || 'New Request');
@@ -35,7 +37,6 @@
 
   // Validation state
   let urlError = $state('');
-  let nameError = $state('');
   let bodyError = $state('');
 
   // Update form state when request prop changes
@@ -46,8 +47,6 @@
       url = request.url;
       headers = request.headers ? [...request.headers] : [];
       body = request.body || '';
-      // Clear validation errors
-      nameError = '';
       urlError = '';
       bodyError = '';
     }
@@ -91,16 +90,6 @@
     }
   }
 
-  // Validate name
-  function validateName(value: string): boolean {
-    if (!value || value.trim() === '') {
-      nameError = $t('requestEditor.errors.nameRequired').toString();
-      return false;
-    }
-    nameError = '';
-    return true;
-  }
-
   // Validate JSON body
   function validateBody(value: string): boolean {
     if (!value || value.trim() === '') {
@@ -108,7 +97,6 @@
       return true;
     }
 
-    // Only validate if method supports body
     if (!['POST', 'PUT', 'PATCH'].includes(method)) {
       bodyError = '';
       return true;
@@ -138,15 +126,13 @@
   function handleSubmit(event: Event) {
     event.preventDefault();
 
-    const isNameValid = validateName(name);
     const isUrlValid = validateUrl(url);
     const isBodyValid = validateBody(body);
 
-    if (!isNameValid || !isUrlValid || !isBodyValid) {
+    if (!isUrlValid || !isBodyValid) {
       return;
     }
 
-    // Filter out empty headers
     const validHeaders = headers.filter((h) => h.key.trim() !== '' && h.value.trim() !== '');
 
     const requestData: Request = {
@@ -159,11 +145,6 @@
     };
 
     onsubmit?.(requestData);
-  }
-
-  // Handle cancel
-  function handleCancel() {
-    oncancel?.();
   }
 
   // Format JSON
@@ -181,50 +162,20 @@
 
 <div class="request-editor">
   <form onsubmit={handleSubmit}>
-    <!-- Name and Method Row -->
-    <div class="form-row">
-      <div class="form-group flex-1">
-        <label for="request-name">
-          {$t('requestEditor.name')}
-          <span class="required">*</span>
-        </label>
-        <input
-          id="request-name"
-          type="text"
-          bind:value={name}
-          onblur={() => validateName(name)}
-          placeholder={$t('requestEditor.namePlaceholder').toString()}
-          disabled={loading}
-          aria-required="true"
-          aria-invalid={nameError !== ''}
-          aria-describedby={nameError ? 'name-error' : undefined}
-        />
-        {#if nameError}
-          <span class="error" id="name-error">{nameError}</span>
-        {/if}
-      </div>
+    <!-- Method and URL Row -->
+    <div class="url-row">
+      <select
+        id="request-method"
+        bind:value={method}
+        disabled={loading}
+        style="color: {methodColors[method]}"
+        class="method-select"
+      >
+        {#each methods as m (m)}
+          <option value={m} style="color: {methodColors[m]}">{m}</option>
+        {/each}
+      </select>
 
-      <div class="form-group">
-        <label for="request-method">{$t('requestEditor.method')}</label>
-        <select
-          id="request-method"
-          bind:value={method}
-          disabled={loading}
-          style="color: {methodColors[method]}"
-        >
-          {#each methods as m (m)}
-            <option value={m} style="color: {methodColors[m]}">{m}</option>
-          {/each}
-        </select>
-      </div>
-    </div>
-
-    <!-- URL -->
-    <div class="form-group">
-      <label for="request-url">
-        {$t('requestEditor.url')}
-        <span class="required">*</span>
-      </label>
       <input
         id="request-url"
         type="url"
@@ -232,120 +183,13 @@
         onblur={() => validateUrl(url)}
         placeholder={$t('requestEditor.urlPlaceholder').toString()}
         disabled={loading}
+        class="url-input"
         aria-required="true"
         aria-invalid={urlError !== ''}
         aria-describedby={urlError ? 'url-error' : undefined}
       />
-      {#if urlError}
-        <span class="error" id="url-error">{urlError}</span>
-      {/if}
-    </div>
 
-    <!-- Headers -->
-    <div class="form-section">
-      <div class="section-header">
-        <h3>{$t('requestEditor.headers')}</h3>
-        <button
-          type="button"
-          class="btn-secondary btn-sm"
-          onclick={addHeader}
-          disabled={loading}
-          aria-label={$t('requestEditor.addHeader').toString()}
-        >
-          + {$t('requestEditor.addHeader')}
-        </button>
-      </div>
-
-      {#if headers.length === 0}
-        <p class="empty-state">{$t('requestEditor.noHeaders')}</p>
-      {:else}
-        <div class="headers-list">
-          {#each headers as header, index (index)}
-            <div class="header-row">
-              <input
-                type="text"
-                bind:value={header.key}
-                placeholder={$t('requestEditor.headerKey').toString()}
-                disabled={loading}
-                aria-label="{$t('requestEditor.headerKey')} {index + 1}"
-              />
-              <input
-                type="text"
-                bind:value={header.value}
-                placeholder={$t('requestEditor.headerValue').toString()}
-                disabled={loading}
-                aria-label="{$t('requestEditor.headerValue')} {index + 1}"
-              />
-              <button
-                type="button"
-                class="btn-icon btn-danger"
-                onclick={() => removeHeader(index)}
-                disabled={loading}
-                aria-label="{$t('requestEditor.removeHeader')} {index + 1}"
-              >
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  aria-hidden="true"
-                >
-                  <path
-                    d="M2 4h12M5.333 4V2.667a1.333 1.333 0 0 1 1.334-1.334h2.666a1.333 1.333 0 0 1 1.334 1.334V4m2 0v9.333a1.333 1.333 0 0 1-1.334 1.334H4.667a1.333 1.333 0 0 1-1.334-1.334V4h9.334Z"
-                    stroke="currentColor"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </button>
-            </div>
-          {/each}
-        </div>
-      {/if}
-    </div>
-
-    <!-- Body -->
-    {#if ['POST', 'PUT', 'PATCH'].includes(method)}
-      <div class="form-section">
-        <div class="section-header">
-          <h3>{$t('requestEditor.body')}</h3>
-          <button
-            type="button"
-            class="btn-secondary btn-sm"
-            onclick={formatJson}
-            disabled={loading || !body}
-            aria-label={$t('requestEditor.formatJson').toString()}
-          >
-            {$t('requestEditor.formatJson')}
-          </button>
-        </div>
-
-        <textarea
-          id="request-body"
-          bind:value={body}
-          onblur={() => validateBody(body)}
-          placeholder={$t('requestEditor.bodyPlaceholder').toString()}
-          disabled={loading}
-          rows="10"
-          aria-invalid={bodyError !== ''}
-          aria-describedby={bodyError ? 'body-error' : undefined}
-        ></textarea>
-        {#if bodyError}
-          <span class="error" id="body-error">{bodyError}</span>
-        {/if}
-      </div>
-    {/if}
-
-    <!-- Actions -->
-    <div class="form-actions">
-      {#if oncancel}
-        <button type="button" class="btn-secondary" onclick={handleCancel} disabled={loading}>
-          {$t('requestEditor.cancel')}
-        </button>
-      {/if}
-      <button type="submit" class="btn-primary" disabled={loading}>
+      <button type="submit" class="btn-send" disabled={loading}>
         {#if loading}
           <span class="spinner" aria-hidden="true"></span>
           {$t('requestEditor.sending')}
@@ -354,55 +198,173 @@
         {/if}
       </button>
     </div>
+
+    {#if urlError}
+      <span class="error" id="url-error">{urlError}</span>
+    {/if}
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button
+        type="button"
+        class="tab"
+        class:active={activeTab === 'headers'}
+        onclick={() => (activeTab = 'headers')}
+      >
+        {$t('requestEditor.headers')}
+        {#if headers.length > 0}
+          <span class="tab-count">{headers.length}</span>
+        {/if}
+      </button>
+      <button
+        type="button"
+        class="tab"
+        class:active={activeTab === 'body'}
+        onclick={() => (activeTab = 'body')}
+      >
+        {$t('requestEditor.body')}
+      </button>
+    </div>
+
+    <!-- Tab Content -->
+    <div class="tab-content">
+      {#if activeTab === 'headers'}
+        <div class="headers-panel">
+          <div class="panel-header">
+            <button
+              type="button"
+              class="btn-secondary btn-sm"
+              onclick={addHeader}
+              disabled={loading}
+              aria-label={$t('requestEditor.addHeader').toString()}
+            >
+              + {$t('requestEditor.addHeader')}
+            </button>
+          </div>
+
+          {#if headers.length === 0}
+            <p class="empty-state">{$t('requestEditor.noHeaders')}</p>
+          {:else}
+            <div class="headers-list">
+              {#each headers as header, index (index)}
+                <div class="header-row">
+                  <input
+                    type="text"
+                    bind:value={header.key}
+                    placeholder={$t('requestEditor.headerKey').toString()}
+                    disabled={loading}
+                    aria-label="{$t('requestEditor.headerKey')} {index + 1}"
+                  />
+                  <input
+                    type="text"
+                    bind:value={header.value}
+                    placeholder={$t('requestEditor.headerValue').toString()}
+                    disabled={loading}
+                    aria-label="{$t('requestEditor.headerValue')} {index + 1}"
+                  />
+                  <button
+                    type="button"
+                    class="btn-icon btn-danger"
+                    onclick={() => removeHeader(index)}
+                    disabled={loading}
+                    aria-label="{$t('requestEditor.removeHeader')} {index + 1}"
+                  >
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M2 4h12M5.333 4V2.667a1.333 1.333 0 0 1 1.334-1.334h2.666a1.333 1.333 0 0 1 1.334 1.334V4m2 0v9.333a1.333 1.333 0 0 1-1.334 1.334H4.667a1.333 1.333 0 0 1-1.334-1.334V4h9.334Z"
+                        stroke="currentColor"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              {/each}
+            </div>
+          {/if}
+        </div>
+      {:else if activeTab === 'body'}
+        <div class="body-panel">
+          <div class="panel-header">
+            <button
+              type="button"
+              class="btn-secondary btn-sm"
+              onclick={formatJson}
+              disabled={loading || !body}
+              aria-label={$t('requestEditor.formatJson').toString()}
+            >
+              {$t('requestEditor.formatJson')}
+            </button>
+          </div>
+
+          <textarea
+            id="request-body"
+            bind:value={body}
+            onblur={() => validateBody(body)}
+            placeholder={$t('requestEditor.bodyPlaceholder').toString()}
+            disabled={loading}
+            aria-invalid={bodyError !== ''}
+            aria-describedby={bodyError ? 'body-error' : undefined}
+          ></textarea>
+          {#if bodyError}
+            <span class="error" id="body-error">{bodyError}</span>
+          {/if}
+        </div>
+      {/if}
+    </div>
   </form>
 </div>
 
 <style>
   .request-editor {
-    background-color: var(--color-surface);
-    border-radius: var(--radius-lg);
-    padding: var(--spacing-lg);
-    border: 1px solid var(--color-border);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
   }
 
   form {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-lg);
-  }
-
-  .form-row {
-    display: flex;
     gap: var(--spacing-md);
-    align-items: flex-start;
+    height: 100%;
   }
 
-  .form-group {
+  .url-row {
     display: flex;
-    flex-direction: column;
-    gap: var(--spacing-xs);
-    min-width: 0;
+    gap: var(--spacing-sm);
+    align-items: center;
   }
 
-  .flex-1 {
-    flex: 1;
-  }
-
-  label {
-    font-weight: 600;
-    color: var(--color-text);
+  .method-select {
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background-color: var(--color-background);
+    font-family: inherit;
     font-size: 0.875rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    min-width: 100px;
+    height: 40px;
   }
 
-  .required {
-    color: var(--color-error);
+  .method-select:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+    border-color: var(--color-primary);
   }
 
-  input[type='text'],
-  input[type='url'],
-  select,
-  textarea {
-    width: 100%;
+  .url-input {
+    flex: 1;
     padding: var(--spacing-sm) var(--spacing-md);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
@@ -411,70 +373,134 @@
     font-family: inherit;
     font-size: 0.875rem;
     transition: all var(--transition-base);
+    height: 40px;
   }
 
-  input[type='text']:focus,
-  input[type='url']:focus,
-  select:focus,
-  textarea:focus {
+  .url-input:focus {
     outline: 2px solid var(--color-primary);
     outline-offset: 2px;
     border-color: var(--color-primary);
   }
 
-  input[aria-invalid='true'],
-  textarea[aria-invalid='true'] {
+  .url-input[aria-invalid='true'] {
     border-color: var(--color-error);
   }
 
-  input:disabled,
-  select:disabled,
-  textarea:disabled,
-  button:disabled {
+  .btn-send {
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    border: none;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    background-color: var(--color-primary);
+    color: white;
+    min-width: 100px;
+    justify-content: center;
+    height: 40px;
+  }
+
+  .btn-send:hover:not(:disabled) {
+    opacity: 0.9;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .btn-send:disabled {
     opacity: 0.6;
     cursor: not-allowed;
-  }
-
-  select {
-    cursor: pointer;
-    font-weight: 600;
-  }
-
-  textarea {
-    font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
-    resize: vertical;
-    min-height: 200px;
   }
 
   .error {
     color: var(--color-error);
     font-size: 0.75rem;
-    margin-top: var(--spacing-xs);
+    margin-top: calc(-1 * var(--spacing-sm));
   }
 
-  .form-section {
+  .tabs {
+    display: flex;
+    gap: var(--spacing-xs);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .tab {
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--color-text-secondary);
+    font-family: inherit;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+  }
+
+  .tab:hover {
+    color: var(--color-text);
+    background-color: var(--color-surface-hover);
+  }
+
+  .tab.active {
+    color: var(--color-primary);
+    border-bottom-color: var(--color-primary);
+  }
+
+  .tab-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 var(--spacing-xs);
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  .tab.active .tab-count {
+    background-color: var(--color-primary-alpha);
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+  }
+
+  .tab-content {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .headers-panel,
+  .body-panel {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-md);
+    padding: var(--spacing-md) 0;
   }
 
-  .section-header {
+  .panel-header {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: center;
-  }
-
-  .section-header h3 {
-    margin: 0;
-    font-size: 1rem;
-    color: var(--color-text);
   }
 
   .empty-state {
     color: var(--color-text-secondary);
     font-style: italic;
     font-size: 0.875rem;
-    margin: 0;
+    margin: var(--spacing-lg) 0;
+    text-align: center;
   }
 
   .headers-list {
@@ -490,43 +516,68 @@
     align-items: center;
   }
 
-  .form-actions {
-    display: flex;
-    gap: var(--spacing-md);
-    justify-content: flex-end;
-    padding-top: var(--spacing-md);
-    border-top: 1px solid var(--color-border);
-  }
-
-  button {
-    padding: var(--spacing-sm) var(--spacing-lg);
+  .header-row input {
+    width: 100%;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
-    font-weight: 600;
-    font-size: 0.875rem;
-    cursor: pointer;
-    transition: all var(--transition-base);
-    border: none;
+    background-color: var(--color-background);
+    color: var(--color-text);
     font-family: inherit;
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-sm);
+    font-size: 0.875rem;
+    transition: all var(--transition-base);
   }
 
-  .btn-primary {
-    background-color: var(--color-primary);
-    color: white;
+  .header-row input:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+    border-color: var(--color-primary);
   }
 
-  .btn-primary:hover:not(:disabled) {
-    opacity: 0.9;
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-md);
+  textarea {
+    flex: 1;
+    width: 100%;
+    padding: var(--spacing-md);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background-color: var(--color-background);
+    color: var(--color-text);
+    font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+    font-size: 0.875rem;
+    resize: none;
+    min-height: 300px;
+    transition: all var(--transition-base);
+  }
+
+  textarea:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+    border-color: var(--color-primary);
+  }
+
+  textarea[aria-invalid='true'] {
+    border-color: var(--color-error);
+  }
+
+  input:disabled,
+  select:disabled,
+  textarea:disabled,
+  button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
   }
 
   .btn-secondary {
+    padding: var(--spacing-xs) var(--spacing-sm);
     background-color: transparent;
     color: var(--color-text);
     border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    font-size: 0.75rem;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all var(--transition-base);
   }
 
   .btn-secondary:hover:not(:disabled) {
@@ -546,6 +597,9 @@
     justify-content: center;
     background-color: transparent;
     border: 1px solid transparent;
+    cursor: pointer;
+    border-radius: var(--radius-md);
+    transition: all var(--transition-base);
   }
 
   .btn-danger {

@@ -2,6 +2,8 @@
   import { locale, t } from '$lib/i18n';
   import { setLocale } from '$lib/i18n';
 
+  let { compact = false } = $props<{ compact?: boolean }>();
+
   type Language = {
     code: string;
     name: string;
@@ -56,39 +58,47 @@
   });
 </script>
 
-<div class="language-switcher">
+<div class="language-switcher" class:compact>
   <button
     bind:this={buttonRef}
     onclick={handleButtonClick}
     class="language-button"
+    class:compact
     aria-label={$t('language.select')}
     aria-expanded={isOpen}
     aria-haspopup="listbox"
     type="button"
   >
     <span class="flag" aria-hidden="true">{currentLanguage.flag}</span>
-    <span class="language-name">{currentLanguage.code.toUpperCase()}</span>
-    <svg
-      class="chevron"
-      class:open={isOpen}
-      width="12"
-      height="12"
-      viewBox="0 0 12 12"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M2.5 4.5L6 8L9.5 4.5"
-        stroke="currentColor"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      />
-    </svg>
+    {#if !compact}
+      <span class="language-name">{currentLanguage.code.toUpperCase()}</span>
+      <svg
+        class="chevron"
+        class:open={isOpen}
+        width="12"
+        height="12"
+        viewBox="0 0 12 12"
+        fill="none"
+        aria-hidden="true"
+      >
+        <path
+          d="M2.5 4.5L6 8L9.5 4.5"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    {/if}
   </button>
 
   {#if isOpen}
-    <div class="language-menu" role="listbox" aria-label={$t('language.selectLanguage')}>
+    <div
+      class="language-menu"
+      class:compact
+      role="listbox"
+      aria-label={$t('language.selectLanguage')}
+    >
       {#each languages as language (language.code)}
         <button
           class="language-option"
@@ -124,6 +134,9 @@
 <style>
   .language-switcher {
     position: relative;
+  }
+
+  .language-switcher:not(.compact) {
     margin-right: 5%;
   }
 
@@ -145,6 +158,20 @@
       background-color var(--transition-fast),
       border-color var(--transition-fast),
       transform var(--transition-fast);
+  }
+
+  .language-button.compact {
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    justify-content: center;
+    border: none;
+    background: none;
+  }
+
+  .language-button.compact:hover {
+    background-color: var(--color-surface-hover);
+    border-radius: 4px;
   }
 
   .language-button:hover {
@@ -189,14 +216,31 @@
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-lg);
     padding: var(--spacing-xs);
-    z-index: var(--z-dropdown);
+    z-index: 10;
     animation: slideDown var(--transition-medium) cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .language-menu.compact {
+    bottom: calc(100% + 4px);
+    top: auto;
+    animation: slideUp var(--transition-medium) cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   @keyframes slideDown {
     from {
       opacity: 0;
       transform: translateY(-8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
     }
     to {
       opacity: 1;

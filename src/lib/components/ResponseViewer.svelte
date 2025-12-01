@@ -16,25 +16,34 @@
 
   type Props = {
     response?: Response;
+    onClear?: () => void;
   };
 
-  let { response }: Props = $props();
+  let { response, onClear }: Props = $props();
 
   // State
-  let headersExpanded = $state(false);
-  let isFormatted = $state(true);
-  let copyBodySuccess = $state(false);
-  let copyHeadersSuccess = $state(false);
+  let activeTab: 'body' | 'headers' = $state('body');
 
   // Derived state
   let statusClass = $derived(getStatusClass(response?.status));
   let contentType = $derived(getContentType(response?.headers));
-  let formattedBody = $derived(formatBody(response?.body, contentType, isFormatted));
-  let hasHeaders = $derived(response?.headers && response.headers.length > 0);
-  let headerCount = $derived(response?.headers?.length || 0);
+  let sortedHeaders = $derived(
+    response?.headers ? [...response.headers].sort((a, b) => a.key.localeCompare(b.key)) : []
+  );
+  let formattedBody = $derived.by(() => {
+    if (!response?.body) return '';
+    if (contentType?.includes('application/json')) {
+      try {
+        return JSON.stringify(JSON.parse(response.body), null, 2);
+      } catch {
+        return response.body;
+      }
+    }
+    return response.body;
+  });
 
-  // Get status code color class
-  function getStatusClass(status?: number): string {
+  // Helper functions
+  function getStatusClass(status: number | undefined): string {
     if (!status) return '';
     if (status >= 200 && status < 300) return 'status-success';
     if (status >= 300 && status < 400) return 'status-redirect';
@@ -43,324 +52,194 @@
     return '';
   }
 
-  // Get content type from headers
-  function getContentType(headers?: Header[]): string {
-    if (!headers) return 'text/plain';
-    const contentTypeHeader = headers.find((h) => h.key.toLowerCase() === 'content-type');
-    return contentTypeHeader?.value.split(';')[0].trim() || 'text/plain';
+  function getContentType(headers?: Header[]): string | undefined {
+    return headers?.find((h) => h.key.toLowerCase() === 'content-type')?.value;
   }
 
-  // Format response body based on content type
-  function formatBody(body?: string, contentType?: string, formatted: boolean = true): string {
-    if (!body) return '';
-    if (!formatted) return body;
-
-    if (contentType?.includes('application/json')) {
-      try {
-        const parsed = JSON.parse(body);
-        return JSON.stringify(parsed, null, 2);
-      } catch {
-        return body;
-      }
-    }
-
-    return body;
+  function formatTime(ms: number): string {
+    if (ms < 1000) return `${ms}ms`;
+    return `${(ms / 1000).toFixed(2)}s`;
   }
 
-  // Toggle headers expansion
-  function toggleHeaders() {
-    headersExpanded = !headersExpanded;
+  function formatSize(bytes: number): string {
+    if (bytes < 1024) return `${bytes}B`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(2)}KB`;
+    return `${(bytes / (1024 * 1024)).toFixed(2)}MB`;
   }
 
-  // Toggle format
-  function toggleFormat() {
-    isFormatted = !isFormatted;
-  }
-
-  // Copy body to clipboard
   async function copyBody() {
     if (!response?.body) return;
     try {
-      await navigator.clipboard.writeText(response.body);
-      copyBodySuccess = true;
-      setTimeout(() => {
-        copyBodySuccess = false;
-      }, 2000);
+      await navigator.clipboard.writeText(formattedBody);
     } catch (err) {
       console.error('Failed to copy body:', err);
     }
   }
 
-  // Copy headers to clipboard
   async function copyHeaders() {
     if (!response?.headers) return;
-    const headersText = response.headers.map((h) => `${h.key}: ${h.value}`).join('\n');
     try {
+      const headersText = response.headers.map((h) => `${h.key}: ${h.value}`).join('\n');
       await navigator.clipboard.writeText(headersText);
-      copyHeadersSuccess = true;
-      setTimeout(() => {
-        copyHeadersSuccess = false;
-      }, 2000);
     } catch (err) {
       console.error('Failed to copy headers:', err);
     }
-  }
-
-  // Format time display
-  function formatTime(ms: number): string {
-    if (ms < 1000) return `${ms}ms`;
-    return `${(ms / 1000).toFixed(2)}s`;
   }
 </script>
 
 <div class="response-viewer">
   {#if response}
-    <!-- Status and Time -->
-    <div class="response-header">
-      <div class="status-section">
-        <span class="status-badge {statusClass}">
-          {response.status}
-          {#if response.statusText}
-            {response.statusText}
+    <!-- Toolbar with Tabs, Status, Metadata, and Clear Button -->
+    <div class="toolbar">
+      <div class="tabs">
+        <button
+          type="button"
+          class="tab"
+          class:active={activeTab === 'body'}
+          onclick={() => (activeTab = 'body')}
+        >
+          {$t('responseViewer.tabs.body')}
+        </button>
+        <button
+          type="button"
+          class="tab"
+          class:active={activeTab === 'headers'}
+          onclick={() => (activeTab = 'headers')}
+        >
+          {$t('responseViewer.tabs.headers')}
+          {#if sortedHeaders.length > 0}
+            <span class="tab-count">{sortedHeaders.length}</span>
           {/if}
-        </span>
-        <span class="time-badge">
+        </button>
+      </div>
+
+      <div class="toolbar-right">
+        <span class="status-badge {statusClass}" title={$t('responseViewer.status')}
+          >{response.status} {response.statusText || ''}</span
+        >
+        <span class="metadata-item">
           <svg
-            width="14"
-            height="14"
-            viewBox="0 0 16 16"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
             fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            aria-hidden="true"
+            stroke="currentColor"
+            stroke-width="2"
           >
-            <path
-              d="M8 14.667A6.667 6.667 0 1 0 8 1.333a6.667 6.667 0 0 0 0 13.334Z"
-              stroke="currentColor"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M8 4v4l2.667 1.333"
-              stroke="currentColor"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
           </svg>
           {formatTime(response.time)}
         </span>
-      </div>
-    </div>
-
-    <!-- Headers Section -->
-    <div class="headers-section">
-      <div class="section-header">
+        <span class="metadata-item" title="Size">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              d="M12 2v20m8-10H4m12-6a6 6 0 0 1-6 6m6-6a6 6 0 0 0-6 6m0 0a6 6 0 0 1-6 6m6-6a6 6 0 0 0-6 6"
+            ></path>
+          </svg>
+          {formatSize(response.body?.length || 0)}
+        </span>
         <button
           type="button"
-          class="expand-button"
-          onclick={toggleHeaders}
-          aria-expanded={headersExpanded}
-          aria-label={headersExpanded
-            ? $t('responseViewer.collapseHeaders')
-            : $t('responseViewer.expandHeaders')}
+          class="btn-icon"
+          onclick={activeTab === 'body' ? copyBody : copyHeaders}
+          title={activeTab === 'body'
+            ? $t('responseViewer.copyBody')
+            : $t('responseViewer.copyHeaders')}
         >
           <svg
             width="16"
             height="16"
-            viewBox="0 0 16 16"
+            viewBox="0 0 24 24"
             fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            aria-hidden="true"
-            class="chevron"
-            class:expanded={headersExpanded}
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
           >
-            <path
-              d="M4 6l4 4 4-4"
-              stroke="currentColor"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
           </svg>
-          <h3>
-            {$t('responseViewer.headers')}
-            {#if headerCount > 0}
-              <span class="count">({headerCount})</span>
-            {/if}
-          </h3>
         </button>
-        {#if hasHeaders}
+        {#if onClear}
           <button
             type="button"
-            class="btn-icon"
-            onclick={copyHeaders}
-            aria-label={$t('responseViewer.copyHeaders')}
-            title={copyHeadersSuccess
-              ? $t('responseViewer.copied')
-              : $t('responseViewer.copyHeaders')}
+            class="btn-clear"
+            onclick={onClear}
+            title={$t('responseViewer.clear')}
           >
-            {#if copyHeadersSuccess}
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 16 16"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                aria-hidden="true"
-              >
-                <path
-                  d="M13.333 4L6 11.333 2.667 8"
-                  stroke="currentColor"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-            {:else}
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 16 16"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                aria-hidden="true"
-              >
-                <path
-                  d="M13.333 6v6.667a1.333 1.333 0 0 1-1.333 1.333H6a1.333 1.333 0 0 1-1.333-1.333V6A1.333 1.333 0 0 1 6 4.667h6a1.333 1.333 0 0 1 1.333 1.333Z"
-                  stroke="currentColor"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-                <path
-                  d="M11.333 4.667V3.333A1.333 1.333 0 0 0 10 2H3.333a1.333 1.333 0 0 0-1.333 1.333V10A1.333 1.333 0 0 0 3.333 11.333h1.334"
-                  stroke="currentColor"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-            {/if}
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M3 6h18M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"
+              ></path>
+            </svg>
           </button>
         {/if}
       </div>
+    </div>
 
-      {#if headersExpanded}
-        <div class="headers-content">
-          {#if hasHeaders}
-            <div class="headers-list">
-              {#each response.headers as header (header.key)}
-                <div class="header-row">
-                  <span class="header-key">{header.key}:</span>
-                  <span class="header-value">{header.value}</span>
-                </div>
-              {/each}
-            </div>
-          {:else}
-            <p class="empty-state">{$t('responseViewer.noHeaders')}</p>
-          {/if}
+    <!-- Tab Content -->
+    <div class="tab-content">
+      {#if activeTab === 'body'}
+        <div class="body-panel">
+          <div class="body-content">
+            <pre class="response-body">{formattedBody}</pre>
+          </div>
+        </div>
+      {:else}
+        <div class="headers-panel">
+          <div class="headers-content">
+            {#if sortedHeaders.length > 0}
+              <table class="headers-table">
+                <tbody>
+                  {#each sortedHeaders as header (header.key)}
+                    <tr class="header-row">
+                      <td class="header-key">{header.key}</td>
+                      <td class="header-value">{header.value}</td>
+                    </tr>
+                  {/each}
+                </tbody>
+              </table>
+            {:else}
+              <p class="empty-state">{$t('responseViewer.noHeaders')}</p>
+            {/if}
+          </div>
         </div>
       {/if}
     </div>
-
-    <!-- Body Section -->
-    <div class="body-section">
-      <div class="section-header">
-        <h3>{$t('responseViewer.body')}</h3>
-        <div class="body-actions">
-          {#if contentType?.includes('application/json')}
-            <button
-              type="button"
-              class="btn-secondary btn-sm"
-              onclick={toggleFormat}
-              aria-label={isFormatted
-                ? $t('responseViewer.showRaw')
-                : $t('responseViewer.formatJson')}
-            >
-              {isFormatted ? $t('responseViewer.raw') : $t('responseViewer.format')}
-            </button>
-          {/if}
-          {#if response.body}
-            <button
-              type="button"
-              class="btn-icon"
-              onclick={copyBody}
-              aria-label={$t('responseViewer.copyBody')}
-              title={copyBodySuccess ? $t('responseViewer.copied') : $t('responseViewer.copyBody')}
-            >
-              {#if copyBodySuccess}
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  aria-hidden="true"
-                >
-                  <path
-                    d="M13.333 4L6 11.333 2.667 8"
-                    stroke="currentColor"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              {:else}
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  aria-hidden="true"
-                >
-                  <path
-                    d="M13.333 6v6.667a1.333 1.333 0 0 1-1.333 1.333H6a1.333 1.333 0 0 1-1.333-1.333V6A1.333 1.333 0 0 1 6 4.667h6a1.333 1.333 0 0 1 1.333 1.333Z"
-                    stroke="currentColor"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M11.333 4.667V3.333A1.333 1.333 0 0 0 10 2H3.333a1.333 1.333 0 0 0-1.333 1.333V10A1.333 1.333 0 0 0 3.333 11.333h1.334"
-                    stroke="currentColor"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              {/if}
-            </button>
-          {/if}
-        </div>
-      </div>
-
-      <div class="body-content">
-        {#if response.body}
-          <pre class="response-body">{formattedBody}</pre>
-        {:else}
-          <p class="empty-state">{$t('responseViewer.noBody')}</p>
-        {/if}
-      </div>
-    </div>
   {:else}
+    <!-- Empty State -->
     <div class="empty-state-container">
       <svg
-        width="48"
-        height="48"
-        viewBox="0 0 16 16"
+        width="64"
+        height="64"
+        viewBox="0 0 24 24"
         fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        aria-hidden="true"
+        stroke="currentColor"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
       >
-        <path
-          d="M14 6.667v6.666a1.333 1.333 0 0 1-1.333 1.334H3.333A1.333 1.333 0 0 1 2 13.333V6.667m12 0V2.667A1.333 1.333 0 0 0 12.667 1.333H3.333A1.333 1.333 0 0 0 2 2.667v4m12 0H2"
-          stroke="currentColor"
-          stroke-width="1.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+        <polyline points="14 2 14 8 20 8" />
+        <line x1="12" y1="18" x2="12" y2="12" />
+        <line x1="9" y1="15" x2="15" y2="15" />
       </svg>
       <h2>{$t('responseViewer.empty')}</h2>
       <p>{$t('responseViewer.emptyHint')}</p>
@@ -370,37 +249,85 @@
 
 <style>
   .response-viewer {
-    background-color: var(--color-surface);
-    border-radius: var(--radius-lg);
-    padding: var(--spacing-lg);
-    border: 1px solid var(--color-border);
+    height: 100%;
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-lg);
   }
 
-  .response-header {
+  .toolbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-bottom: var(--spacing-md);
     border-bottom: 1px solid var(--color-border);
-  }
-
-  .status-section {
-    display: flex;
-    align-items: center;
     gap: var(--spacing-md);
   }
 
+  .toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+  }
+
+  .tabs {
+    display: flex;
+    gap: var(--spacing-xs);
+  }
+
+  .tab {
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--color-text-secondary);
+    font-family: inherit;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+  }
+
+  .tab:hover {
+    color: var(--color-text);
+    background-color: var(--color-surface-hover);
+  }
+
+  .tab.active {
+    color: var(--color-primary);
+    border-bottom-color: var(--color-primary);
+  }
+
+  .tab-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 var(--spacing-xs);
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  .tab.active .tab-count {
+    background-color: var(--color-primary-alpha);
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+  }
+
   .status-badge {
-    padding: var(--spacing-xs) var(--spacing-md);
+    padding: var(--spacing-xs) var(--spacing-sm);
     border-radius: var(--radius-md);
     font-weight: 600;
-    font-size: 0.875rem;
+    font-size: 0.75rem;
     display: inline-flex;
     align-items: center;
     gap: var(--spacing-xs);
+    white-space: nowrap;
   }
 
   .status-success {
@@ -427,7 +354,7 @@
     border: 1px solid var(--color-danger);
   }
 
-  .time-badge {
+  .metadata-item {
     display: flex;
     align-items: center;
     gap: var(--spacing-xs);
@@ -435,102 +362,67 @@
     background-color: var(--color-background);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
-    font-size: 0.875rem;
+    font-size: 0.75rem;
     color: var(--color-text-secondary);
+    font-weight: 500;
+    white-space: nowrap;
   }
 
-  .headers-section,
-  .body-section {
+  .btn-clear {
+    padding: var(--spacing-xs);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    border: 1px solid transparent;
+    border-radius: var(--radius-md);
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: all var(--transition-base);
+  }
+
+  .btn-clear:hover {
+    background-color: var(--color-background);
+    border-color: var(--color-border);
+    color: var(--color-danger);
+  }
+
+  .tab-content {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .body-panel,
+  .headers-panel {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-md);
+    padding: var(--spacing-md) 0;
+    flex: 1;
   }
 
-  .section-header {
+  .panel-header {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: center;
   }
 
-  .section-header h3 {
-    margin: 0;
-    font-size: 1rem;
-    color: var(--color-text);
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-xs);
-  }
-
-  .count {
-    color: var(--color-text-secondary);
-    font-weight: 400;
-    font-size: 0.875rem;
-  }
-
-  .expand-button {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-xs);
-    background: none;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    color: var(--color-text);
-    font-family: inherit;
-    transition: color var(--transition-base);
-  }
-
-  .expand-button:hover {
-    color: var(--color-primary);
-  }
-
-  .chevron {
-    transition: transform var(--transition-base);
-  }
-
-  .chevron.expanded {
-    transform: rotate(180deg);
-  }
-
-  .body-actions {
+  .panel-actions {
     display: flex;
     align-items: center;
     gap: var(--spacing-sm);
   }
 
-  .headers-content {
-    padding-left: var(--spacing-md);
-  }
-
-  .headers-list {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-xs);
-  }
-
-  .header-row {
-    display: grid;
-    grid-template-columns: minmax(150px, auto) 1fr;
-    gap: var(--spacing-md);
-    padding: var(--spacing-xs) 0;
-    font-size: 0.875rem;
-  }
-
-  .header-key {
-    color: var(--color-text-secondary);
-    font-weight: 600;
-  }
-
-  .header-value {
-    color: var(--color-text);
-    word-break: break-all;
-  }
-
   .body-content {
+    flex: 1;
     background-color: var(--color-background);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
   }
 
   .response-body {
@@ -539,17 +431,56 @@
     font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
     font-size: 0.875rem;
     color: var(--color-text);
-    overflow-x: auto;
-    max-height: 500px;
+    overflow: auto;
+    flex: 1;
+  }
+
+  .headers-content {
+    flex: 1;
     overflow-y: auto;
   }
 
+  .headers-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+  }
+
+  .header-row:nth-child(odd) {
+    background-color: var(--color-surface);
+  }
+
+  .header-row:nth-child(even) {
+    background-color: var(--color-background);
+  }
+
+  .header-row:hover {
+    background-color: var(--color-surface-hover);
+  }
+
+  .header-key {
+    padding: var(--spacing-sm) var(--spacing-md);
+    color: var(--color-text);
+    font-weight: 600;
+    width: 200px;
+    vertical-align: top;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .header-value {
+    padding: var(--spacing-sm) var(--spacing-md);
+    color: var(--color-text);
+    word-break: break-all;
+    border-bottom: 1px solid var(--color-border);
+  }
+
   .empty-state {
-    padding: var(--spacing-md);
+    padding: var(--spacing-lg);
     color: var(--color-text-secondary);
     font-style: italic;
     font-size: 0.875rem;
     margin: 0;
+    text-align: center;
   }
 
   .empty-state-container {
@@ -560,6 +491,7 @@
     padding: var(--spacing-xl) var(--spacing-lg);
     text-align: center;
     color: var(--color-text-secondary);
+    flex: 1;
   }
 
   .empty-state-container svg {

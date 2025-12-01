@@ -162,12 +162,17 @@
     "copyBody": "Body kopieren",
     "copyHeaders": "Header kopieren",
     "copied": "Kopiert!",
-    "format": "Formatieren",
+    "format": "Format",
     "raw": "Roh",
     "formatJson": "JSON formatieren",
     "showRaw": "Roh anzeigen",
     "expandHeaders": "Header erweitern",
-    "collapseHeaders": "Header reduzieren"
+    "collapseHeaders": "Header reduzieren",
+    "clear": "Antwort löschen",
+    "tabs": {
+      "body": "Body",
+      "headers": "Header"
+    }
   },
   "headers": {
     "key": "Schlüssel",
@@ -377,10 +382,37 @@
     "openMenu": "Menü öffnen",
     "expandSection": "Abschnitt erweitern",
     "collapseSection": "Abschnitt reduzieren",
-    "selectOption": "Option auswählen",
+    "selectOption": "Option wählen",
     "navigationMenu": "Navigationsmenü",
     "mainContent": "Hauptinhalt",
     "loadingContent": "Inhalt wird geladen"
+  },
+  "response": {
+    "title": "Antwort",
+    "clear": "Löschen"
+  },
+  "toolbar": {
+    "showSidebar": "Seitenleiste Anzeigen",
+    "hideSidebar": "Seitenleiste Ausblenden",
+    "preferences": "Einstellungen"
+  },
+  "preferences": {
+    "title": "Einstellungen",
+    "close": "Schließen",
+    "appearance": "Erscheinungsbild",
+    "theme": "Thema",
+    "language": "Sprache",
+    "selectLanguage": "Sprache Auswählen"
+  },
+  "tabs": {
+    "close": "Tab Schließen",
+    "untitled": "Ohne Titel",
+    "noActiveTab": "Kein Aktiver Tab",
+    "selectOrCreateRequest": "Wählen Sie eine Anfrage aus der Seitenleiste aus oder erstellen Sie eine neue"
+  },
+  "layout": {
+    "switchToVertical": "Zu Vertikalem Layout Wechseln",
+    "switchToHorizontal": "Zu Horizontalem Layout Wechseln"
   },
   "test": {
     "param": "Hallo {name}",

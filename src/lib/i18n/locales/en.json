@@ -167,7 +167,12 @@
     "formatJson": "Format JSON",
     "showRaw": "Show raw",
     "expandHeaders": "Expand headers",
-    "collapseHeaders": "Collapse headers"
+    "collapseHeaders": "Collapse headers",
+    "clear": "Clear response",
+    "tabs": {
+      "body": "Body",
+      "headers": "Headers"
+    }
   },
   "headers": {
     "key": "Key",
@@ -381,6 +386,33 @@
     "navigationMenu": "Navigation menu",
     "mainContent": "Main content",
     "loadingContent": "Loading content"
+  },
+  "response": {
+    "title": "Response",
+    "clear": "Clear"
+  },
+  "toolbar": {
+    "showSidebar": "Show Sidebar",
+    "hideSidebar": "Hide Sidebar",
+    "preferences": "Preferences"
+  },
+  "preferences": {
+    "title": "Preferences",
+    "close": "Close",
+    "appearance": "Appearance",
+    "theme": "Theme",
+    "language": "Language",
+    "selectLanguage": "Select Language"
+  },
+  "tabs": {
+    "close": "Close Tab",
+    "untitled": "Untitled",
+    "noActiveTab": "No Active Tab",
+    "selectOrCreateRequest": "Select a request from the sidebar or create a new one"
+  },
+  "layout": {
+    "switchToVertical": "Switch to Vertical Layout",
+    "switchToHorizontal": "Switch to Horizontal Layout"
   },
   "test": {
     "param": "Hello {name}",

@@ -153,21 +153,26 @@
   "responseViewer": {
     "status": "Statut",
     "time": "Temps",
-    "headers": "En-têtes de réponse",
-    "body": "Corps de réponse",
+    "headers": "En-têtes de Réponse",
+    "body": "Corps de Réponse",
     "empty": "Pas encore de réponse",
     "emptyHint": "Envoyez une requête pour voir la réponse",
     "noHeaders": "Aucun en-tête dans la réponse",
     "noBody": "Aucun corps dans la réponse",
     "copyBody": "Copier le corps",
     "copyHeaders": "Copier les en-têtes",
-    "copied": "Copié !",
-    "format": "Formater",
+    "copied": "Copié!",
+    "format": "Format",
     "raw": "Brut",
     "formatJson": "Formater JSON",
     "showRaw": "Afficher brut",
     "expandHeaders": "Développer les en-têtes",
-    "collapseHeaders": "Réduire les en-têtes"
+    "collapseHeaders": "Réduire les en-têtes",
+    "clear": "Effacer la réponse",
+    "tabs": {
+      "body": "Corps",
+      "headers": "En-têtes"
+    }
   },
   "headers": {
     "key": "Clé",
@@ -373,7 +378,7 @@
     "prevTab": "Onglet Précédent"
   },
   "accessibility": {
-    "closeDialog": "Fermer le dialogue",
+    "closeDialog": "Fermer la boîte de dialogue",
     "openMenu": "Ouvrir le menu",
     "expandSection": "Développer la section",
     "collapseSection": "Réduire la section",
@@ -382,8 +387,35 @@
     "mainContent": "Contenu principal",
     "loadingContent": "Chargement du contenu"
   },
+  "response": {
+    "title": "Réponse",
+    "clear": "Effacer"
+  },
+  "toolbar": {
+    "showSidebar": "Afficher la Barre Latérale",
+    "hideSidebar": "Masquer la Barre Latérale",
+    "preferences": "Préférences"
+  },
+  "preferences": {
+    "title": "Préférences",
+    "close": "Fermer",
+    "appearance": "Apparence",
+    "theme": "Thème",
+    "language": "Langue",
+    "selectLanguage": "Sélectionner la Langue"
+  },
+  "tabs": {
+    "close": "Fermer l'Onglet",
+    "untitled": "Sans Titre",
+    "noActiveTab": "Aucun Onglet Actif",
+    "selectOrCreateRequest": "Sélectionnez une requête dans la barre latérale ou créez-en une nouvelle"
+  },
+  "layout": {
+    "switchToVertical": "Passer à la Disposition Verticale",
+    "switchToHorizontal": "Passer à la Disposition Horizontale"
+  },
   "test": {
     "param": "Bonjour {name}",
-    "greeting": "Bonjour, {name} !"
+    "greeting": "Bonjour, {name}!"
   }
 }
