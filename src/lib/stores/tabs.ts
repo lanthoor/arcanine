@@ -29,7 +29,7 @@ function createTabStore() {
 
         // Create new tab
         const newTab: Tab = {
-          id: `tab-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+          id: `tab-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
           requestId,
           name,
         };
