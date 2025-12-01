@@ -1,6 +1,6 @@
 import { defineConfig } from 'vitest/config';
 import { svelte } from '@sveltejs/vite-plugin-svelte';
-import { resolve } from 'path';
+import { resolve } from 'node:path';
 
 export default defineConfig({
   plugins: [
@@ -45,6 +45,7 @@ export default defineConfig({
   resolve: {
     alias: {
       $lib: resolve('./src/lib'),
+      '$app/environment': resolve('./src/test/mocks/app-environment.ts'),
     },
   },
 });
