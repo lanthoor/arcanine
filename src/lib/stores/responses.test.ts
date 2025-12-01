@@ -378,7 +378,7 @@ describe('Response Store', () => {
       });
 
       expect(states.length).toBeGreaterThan(1);
-      expect(states[states.length - 1]['request-1']).toBeDefined();
+      expect(states.at(-1)!['request-1']).toBeDefined();
 
       unsubscribe();
     });
@@ -401,7 +401,7 @@ describe('Response Store', () => {
       responseStore.clearResponse('request-1');
 
       expect(states.length).toBeGreaterThan(1);
-      expect(states[states.length - 1]['request-1']).toBeUndefined();
+      expect(states.at(-1)!['request-1']).toBeUndefined();
 
       unsubscribe();
     });
@@ -424,7 +424,7 @@ describe('Response Store', () => {
       responseStore.clearAll();
 
       expect(states.length).toBeGreaterThan(1);
-      expect(Object.keys(states[states.length - 1])).toHaveLength(0);
+      expect(Object.keys(states.at(-1)!)).toHaveLength(0);
 
       unsubscribe();
     });

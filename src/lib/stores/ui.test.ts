@@ -8,7 +8,7 @@ describe('UI Store', () => {
   beforeEach(() => {
     // Mock localStorage
     mockLocalStorage = {};
-    global.localStorage = {
+    globalThis.localStorage = {
       getItem: vi.fn((key: string) => mockLocalStorage[key] || null),
       setItem: vi.fn((key: string, value: string) => {
         mockLocalStorage[key] = value;
@@ -171,7 +171,7 @@ describe('UI Store', () => {
       uiStore.toggleSidebar();
 
       const setItemMock = localStorage.setItem as ReturnType<typeof vi.fn>;
-      const lastCall = setItemMock.mock.calls[setItemMock.mock.calls.length - 1];
+      const lastCall = setItemMock.mock.calls.at(-1)!;
       const [key, value] = lastCall;
 
       expect(key).toBe('arcanine-ui-state');
@@ -260,7 +260,7 @@ describe('UI Store', () => {
   describe('Error Handling', () => {
     it('should handle localStorage.setItem errors gracefully on sidebar toggle', () => {
       // Make setItem throw an error
-      global.localStorage.setItem = vi.fn(() => {
+      globalThis.localStorage.setItem = vi.fn(() => {
         throw new Error('QuotaExceededError');
       });
 
@@ -270,7 +270,7 @@ describe('UI Store', () => {
 
     it('should handle localStorage.setItem errors gracefully on layout toggle', () => {
       // Make setItem throw an error
-      global.localStorage.setItem = vi.fn(() => {
+      globalThis.localStorage.setItem = vi.fn(() => {
         throw new Error('QuotaExceededError');
       });
 
@@ -284,7 +284,7 @@ describe('UI Store', () => {
       mockLocalStorage['arcanine-ui-state'] = invalidJSON;
 
       // Make getItem return the invalid JSON
-      global.localStorage.getItem = vi.fn((key) => {
+      globalThis.localStorage.getItem = vi.fn((key) => {
         if (key === 'arcanine-ui-state') {
           // This will be parsed and should trigger the catch block
           return invalidJSON;
@@ -305,7 +305,7 @@ describe('UI Store', () => {
 
     it('should handle localStorage.getItem throwing errors', () => {
       // Make getItem throw
-      global.localStorage.getItem = vi.fn(() => {
+      globalThis.localStorage.getItem = vi.fn(() => {
         throw new Error('Storage access denied');
       });
 
@@ -321,7 +321,7 @@ describe('UI Store', () => {
         layoutOrientation: 'horizontal',
       });
       mockLocalStorage['arcanine-ui-state'] = validData;
-      global.localStorage.getItem = vi.fn(() => validData);
+      globalThis.localStorage.getItem = vi.fn(() => validData);
 
       // Toggle to potentially trigger loadFromStorage code path
       uiStore.toggleSidebar();
@@ -375,7 +375,7 @@ describe('UI Store', () => {
     });
 
     it('should test saveToStorage with errors', () => {
-      global.localStorage.setItem = vi.fn(() => {
+      globalThis.localStorage.setItem = vi.fn(() => {
         throw new Error('Quota exceeded');
       });
 
