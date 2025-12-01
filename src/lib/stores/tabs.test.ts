@@ -311,7 +311,7 @@ describe('Tabs Store', () => {
       tabStore.openTab('request-1', 'Tab 1');
 
       expect(states.length).toBeGreaterThan(1);
-      expect(states[states.length - 1].tabs.length).toBeGreaterThan(states[0].tabs.length);
+      expect(states.at(-1)!.tabs.length).toBeGreaterThan(states[0].tabs.length);
 
       unsubscribe();
     });
@@ -328,7 +328,7 @@ describe('Tabs Store', () => {
       tabStore.closeTab(currentState.tabs[0].id);
 
       expect(states.length).toBeGreaterThan(1);
-      expect(states[states.length - 1].tabs.length).toBeLessThan(states[0].tabs.length);
+      expect(states.at(-1)!.tabs.length).toBeLessThan(states[0].tabs.length);
 
       unsubscribe();
     });
