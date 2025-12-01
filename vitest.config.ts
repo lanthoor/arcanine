@@ -45,6 +45,7 @@ export default defineConfig({
   resolve: {
     alias: {
       $lib: resolve('./src/lib'),
+      '$app/environment': resolve('./src/test/mocks/app-environment.ts'),
     },
   },
 });
