@@ -9,15 +9,31 @@ interface UIState {
 
 const STORAGE_KEY = 'arcanine-ui-state';
 
+// Export helpers for testing
+export const loadFromStorage = (): UIState | null => {
+  if (!browser) return null;
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    return stored ? JSON.parse(stored) : null;
+  } catch {
+    return null;
+  }
+};
+
+export const saveToStorage = (state: UIState): void => {
+  if (!browser) return;
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch {
+    // Silently fail if localStorage is not available
+  }
+};
+
 function createUIStore() {
-  // Load from localStorage if in browser
-  const stored = browser ? localStorage.getItem(STORAGE_KEY) : null;
-  const initial: UIState = stored
-    ? JSON.parse(stored)
-    : {
-        sidebarCollapsed: false,
-        layoutOrientation: 'vertical',
-      };
+  const initial: UIState = loadFromStorage() || {
+    sidebarCollapsed: false,
+    layoutOrientation: 'vertical',
+  };
 
   const { subscribe, update } = writable<UIState>(initial);
 
@@ -26,9 +42,7 @@ function createUIStore() {
     toggleSidebar: () => {
       update((state) => {
         const newState = { ...state, sidebarCollapsed: !state.sidebarCollapsed };
-        if (browser) {
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(newState));
-        }
+        saveToStorage(newState);
         return newState;
       });
     },
@@ -38,9 +52,7 @@ function createUIStore() {
           ...state,
           layoutOrientation: state.layoutOrientation === 'horizontal' ? 'vertical' : 'horizontal',
         } as UIState;
-        if (browser) {
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(newState));
-        }
+        saveToStorage(newState);
         return newState;
       });
     },

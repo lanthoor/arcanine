@@ -176,8 +176,25 @@ describe('Tabs Store', () => {
 
       expect(afterClose.tabs).toHaveLength(beforeClose.tabs.length);
     });
-  });
 
+    it('should handle edge case when closing tab at boundary index', () => {
+      // Create exactly 2 tabs and close the first one to test index boundary
+      tabStore.openTab('request-1', 'Tab 1');
+      tabStore.openTab('request-2', 'Tab 2');
+
+      const state = get(tabStore);
+      const firstTabId = state.tabs[0].id;
+      const secondTabId = state.tabs[1].id;
+
+      // Set first tab as active and close it
+      tabStore.setActiveTab(firstTabId);
+      tabStore.closeTab(firstTabId);
+
+      const afterClose = get(tabStore);
+      expect(afterClose.tabs).toHaveLength(1);
+      expect(afterClose.activeTabId).toBe(secondTabId);
+    });
+  });
   describe('setActiveTab', () => {
     it('should set the specified tab as active', () => {
       tabStore.openTab('request-1', 'Tab 1');
