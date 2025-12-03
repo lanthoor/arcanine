@@ -444,110 +444,55 @@ Describe the tests you ran
    git pull upstream main
    ```
 
-## Project Structure
-
-Understanding the project structure will help you navigate the codebase:
-
-```
-arcanine/
-├── src/                    # Frontend (Svelte 5 + TypeScript)
-│   ├── lib/
-│   │   ├── components/    # UI components (ThemeToggle.svelte)
-│   │   ├── i18n/          # Internationalization (locales/, index.ts)
-│   │   └── stores/        # State management (theme.ts)
-│   ├── routes/            # SvelteKit routes
-│   ├── app.css            # Global styles with CSS variables
-│   └── app.html           # HTML template
-│
-├── src-tauri/             # Backend (Rust + Tauri 2.x)
-│   ├── src/
-│   │   ├── commands/      # Tauri commands (to be added)
-│   │   ├── models/        # Data structures (to be added)
-│   │   ├── services/      # Business logic (to be added)
-│   │   └── main.rs        # Application entry point
-│   ├── Cargo.toml         # Rust dependencies
-│   ├── tauri.conf.json    # Tauri configuration
-│   └── rustfmt.toml       # Rust formatting config
-│
-├── docs/                  # Documentation
-│   ├── architecture/      # Architecture docs
-│   └── plan/              # Development plan
-│
-├── .prettierrc            # Prettier configuration
-├── .eslintrc.cjs          # ESLint configuration
-├── tailwind.config.js     # TailwindCSS configuration
-├── postcss.config.js      # PostCSS configuration
-├── tsconfig.json          # TypeScript configuration
-└── svelte.config.js       # Svelte configuration
-```
-
 ## Testing
 
-### Frontend Tests
+### Frontend Testing
+
+**Stack**: Vitest with Happy-DOM, @testing-library/svelte, @vitest/coverage-v8
+
+**Commands**:
 
 ```bash
-# Run tests in watch mode
-npm run test
-
-# Run tests once
-npm run test:run
-
-# Run with UI
-npm run test:ui
-
-# Generate coverage report
-npm run test:coverage
+npm run test              # Watch mode
+npm run test:run          # Single run
+npm run test:coverage     # With coverage
 ```
 
-**Stack**: Vitest, Happy-DOM, @testing-library/svelte, @vitest/coverage-v8
+**Coverage Goals**: 90%+ across lines, functions, branches, statements
 
-### Backend Tests
+**Test Structure**: Co-located with source files (`.test.ts` extension)
 
-```bash
-# Run all Rust tests
-npm run test:rust
-
-# Run specific test
-cd src-tauri && cargo test test_name
-
-# Run tests with output
-cd src-tauri && cargo test -- --nocapture
-
-# Generate coverage report
-npm run test:rust:coverage
-```
-
-**Stack**: Rust built-in test framework, cargo-tarpaulin for coverage
-
-### Coverage Goals
-
-- Target: **90%+ test coverage** across all phases
-- Frontend: Vitest + @testing-library/svelte + Happy-DOM + v8 coverage
-- Backend: Rust built-in test framework + cargo-tarpaulin
-- CI/CD: GitHub Actions with Codecov integration
-
-### Test Documentation
-
-See [Testing Documentation](docs/architecture/testing.md) for detailed testing guide.
-
-### Writing Tests
-
-**Frontend (Vitest - to be added in Phase 1.2):**
+**Example**:
 
 ```typescript
 import { describe, it, expect } from 'vitest';
-import { render } from '@testing-library/svelte';
-import Component from './Component.svelte';
+import { mount } from 'svelte';
+import MyComponent from './MyComponent.svelte';
 
-describe('Component', () => {
+describe('MyComponent', () => {
   it('renders correctly', () => {
-    const { getByText } = render(Component);
-    expect(getByText('Hello')).toBeInTheDocument();
+    expect(MyComponent).toBeDefined();
   });
 });
 ```
 
-**Backend (Rust):**
+### Backend Testing
+
+**Stack**: Rust built-in test framework, Tarpaulin for coverage
+
+**Commands**:
+
+```bash
+cd src-tauri && cargo test              # Run tests
+cd src-tauri && cargo test -- --nocapture  # With output
+npm run test:rust:coverage              # With coverage
+```
+
+**Coverage Goals**: 90%+ backend coverage
+
+**Test Structure**: Tests in same file using `#[cfg(test)]`
+
+**Example**:
 
 ```rust
 #[cfg(test)]
@@ -562,45 +507,41 @@ mod tests {
 }
 ```
 
-## Documentation
+### Pre-commit Validation
 
-### Code Documentation
+All changes must pass before committing:
 
-- **Rust**: Use `///` for public APIs
+```bash
+# Frontend
+npm run lint              # ESLint check
+npm run check             # TypeScript/Svelte check
+npm run test:coverage     # Tests with coverage (≥90% lines, ≥80% branches)
 
-  ```rust
-  /// Executes an HTTP request
-  ///
-  /// # Arguments
-  /// * `request` - The request to execute
-  ///
-  /// # Returns
-  /// The HTTP response
-  pub fn execute_request(request: Request) -> Response {
-      // Implementation
-  }
-  ```
+# Backend
+cd src-tauri && cargo fmt --check  # Rust formatting
+cd src-tauri && cargo clippy -- -D warnings  # Rust linting
+npm run test:rust:coverage  # Rust tests with coverage (≥90%)
 
-- **TypeScript**: Use JSDoc
-  ```typescript
-  /**
-   * Fetches a user by ID
-   * @param id - The user ID
-   * @returns The user object or null
-   */
-  function getUserById(id: string): User | null {
-    // Implementation
-  }
-  ```
+# Build
+npm run build  # Production build
+```
 
-### Architecture Documentation
+### CI/CD Pipeline
 
-When making significant changes, update relevant documentation in `docs/architecture/`:
+Tests run automatically on push/PR:
 
-- Architecture overview
-- YAML schema
-- API documentation
-- Design decisions
+- Frontend: Type checking, ESLint, Vitest with coverage
+- Backend: `cargo fmt`, `cargo clippy`, unit tests, coverage (Ubuntu only)
+- Build: Full application build on Ubuntu, macOS, Windows
+
+See `.github/workflows/ci.yml` for details.
+
+## Additional Resources
+
+- **Setup Guide**: See [SETUP.md](SETUP.md) for development environment prerequisites and installation
+- **Architecture**: See [docs/architecture/README.md](docs/architecture/README.md) for technical design and project structure
+- **Progress**: See [docs/progress/README.md](docs/progress/README.md) for current project status
+- **Roadmap**: See [docs/plan/](docs/plan/) for project vision and execution plan
 
 ## Recognition
 

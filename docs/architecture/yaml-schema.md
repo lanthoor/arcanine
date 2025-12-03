@@ -758,5 +758,6 @@ request:
 For more information:
 
 - [Architecture Overview](README.md)
+- [Collection Structure Guide](collection-structure.md)
 - [Scripting Guide](scripting.md)
 - [Authentication Guide](authentication.md)
