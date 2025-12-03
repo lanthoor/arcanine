@@ -35,7 +35,7 @@ pub enum FileChangeType {
 /// Manages collections and their associated requests on disk
 pub struct CollectionManager {
     /// Base path for all collections
-    base_path: PathBuf,
+    pub base_path: PathBuf,
 
     /// YAML store for file I/O operations
     yaml_store: YAMLStore,

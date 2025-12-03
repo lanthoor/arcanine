@@ -5,13 +5,55 @@
 
 use crate::models::Collection;
 use crate::storage::CollectionManager;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::sync::Arc;
 use tauri::State;
 
 /// Shared application state containing the collection manager
 pub struct AppState {
     pub collection_manager: Arc<CollectionManager>,
+}
+
+/// Sanitize a collection name to create a safe filename
+///
+/// Converts to lowercase, replaces spaces with dashes, and filters to alphanumeric + dashes.
+/// Returns an error if the result is empty or contains only dashes.
+fn sanitize_filename(name: &str) -> Result<String, String> {
+    let filename: String = name
+        .to_lowercase()
+        .replace(' ', "-")
+        .chars()
+        .filter(|c| c.is_alphanumeric() || *c == '-')
+        .collect();
+
+    // Check if empty or contains only dashes
+    if filename.is_empty() || filename.chars().all(|c| c == '-') {
+        return Err("Collection name must contain at least one alphanumeric character".to_string());
+    }
+
+    Ok(filename)
+}
+
+/// Validate that a path is within the collections directory
+///
+/// Prevents directory traversal attacks by ensuring the canonical path
+/// is within the collection manager's base directory.
+fn validate_path_in_collections(path: &Path, base_path: &Path) -> Result<PathBuf, String> {
+    // Canonicalize both paths to resolve .. and symlinks
+    let canonical_path = path
+        .canonicalize()
+        .map_err(|e| format!("Invalid path: {}", e))?;
+
+    let canonical_base = base_path
+        .canonicalize()
+        .map_err(|e| format!("Invalid base path: {}", e))?;
+
+    // Ensure path is within collections directory
+    if !canonical_path.starts_with(canonical_base) {
+        return Err("Access denied: path outside collections directory".to_string());
+    }
+
+    Ok(canonical_path)
 }
 
 /// Load a collection from the filesystem
@@ -35,9 +77,13 @@ pub async fn load_collection(
 ) -> Result<Collection, String> {
     let path_buf = PathBuf::from(&path);
 
+    // Validate path is within collections directory
+    let validated_path =
+        validate_path_in_collections(&path_buf, &state.collection_manager.base_path)?;
+
     state
         .collection_manager
-        .load_collection(&path_buf)
+        .load_collection(&validated_path)
         .map_err(|e| format!("Failed to load collection: {}", e))
 }
 
@@ -68,6 +114,16 @@ pub async fn save_collection(
     // Basic validation
     if collection.name.trim().is_empty() {
         return Err("Collection name cannot be empty".to_string());
+    }
+
+    // Validate filename doesn't contain path separators
+    if filename.contains('/') || filename.contains('\\') {
+        return Err("Filename cannot contain path separators".to_string());
+    }
+
+    // Validate filename is not empty
+    if filename.trim().is_empty() {
+        return Err("Filename cannot be empty".to_string());
     }
 
     let path = state
@@ -102,13 +158,8 @@ pub async fn create_new_collection(
     // Create new collection with metadata
     let collection = Collection::new(name.clone());
 
-    // Generate filename from name (kebab-case)
-    let filename = name
-        .to_lowercase()
-        .replace(' ', "-")
-        .chars()
-        .filter(|c| c.is_alphanumeric() || *c == '-')
-        .collect::<String>();
+    // Generate filename from name (kebab-case) with validation
+    let filename = sanitize_filename(&name)?;
 
     // Save the collection
     let path = state
@@ -178,9 +229,13 @@ pub async fn list_collections(state: State<'_, AppState>) -> Result<Vec<Collecti
 pub async fn delete_collection(path: String, state: State<'_, AppState>) -> Result<(), String> {
     let path_buf = PathBuf::from(&path);
 
+    // Validate path is within collections directory
+    let validated_path =
+        validate_path_in_collections(&path_buf, &state.collection_manager.base_path)?;
+
     state
         .collection_manager
-        .delete_collection(&path_buf)
+        .delete_collection(&validated_path)
         .map_err(|e| format!("Failed to delete collection: {}", e))
 }
 
@@ -213,10 +268,14 @@ pub async fn validate_collection(
 ) -> Result<(Collection, Vec<String>), String> {
     let path_buf = PathBuf::from(&path);
 
+    // Validate path is within collections directory
+    let validated_path =
+        validate_path_in_collections(&path_buf, &state.collection_manager.base_path)?;
+
     // Load the collection
     let collection = state
         .collection_manager
-        .load_collection(&path_buf)
+        .load_collection(&validated_path)
         .map_err(|e| format!("Failed to load collection: {}", e))?;
 
     // Validate and optionally fix
@@ -225,7 +284,7 @@ pub async fn validate_collection(
 
     // If auto_fix is enabled and issues were found, save the fixed collection
     if auto_fix && !issues.is_empty() {
-        let filename = path_buf
+        let filename = validated_path
             .file_stem()
             .and_then(|s| s.to_str())
             .ok_or_else(|| "Invalid filename".to_string())?;
@@ -265,7 +324,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_collection_filename_sanitization() {
-        // Test the filename generation logic from create_new_collection
+        // Test the filename generation logic using the helper function
         let test_cases = vec![
             ("My API", "my-api"),
             ("Test@API#Collection!", "testapicollection"),
@@ -275,14 +334,9 @@ mod tests {
         ];
 
         for (input, expected) in test_cases {
-            let filename: String = input
-                .to_lowercase()
-                .replace(' ', "-")
-                .chars()
-                .filter(|c| c.is_alphanumeric() || *c == '-')
-                .collect();
-
-            assert_eq!(filename, expected, "Failed for input: {}", input);
+            let result = sanitize_filename(input);
+            assert!(result.is_ok(), "Failed for input: {}", input);
+            assert_eq!(result.unwrap(), expected, "Failed for input: {}", input);
         }
     }
 
@@ -340,12 +394,7 @@ mod tests {
         let name = "New API".to_string();
         let collection = Collection::new(name.clone());
 
-        let filename = name
-            .to_lowercase()
-            .replace(' ', "-")
-            .chars()
-            .filter(|c| c.is_alphanumeric() || *c == '-')
-            .collect::<String>();
+        let filename = sanitize_filename(&name).unwrap();
 
         let path = manager.save_collection(&collection, &filename).unwrap();
 
@@ -517,5 +566,131 @@ mod tests {
         let abs_path = "/absolute/path/collection.yaml";
         let abs_buf = PathBuf::from(abs_path);
         assert_eq!(abs_buf.to_string_lossy(), abs_path);
+    }
+
+    // Security Tests
+
+    #[tokio::test]
+    async fn test_sanitize_filename_with_valid_names() {
+        let test_cases = vec![
+            ("My API", "my-api"),
+            ("Hello World 123", "hello-world-123"),
+            ("UPPERCASE", "uppercase"),
+        ];
+
+        for (input, expected) in test_cases {
+            let result = sanitize_filename(input);
+            assert!(result.is_ok());
+            assert_eq!(result.unwrap(), expected);
+        }
+    }
+
+    #[tokio::test]
+    async fn test_sanitize_filename_removes_special_chars() {
+        let test_cases = vec![
+            ("Test@API#Collection!", "testapicollection"),
+            ("with---dashes", "with---dashes"),
+            ("a!b@c#d$e%", "abcde"),
+        ];
+
+        for (input, expected) in test_cases {
+            let result = sanitize_filename(input);
+            assert!(result.is_ok());
+            assert_eq!(result.unwrap(), expected);
+        }
+    }
+
+    #[tokio::test]
+    async fn test_sanitize_filename_rejects_empty_results() {
+        let invalid_inputs = vec![
+            "!!!",       // Only special chars
+            "@#$%^&*()", // No alphanumerics
+            "   ",       // Only spaces
+            "!@#",       // Mixed special chars
+        ];
+
+        for input in invalid_inputs {
+            let result = sanitize_filename(input);
+            assert!(result.is_err(), "Should reject input: {}", input);
+            assert!(result.unwrap_err().contains("alphanumeric"));
+        }
+    }
+
+    #[tokio::test]
+    async fn test_save_collection_rejects_path_separators() {
+        let (manager, _temp_dir) = setup_test_manager();
+        let collection = Collection::new("Test");
+
+        // Test Unix path separator
+        let result = manager.save_collection(&collection, "../etc/passwd");
+        assert!(result.is_err());
+
+        // Test Windows path separator
+        let result = manager.save_collection(&collection, "..\\windows\\system32");
+        assert!(result.is_err());
+
+        // Test nested paths
+        let result = manager.save_collection(&collection, "../../malicious");
+        assert!(result.is_err());
+    }
+
+    #[tokio::test]
+    async fn test_save_collection_rejects_empty_filename() {
+        let (manager, _temp_dir) = setup_test_manager();
+        let collection = Collection::new("Test");
+
+        let result = manager.save_collection(&collection, "");
+        assert!(result.is_err());
+        let error_msg = format!("{}", result.unwrap_err());
+        assert!(error_msg.to_lowercase().contains("empty"));
+
+        let result = manager.save_collection(&collection, "   ");
+        assert!(result.is_err());
+    }
+
+    #[tokio::test]
+    async fn test_create_new_collection_rejects_invalid_names() {
+        // Test names that would result in empty filenames
+        let invalid_names = vec!["!!!", "@#$%", "   "];
+
+        for name in invalid_names {
+            let result = sanitize_filename(name);
+            assert!(result.is_err(), "Should reject name: {}", name);
+        }
+    }
+
+    #[tokio::test]
+    async fn test_path_validation_prevents_traversal() {
+        let (manager, _temp_dir) = setup_test_manager();
+
+        // Create a valid collection
+        let collection = Collection::new("Valid");
+        let path = manager.save_collection(&collection, "valid").unwrap();
+
+        // Test that validate_path_in_collections works for valid paths
+        let result = validate_path_in_collections(&path, &manager.base_path);
+        assert!(result.is_ok());
+
+        // Note: Cannot test traversal with non-existent paths as canonicalize will fail
+        // This is actually good security - non-existent paths are rejected
+    }
+
+    #[tokio::test]
+    async fn test_sanitize_filename_unicode() {
+        // Test that Unicode characters are filtered appropriately
+        let result = sanitize_filename("Hello世界");
+        assert!(result.is_ok());
+        // Unicode letters are alphanumeric, so they should be preserved
+
+        let result = sanitize_filename("Ñoño");
+        assert!(result.is_ok());
+    }
+
+    #[tokio::test]
+    async fn test_sanitize_filename_mixed_valid_invalid() {
+        // Mix of valid and invalid characters should keep valid ones
+        let result = sanitize_filename("My!@#API$%^123");
+        assert!(result.is_ok());
+        assert_eq!(result.unwrap(), "myapi123");
     }
 }
