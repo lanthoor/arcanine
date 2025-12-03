@@ -693,4 +693,257 @@ mod tests {
         assert!(result.is_ok());
         assert_eq!(result.unwrap(), "myapi123");
     }
+
+    // Additional Edge Case Tests
+
+    #[tokio::test]
+    async fn test_sanitize_filename_only_dashes() {
+        let result = sanitize_filename("---");
+        assert!(result.is_err());
+        assert!(result.unwrap_err().contains("alphanumeric"));
+    }
+
+    #[tokio::test]
+    async fn test_sanitize_filename_single_dash() {
+        let result = sanitize_filename("-");
+        assert!(result.is_err());
+    }
+
+    #[tokio::test]
+    async fn test_sanitize_filename_numbers_only() {
+        let result = sanitize_filename("123456");
+        assert!(result.is_ok());
+        assert_eq!(result.unwrap(), "123456");
+    }
+
+    #[tokio::test]
+    async fn test_sanitize_filename_leading_trailing_spaces() {
+        let result = sanitize_filename("  test api  ");
+        assert!(result.is_ok());
+        assert_eq!(result.unwrap(), "--test-api--");
+    }
+
+    #[tokio::test]
+    async fn test_sanitize_filename_multiple_spaces() {
+        let result = sanitize_filename("my    api");
+        assert!(result.is_ok());
+        assert_eq!(result.unwrap(), "my----api");
+    }
+
+    #[tokio::test]
+    async fn test_path_validation_with_valid_path() {
+        let (manager, _temp_dir) = setup_test_manager();
+
+        // Create a valid file
+        let collection = Collection::new("Valid");
+        let path = manager.save_collection(&collection, "valid").unwrap();
+
+        // Validate it
+        let result = validate_path_in_collections(&path, &manager.base_path);
+        assert!(result.is_ok());
+
+        // Verify returned path is canonical
+        let canonical = result.unwrap();
+        assert!(canonical.is_absolute());
+    }
+
+    #[tokio::test]
+    async fn test_path_validation_nonexistent_path() {
+        let (manager, _temp_dir) = setup_test_manager();
+
+        let nonexistent = manager.base_path.join("nonexistent.yaml");
+        let result = validate_path_in_collections(&nonexistent, &manager.base_path);
+
+        // Should fail because path doesn't exist (canonicalize fails)
+        assert!(result.is_err());
+        assert!(result.unwrap_err().contains("Invalid path"));
+    }
+
+    #[tokio::test]
+    async fn test_save_with_whitespace_filename() {
+        let (manager, _temp_dir) = setup_test_manager();
+        let collection = Collection::new("Test");
+
+        // Whitespace-only filename should be rejected
+        let result = manager.save_collection(&collection, "   \t\n   ");
+        assert!(result.is_err());
+    }
+
+    #[tokio::test]
+    async fn test_save_with_forward_slash() {
+        let (manager, _temp_dir) = setup_test_manager();
+        let collection = Collection::new("Test");
+
+        let result = manager.save_collection(&collection, "path/to/file");
+        assert!(result.is_err());
+    }
+
+    #[tokio::test]
+    async fn test_save_with_backslash() {
+        let (manager, _temp_dir) = setup_test_manager();
+        let collection = Collection::new("Test");
+
+        let result = manager.save_collection(&collection, "path\\to\\file");
+        assert!(result.is_err());
+    }
+
+    #[tokio::test]
+    async fn test_multiple_collections_workflow() {
+        let (manager, _temp_dir) = setup_test_manager();
+
+        // Create multiple collections
+        let names = vec!["API One", "API Two", "API Three"];
+        let mut paths = vec![];
+
+        for name in &names {
+            let collection = Collection::new(*name);
+            let filename = sanitize_filename(name).unwrap();
+            let path = manager.save_collection(&collection, &filename).unwrap();
+            paths.push(path);
+        }
+
+        // Load all collections
+        manager.load_all_collections().unwrap();
+        let loaded = manager.get_all_collections();
+        assert_eq!(loaded.len(), 3);
+
+        // Verify names
+        let loaded_names: Vec<String> = loaded.iter().map(|c| c.name.clone()).collect();
+        for name in &names {
+            assert!(loaded_names.contains(&name.to_string()));
+        }
+
+        // Delete one
+        manager.delete_collection(&paths[1]).unwrap();
+
+        // Reload and verify
+        manager.clear_index();
+        manager.load_all_collections().unwrap();
+        assert_eq!(manager.get_all_collections().len(), 2);
+    }
+
+    #[tokio::test]
+    async fn test_collection_with_multiple_requests() {
+        let (manager, _temp_dir) = setup_test_manager();
+
+        let collection = Collection::new("Multi Request API")
+            .add_request(Request::new("Get Users", "https://api.example.com/users"))
+            .add_request(Request::new("Get Posts", "https://api.example.com/posts"))
+            .add_request(Request::new(
+                "Get Comments",
+                "https://api.example.com/comments",
+            ));
+
+        let path = manager.save_collection(&collection, "multi-req").unwrap();
+
+        // Load and verify
+        let loaded = manager.load_collection(&path).unwrap();
+        assert_eq!(loaded.requests.len(), 3);
+        assert_eq!(loaded.requests[0].name, "Get Users");
+        assert_eq!(loaded.requests[1].name, "Get Posts");
+        assert_eq!(loaded.requests[2].name, "Get Comments");
+    }
+
+    #[tokio::test]
+    async fn test_validate_and_save_workflow() {
+        let (manager, _temp_dir) = setup_test_manager();
+
+        // Create collection with issues
+        let collection = Collection::new("Test")
+            .add_request(Request::new("Duplicate", "https://api.example.com/1"))
+            .add_request(Request::new("Duplicate", "https://api.example.com/2"));
+
+        let path = manager
+            .save_collection(&collection, "test-validate")
+            .unwrap();
+
+        // Load it
+        let loaded = manager.load_collection(&path).unwrap();
+
+        // Validate with auto-fix
+        let (fixed, issues) = CollectionManager::validate_and_fix_collection(&loaded, true);
+        assert!(!issues.is_empty());
+
+        // Save the fixed version
+        let result = manager.save_collection(&fixed, "test-validate");
+        assert!(result.is_ok());
+
+        // Reload and verify no issues
+        let reloaded = manager.load_collection(&path).unwrap();
+        let (_checked, new_issues) =
+            CollectionManager::validate_and_fix_collection(&reloaded, false);
+        assert_eq!(new_issues.len(), 0);
+    }
+
+    #[tokio::test]
+    async fn test_sanitize_filename_edge_cases() {
+        // Empty string
+        assert!(sanitize_filename("").is_err());
+
+        // Single character valid
+        assert_eq!(sanitize_filename("a").unwrap(), "a");
+        assert_eq!(sanitize_filename("Z").unwrap(), "z");
+        assert_eq!(sanitize_filename("1").unwrap(), "1");
+
+        // Mixed case
+        assert_eq!(sanitize_filename("MyAPI").unwrap(), "myapi");
+
+        // Consecutive dashes
+        assert_eq!(sanitize_filename("my--api").unwrap(), "my--api");
+    }
+
+    #[tokio::test]
+    async fn test_collection_name_validation() {
+        let (manager, _temp_dir) = setup_test_manager();
+
+        // Valid names
+        let valid = Collection::new("Valid Name");
+        assert!(manager.save_collection(&valid, "valid").is_ok());
+
+        // Empty name should still save (validation is in command layer)
+        let mut empty_name = Collection::new("Test");
+        empty_name.name = String::new();
+        // This will save but would be caught by the command validation
+        assert!(manager.save_collection(&empty_name, "test").is_ok());
+    }
+
+    #[tokio::test]
+    async fn test_delete_and_recreate() {
+        let (manager, _temp_dir) = setup_test_manager();
+
+        // Create, delete, recreate with same name
+        let collection1 = Collection::new("Test API");
+        let path1 = manager.save_collection(&collection1, "test").unwrap();
+        assert!(path1.exists());
+
+        manager.delete_collection(&path1).unwrap();
+        assert!(!path1.exists());
+
+        // Recreate with same filename
+        let collection2 = Collection::new("Test API v2");
+        let path2 = manager.save_collection(&collection2, "test").unwrap();
+        assert!(path2.exists());
+        assert_eq!(path1, path2); // Same path
+
+        // Load and verify it's the new version
+        let loaded = manager.load_collection(&path2).unwrap();
+        assert_eq!(loaded.name, "Test API v2");
+    }
+
+    #[tokio::test]
+    async fn test_path_to_string_conversion() {
+        let (manager, _temp_dir) = setup_test_manager();
+
+        let collection = Collection::new("Test");
+        let path = manager.save_collection(&collection, "test").unwrap();
+
+        // Test to_string_lossy conversion
+        let path_str = path.to_string_lossy().to_string();
+        assert!(path_str.contains("test"));
+        assert!(path_str.contains(".collection.yaml"));
+
+        // Verify we can reconstruct PathBuf
+        let reconstructed = PathBuf::from(path_str);
+        assert_eq!(path, reconstructed);
+    }
 }

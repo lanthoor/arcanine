@@ -59,6 +59,7 @@ pub fn run() {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use tempfile::TempDir;
 
     #[test]
     fn test_greet_returns_greeting() {
@@ -77,5 +78,70 @@ mod tests {
     fn test_greet_with_special_characters() {
         let result = greet("Alice & Bob");
         assert!(result.contains("Alice & Bob"));
+    }
+
+    #[test]
+    fn test_greet_format() {
+        let result = greet("Test");
+        assert_eq!(result, "Hello, Test! You've been greeted from Rust!");
+    }
+
+    #[test]
+    fn test_greet_with_unicode() {
+        let result = greet("世界");
+        assert!(result.contains("世界"));
+    }
+
+    #[tokio::test]
+    async fn test_http_service_initialization() {
+        // Test that HTTPService can be created and wrapped in Arc<TokioMutex>
+        let http_service = Arc::new(TokioMutex::new(
+            HTTPService::new().expect("Failed to create HTTP service"),
+        ));
+        assert!(Arc::strong_count(&http_service) == 1);
+    }
+
+    #[test]
+    fn test_request_store_initialization() {
+        // Test that RequestStore can be created and wrapped in Arc<Mutex>
+        let request_store = Arc::new(Mutex::new(RequestStore::new()));
+        assert!(Arc::strong_count(&request_store) == 1);
+
+        // Verify store starts empty
+        let store = request_store.lock().unwrap();
+        assert_eq!(store.len(), 0);
+    }
+
+    #[test]
+    fn test_collection_manager_initialization() {
+        // Test that CollectionManager can be created with a temp directory
+        let temp_dir = TempDir::new().unwrap();
+        let manager = Arc::new(
+            CollectionManager::new(temp_dir.path()).expect("Failed to create collection manager"),
+        );
+        assert!(Arc::strong_count(&manager) == 1);
+    }
+
+    #[test]
+    fn test_app_state_creation() {
+        // Test that AppState can be created with a CollectionManager
+        let temp_dir = TempDir::new().unwrap();
+        let collection_manager = Arc::new(
+            CollectionManager::new(temp_dir.path()).expect("Failed to create collection manager"),
+        );
+        let app_state = AppState { collection_manager };
+        assert!(Arc::strong_count(&app_state.collection_manager) == 1);
+    }
+
+    #[test]
+    fn test_shared_state_cloning() {
+        // Test that Arc allows multiple owners of the same data
+        let temp_dir = TempDir::new().unwrap();
+        let manager1 = Arc::new(
+            CollectionManager::new(temp_dir.path()).expect("Failed to create collection manager"),
+        );
+        let manager2 = Arc::clone(&manager1);
+        assert!(Arc::strong_count(&manager1) == 2);
+        assert!(Arc::ptr_eq(&manager1, &manager2));
     }
 }
