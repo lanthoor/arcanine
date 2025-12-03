@@ -26,114 +26,83 @@ Built for developers who value **version control**, **offline capability**, and 
 
 ✅ **Git-friendly** - Each request is a separate YAML file  
 ✅ **Offline-first** - No cloud sync required  
-✅ **Lightweight** - ~600KB binary vs ~150MB Electron apps  
-✅ **Secure** - Sandboxed scripts, local secrets  
+✅ **Lightweight** - Native Tauri app vs ~150MB Electron apps  
+✅ **Secure** - Local-only data storage  
 ✅ **Team-friendly** - Share via Git repositories
+
+**Current Status**: Phase 4.2 Complete - Collection File System ✅  
+**Version**: 0.4.2
 
 ## Features
 
-- **Protocols**: HTTP, GraphQL, WebSocket, gRPC
-- **Authentication**: Bearer, Basic, OAuth 2.0, API Key, Digest, AWS SigV4
-- **Scripting**: Deno-powered pre/post-request scripts and tests
-- **Environments**: Multiple environments with secret management
-- **Organization**: Hierarchical folders with self-contained ordering
-- **Collaboration**: Git-based sharing, import from Postman/Insomnia
-- **Cross-platform**: macOS, Linux, Windows
+### Implemented ✅
 
-[→ See all features](docs/architecture/README.md#overview)
+- ✅ **HTTP Client**: All methods (GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS)
+- ✅ **Request Editor**: Headers, body, URL with validation
+- ✅ **Response Viewer**: Syntax highlighting, formatting, statistics
+- ✅ **Themes**: Light and dark modes with smooth transitions
+- ✅ **Internationalization**: 5 languages (English, Spanish, French, German, Japanese)
+- ✅ **File Storage**: YAML-based with atomic writes
+- ✅ **Collection Manager**: File watching, O(1) indexing, auto-reload
+- ✅ **Tabbed Interface**: Multiple requests with response caching
+- ✅ **Testing**: 308 tests with 95.88% frontend, 90.91% backend coverage
+
+### In Development ⏳
+
+- ⏳ **File Management**: Native file picker, collection operations (Phase 4.3)
+- ⏳ **Variables**: Collection and environment variables with {{syntax}} (Phase 5)
+- ⏳ **Environments**: Multiple environments with switching (Phase 6)
+- ⏳ **Folders**: Hierarchical folder organization (Phase 8)
+
+### Planned 📋
+
+- 📋 **Authentication**: Bearer, Basic, OAuth 2.0, API Key, AWS SigV4 (Phase 9, 16)
+- 📋 **Scripting**: Deno-powered pre/post-request scripts and tests (Phase 11)
+- 📋 **History**: SQLite-based request/response history (Phase 10)
+- 📋 **Import/Export**: Postman, Insomnia, cURL, OpenAPI (Phase 13)
+- 📋 **GraphQL**: Native GraphQL support (Phase 14)
+- 📋 **WebSocket**: WebSocket connections (Phase 14)
+
+[→ Full roadmap](docs/plan/README.md)
 
 ## Installation
 
-### macOS
+**Note**: Arcanine is currently in active development (Phase 4.2). Binary releases will be available at V1.0.
+
+### Development Build
+
+To run from source:
 
 ```bash
-brew install arcanine  # Coming soon
+# Clone repository
+git clone https://github.com/lanthoor/arcanine.git
+cd arcanine
+
+# Install dependencies
+npm install
+
+# Run development build
+npm run tauri dev
 ```
 
-### Linux
+See [SETUP.md](SETUP.md) for detailed development environment setup.
 
-```bash
-# Debian/Ubuntu
-wget https://github.com/lanthoor/arcanine/releases/latest/download/arcanine_amd64.deb
-sudo dpkg -i arcanine_amd64.deb
+### Future Releases (V1.0+)
 
-# Arch Linux
-yay -S arcanine
-```
+Planned distribution methods:
 
-### Windows
+- **macOS**: Homebrew, DMG installer
+- **Linux**: .deb, .rpm, AppImage, AUR package
+- **Windows**: MSI installer, winget
 
-```powershell
-winget install arcanine
-```
-
-[→ All installation methods](docs/architecture/README.md#installation)
-
-## Quick Start
-
-### 1. Create a Collection
-
-```bash
-mkdir my-api && cd my-api
-```
-
-Create `collection.yaml`:
-
-```yaml
-version: '1.0'
-name: 'My API'
-variables:
-  baseUrl: 'http://localhost:3000'
-```
-
-### 2. Add a Request
-
-Create `get-users.request.yaml`:
-
-```yaml
-version: '1.0'
-name: 'Get Users'
-order: 1
-
-request:
-  method: 'GET'
-  url: '{{baseUrl}}/api/users'
-  headers:
-    - key: 'Authorization'
-      value: 'Bearer {{token}}'
-      enabled: true
-
-tests:
-  - name: 'Status is 200'
-    script: assert(response.status === 200);
-```
-
-### 3. Create Environment
-
-Create `environments/development.yaml`:
-
-```yaml
-version: '1.0'
-name: 'Development'
-variables:
-  baseUrl: 'http://localhost:3000'
-  token: 'dev-token-123'
-```
-
-### 4. Open in Arcanine
-
-```bash
-arcanine open my-api
-```
-
-[→ More examples and details](docs/architecture/collection-structure.md)
+[→ Track V1.0 release progress](docs/plan/README.md#milestone-4-polish--release-phases-15-19)
 
 ## Documentation
 
 ### Getting Started
 
 - **[Collection Structure](docs/architecture/collection-structure.md)** - Organize your requests
-- **[Environment Management](docs/architecture/environments.md)** - Multiple environments
+- **[YAML Schema Reference](docs/architecture/yaml-schema.md)** - Complete schema documentation
 
 ### Core Concepts
 
@@ -170,38 +139,13 @@ flowchart TD
 
 ## Development
 
-```bash
-# Clone and setup
-git clone https://github.com/lanthoor/arcanine.git
-cd arcanine
-npm install
+Interested in contributing? See the [Contributing Guide](CONTRIBUTING.md) for:
 
-# Run development mode (frontend only)
-npm run dev
-
-# Run Tauri application in development
-npm run tauri dev
-
-# Build for production
-npm run build
-npm run tauri build
-
-# Type checking
-npm run check
-
-# Linting and formatting
-npm run lint
-npm run format
-
-# Testing
-npm run test              # Frontend tests (watch mode)
-npm run test:run          # Frontend tests (single run)
-npm run test:coverage     # Frontend coverage report
-npm run test:rust         # Backend tests
-npm run test:rust:coverage # Backend coverage report
-```
-
-[→ Complete development guide](CONTRIBUTING.md#development-setup)
+- Development environment setup
+- Build commands and scripts
+- Coding standards and guidelines
+- Testing requirements
+- Pull request process
 
 ## Comparison
 

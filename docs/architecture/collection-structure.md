@@ -668,5 +668,4 @@ microservices/
 For more information:
 
 - [Architecture Overview](README.md)
-- [YAML Schema Reference](yaml-schema.md)
-- [Environment Management](environments.md)
+- [YAML Schema Reference](yaml-schema.md) - Includes environment management

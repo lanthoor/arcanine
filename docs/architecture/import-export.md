@@ -698,5 +698,5 @@ For more information:
 
 - [Architecture Overview](README.md)
 - [Collection Structure](collection-structure.md)
-- [Environment Management](environments.md)
+- [YAML Schema Reference](yaml-schema.md) - Includes environment management
 - [Scripting Guide](scripting.md)

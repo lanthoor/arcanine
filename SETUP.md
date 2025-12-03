@@ -1,162 +1,181 @@
-# Arcanine - Project Structure
+# Arcanine - Development Setup Guide
 
-This document describes the project structure and key files for developers.
+Quick start guide for setting up Arcanine development environment.
 
-## Directory Structure
+## Prerequisites
+
+### Required
+
+- **Node.js**: v20+ ([download](https://nodejs.org/))
+- **Rust**: Latest stable ([install via rustup](https://rustup.rs/))
+- **Git**: Version control
+- **pnpm/npm**: Package manager (npm comes with Node.js)
+
+### Platform-Specific
+
+#### macOS
+
+```bash
+# Install Xcode Command Line Tools
+xcode-select --install
+
+# Install Tauri dependencies
+brew install pkg-config
+```
+
+#### Linux (Debian/Ubuntu)
+
+```bash
+sudo apt update
+sudo apt install libwebkit2gtk-4.1-dev \
+  build-essential \
+  curl \
+  wget \
+  file \
+  libssl-dev \
+  libayatana-appindicator3-dev \
+  librsvg2-dev
+```
+
+#### Windows
+
+- Install [Microsoft C++ Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/)
+- Install [WebView2](https://developer.microsoft.com/en-us/microsoft-edge/webview2/#download-section)
+
+## Quick Start
+
+### 1. Clone Repository
+
+```bash
+git clone https://github.com/lanthoor/arcanine.git
+cd arcanine
+```
+
+### 2. Install Dependencies
+
+```bash
+# Frontend dependencies
+npm install
+
+# Rust dependencies are auto-installed by cargo
+```
+
+### 3. Start Development Server
+
+```bash
+# Start Tauri app in development mode
+npm run tauri dev
+```
+
+The app will open with hot reload enabled for both frontend and backend changes.
+
+## Project Structure
 
 ```
 arcanine/
-├── src/                          # Frontend (Svelte)
+├── src/                    # Frontend (Svelte 5 + TypeScript)
 │   ├── lib/
-│   │   ├── components/          # Reusable UI components
-│   │   │   └── ThemeToggle.svelte
-│   │   ├── i18n/                # Internationalization
-│   │   │   ├── index.ts         # i18n store and utilities
-│   │   │   └── locales/         # Translation files
-│   │   │       └── en.json      # English translations
-│   │   └── stores/              # Svelte stores
-│   │       └── theme.ts         # Theme management store
-│   ├── routes/                  # SvelteKit routes
-│   │   ├── +layout.svelte       # Root layout with theme/i18n init
-│   │   ├── +layout.ts           # Layout config
-│   │   └── +page.svelte         # Home page
-│   ├── app.css                  # Global styles with CSS variables
-│   └── app.html                 # HTML template
-│
-├── src-tauri/                   # Backend (Rust)
-│   ├── src/                     # Rust source code
-│   │   └── main.rs              # Application entry point
-│   ├── capabilities/            # Tauri capabilities
-│   ├── icons/                   # App icons
-│   ├── Cargo.toml               # Rust dependencies
-│   ├── rustfmt.toml             # Rust formatting config
-│   └── tauri.conf.json          # Tauri configuration
-│
-├── docs/                        # Documentation
-│   ├── architecture/            # Architecture documentation
-│   └── plan/                    # Development plan
-│
-├── .eslintrc.cjs                # ESLint configuration
-├── .prettierrc                  # Prettier configuration
-├── tailwind.config.js           # TailwindCSS configuration
-├── postcss.config.js            # PostCSS configuration
-├── tsconfig.json                # TypeScript configuration
-├── svelte.config.js             # Svelte configuration
-├── vite.config.js               # Vite configuration
-├── package.json                 # Node.js dependencies
-└── README.md                    # Main README
+│   │   ├── components/     # UI components
+│   │   ├── stores/         # Svelte stores
+│   │   └── i18n/           # Internationalization
+│   └── routes/             # SvelteKit routes
+├── src-tauri/              # Backend (Rust + Tauri 2.x)
+│   └── src/
+│       ├── models/         # Data models
+│       ├── services/       # Business logic
+│       ├── storage/        # Persistence layer
+│       └── commands/       # Tauri commands
+└── docs/                   # Documentation
+    ├── architecture/       # Technical architecture
+    ├── plan/               # Project vision and roadmap
+    └── progress/           # Phase completion reports
 ```
 
-## Key Technologies
+For detailed directory structure, see [Architecture Documentation](docs/architecture/README.md).
 
-### Frontend
-- **Svelte 5**: Reactive UI framework
-- **SvelteKit**: Application framework
-- **TypeScript**: Type-safe JavaScript (strict mode enabled)
-- **TailwindCSS**: Utility-first CSS framework
-- **Vite**: Build tool and dev server
+## Development Scripts
 
-### Backend
-- **Tauri 2.x**: Desktop application framework
-- **Rust**: Systems programming language
-
-### Development Tools
-- **Prettier**: Code formatter
-- **ESLint**: JavaScript/TypeScript linter
-- **rustfmt**: Rust code formatter
-
-## Theme System
-
-The theme system uses CSS custom properties (variables) defined in `src/app.css`:
-
-### Light Theme
-- Background: `#ffffff`
-- Surface: `#f5f5f5`
-- Primary: `#2563eb`
-- Text: `#1e293b`
-
-### Dark Theme
-- Background: `#0f172a`
-- Surface: `#1e293b`
-- Primary: `#3b82f6`
-- Text: `#f1f5f9`
-
-Theme preference is persisted to `localStorage` and respects system preferences.
-
-## Internationalization (i18n)
-
-The i18n system is built from scratch and includes:
-
-- **Translation files**: JSON files in `src/lib/i18n/locales/`
-- **Store**: Svelte store for reactive translations
-- **Persistence**: Locale preference saved to localStorage
-- **Fallback**: English as default language
-
-### Adding Translations
-
-1. Create a new JSON file in `src/lib/i18n/locales/` (e.g., `es.json`)
-2. Copy the structure from `en.json`
-3. Translate the values
-4. Load the translations in your component:
-
-```typescript
-import { loadTranslations, setLocale } from '$lib/i18n';
-
-await loadTranslations('es');
-setLocale('es');
-```
-
-## Available Scripts
+### Development
 
 ```bash
-# Development
-npm run dev              # Start dev server with hot reload
-npm run tauri dev        # Start Tauri app in dev mode
-
-# Building
-npm run build            # Build for production
-npm run tauri build      # Build Tauri app for production
-
-# Code Quality
-npm run format           # Format code with Prettier
-npm run format:check     # Check code formatting
-npm run lint             # Lint code with ESLint
-npm run lint:fix         # Fix linting issues
-npm run check            # Type-check with svelte-check
-
-# Rust
-cd src-tauri
-cargo fmt                # Format Rust code
-cargo clippy             # Lint Rust code
-cargo test               # Run Rust tests
+npm run dev              # Start frontend dev server
+npm run tauri dev        # Start full Tauri app (recommended)
 ```
 
-## Getting Started
+### Testing
 
-1. Install dependencies:
-   ```bash
-   npm install
-   ```
+```bash
+npm run test             # Run frontend tests
+npm run test:coverage    # Frontend coverage (≥75%)
+npm run test:rust        # Run Rust tests
+npm run test:rust:coverage # Rust coverage (≥80%)
+```
 
-2. Start development server:
-   ```bash
-   npm run tauri dev
-   ```
+### Code Quality
 
-3. The app will open with:
-   - Theme toggle (light/dark)
-   - i18n system initialized
-   - Demo page showing theme colors
+```bash
+npm run lint             # Lint JavaScript/TypeScript
+npm run format           # Format code
+npm run check            # Type-check TypeScript
+npm run clippy           # Lint Rust code
+```
+
+### Building
+
+```bash
+npm run build            # Build for production
+npm run tauri build      # Create distributable app
+```
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed development workflow and coding standards.
+
+## Testing
+
+The project uses Vitest (frontend) and Rust's built-in test framework (backend) with high coverage requirements:
+
+- **Frontend**: ≥75% coverage (currently 95.88%)
+- **Backend**: ≥80% coverage (currently 90.91%)
+- **Total**: 308 tests across both layers
+
+Run all tests before committing:
+
+```bash
+npm run test:coverage && npm run test:rust:coverage
+```
 
 ## Next Steps
 
-See `docs/plan/README.md` for the full development roadmap.
+- **Contributing**: Read [CONTRIBUTING.md](CONTRIBUTING.md) for PR workflow and coding standards
+- **Architecture**: See [docs/architecture/](docs/architecture/) for technical design decisions
+- **Progress**: Check [docs/progress/summary.md](docs/progress/summary.md) for current project status
+- **Roadmap**: View [docs/plan/](docs/plan/) for project vision and execution plan
 
-Current status: **Phase 1.1 Complete** ✅
-- Tauri 2.x project initialized
-- Svelte 5 with TypeScript (strict mode)
-- Theme system with CSS variables
-- i18n infrastructure
-- Code formatters (Prettier, rustfmt)
-- Linters (ESLint)
-- Build tools configured (Vite, Cargo)
+## Troubleshooting
+
+### Build Errors
+
+If you encounter build errors:
+
+```bash
+# Clean and reinstall
+rm -rf node_modules package-lock.json
+npm install
+
+# Clean Rust build
+cd src-tauri && cargo clean && cd ..
+```
+
+### Tauri Development Issues
+
+- **macOS**: Ensure Xcode Command Line Tools are installed
+- **Linux**: Verify all webkit2gtk dependencies are installed
+- **Windows**: Check WebView2 and C++ Build Tools are present
+
+### Port Already in Use
+
+```bash
+# Kill process on port 1420 (Vite default)
+lsof -ti:1420 | xargs kill -9
+```
+
+For more help, see [GitHub Issues](https://github.com/lanthoor/arcanine/issues) or [Discussions](https://github.com/lanthoor/arcanine/discussions).

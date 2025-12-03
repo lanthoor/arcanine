@@ -1,0 +1,377 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/lanthoor/arcanine/schemas/arcanine-collection.json",
+  "title": "Arcanine Collection Schema",
+  "description": "Schema definition for Arcanine REST API collection format",
+  "type": "object",
+  "required": ["name", "version", "requests"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Collection name",
+      "minLength": 1,
+      "maxLength": 255
+    },
+    "version": {
+      "type": "string",
+      "description": "Collection schema version (currently 0.1.0)",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "description": {
+      "type": "string",
+      "description": "Optional collection description",
+      "maxLength": 1000
+    },
+    "author": {
+      "type": "string",
+      "description": "Collection author",
+      "maxLength": 255
+    },
+    "created": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp of collection creation"
+    },
+    "modified": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp of last modification"
+    },
+    "tags": {
+      "type": "array",
+      "description": "Collection tags for organization",
+      "items": {
+        "type": "string",
+        "maxLength": 50
+      },
+      "uniqueItems": true
+    },
+    "variables": {
+      "type": "object",
+      "description": "Collection-level variables",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "environments": {
+      "type": "array",
+      "description": "Named environment configurations",
+      "items": {
+        "$ref": "#/definitions/environment"
+      }
+    },
+    "requests": {
+      "type": "array",
+      "description": "Array of HTTP requests in this collection",
+      "items": {
+        "$ref": "#/definitions/request"
+      },
+      "minItems": 0
+    },
+    "folders": {
+      "type": "array",
+      "description": "Folder structure for organizing requests",
+      "items": {
+        "$ref": "#/definitions/folder"
+      }
+    }
+  },
+  "definitions": {
+    "request": {
+      "type": "object",
+      "required": ["id", "name", "method", "url"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique request identifier (UUID)",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "name": {
+          "type": "string",
+          "description": "Request name",
+          "minLength": 1,
+          "maxLength": 255
+        },
+        "description": {
+          "type": "string",
+          "description": "Optional request description",
+          "maxLength": 1000
+        },
+        "method": {
+          "type": "string",
+          "description": "HTTP method",
+          "enum": ["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"]
+        },
+        "url": {
+          "type": "string",
+          "description": "Request URL (supports variables: {{var}})",
+          "minLength": 1
+        },
+        "headers": {
+          "type": "array",
+          "description": "HTTP headers",
+          "items": {
+            "$ref": "#/definitions/header"
+          }
+        },
+        "queryParams": {
+          "type": "array",
+          "description": "URL query parameters",
+          "items": {
+            "$ref": "#/definitions/queryParam"
+          }
+        },
+        "body": {
+          "$ref": "#/definitions/body"
+        },
+        "auth": {
+          "$ref": "#/definitions/auth"
+        },
+        "preRequestScript": {
+          "type": "string",
+          "description": "JavaScript executed before sending request"
+        },
+        "postResponseScript": {
+          "type": "string",
+          "description": "JavaScript executed after receiving response"
+        },
+        "tests": {
+          "type": "array",
+          "description": "Test assertions to run on response",
+          "items": {
+            "type": "string",
+            "description": "JavaScript assertion code"
+          }
+        },
+        "timeout": {
+          "type": "integer",
+          "description": "Request timeout in milliseconds",
+          "minimum": 0,
+          "maximum": 300000
+        }
+      }
+    },
+    "header": {
+      "type": "object",
+      "required": ["key", "value"],
+      "properties": {
+        "key": {
+          "type": "string",
+          "description": "Header name",
+          "minLength": 1
+        },
+        "value": {
+          "type": "string",
+          "description": "Header value (supports variables: {{var}})"
+        },
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether header is active",
+          "default": true
+        },
+        "description": {
+          "type": "string",
+          "description": "Optional header description"
+        }
+      }
+    },
+    "queryParam": {
+      "type": "object",
+      "required": ["key", "value"],
+      "properties": {
+        "key": {
+          "type": "string",
+          "description": "Parameter name",
+          "minLength": 1
+        },
+        "value": {
+          "type": "string",
+          "description": "Parameter value (supports variables: {{var}})"
+        },
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether parameter is active",
+          "default": true
+        },
+        "description": {
+          "type": "string",
+          "description": "Optional parameter description"
+        }
+      }
+    },
+    "body": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Body content type",
+          "enum": ["none", "json", "text", "xml", "form-urlencoded", "form-data", "graphql"]
+        },
+        "content": {
+          "type": "string",
+          "description": "Body content (supports variables: {{var}})"
+        },
+        "formData": {
+          "type": "array",
+          "description": "Form data fields (for form-urlencoded/form-data)",
+          "items": {
+            "$ref": "#/definitions/formField"
+          }
+        },
+        "graphql": {
+          "$ref": "#/definitions/graphql"
+        }
+      }
+    },
+    "formField": {
+      "type": "object",
+      "required": ["key", "value"],
+      "properties": {
+        "key": {
+          "type": "string",
+          "description": "Field name",
+          "minLength": 1
+        },
+        "value": {
+          "type": "string",
+          "description": "Field value (supports variables: {{var}})"
+        },
+        "type": {
+          "type": "string",
+          "description": "Field type",
+          "enum": ["text", "file"],
+          "default": "text"
+        },
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether field is active",
+          "default": true
+        }
+      }
+    },
+    "graphql": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "description": "GraphQL query or mutation"
+        },
+        "variables": {
+          "type": "string",
+          "description": "GraphQL variables as JSON string"
+        }
+      }
+    },
+    "auth": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Authentication type",
+          "enum": ["none", "bearer", "basic", "api-key", "oauth2", "digest", "aws-v4"]
+        },
+        "bearer": {
+          "type": "object",
+          "properties": {
+            "token": {
+              "type": "string",
+              "description": "Bearer token (supports variables: {{var}})"
+            }
+          }
+        },
+        "basic": {
+          "type": "object",
+          "required": ["username", "password"],
+          "properties": {
+            "username": {
+              "type": "string",
+              "description": "Username (supports variables: {{var}})"
+            },
+            "password": {
+              "type": "string",
+              "description": "Password (supports variables: {{var}})"
+            }
+          }
+        },
+        "apiKey": {
+          "type": "object",
+          "required": ["key", "value"],
+          "properties": {
+            "key": {
+              "type": "string",
+              "description": "API key parameter name"
+            },
+            "value": {
+              "type": "string",
+              "description": "API key value (supports variables: {{var}})"
+            },
+            "in": {
+              "type": "string",
+              "description": "Where to send API key",
+              "enum": ["header", "query"],
+              "default": "header"
+            }
+          }
+        }
+      }
+    },
+    "environment": {
+      "type": "object",
+      "required": ["name", "variables"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Environment name",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "description": {
+          "type": "string",
+          "description": "Optional environment description",
+          "maxLength": 500
+        },
+        "variables": {
+          "type": "object",
+          "description": "Environment-specific variables",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "folder": {
+      "type": "object",
+      "required": ["id", "name"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique folder identifier (UUID)",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "name": {
+          "type": "string",
+          "description": "Folder name",
+          "minLength": 1,
+          "maxLength": 255
+        },
+        "description": {
+          "type": "string",
+          "description": "Optional folder description",
+          "maxLength": 500
+        },
+        "parentId": {
+          "type": "string",
+          "description": "Parent folder ID (null for root-level)",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "order": {
+          "type": "integer",
+          "description": "Display order within parent",
+          "minimum": 0
+        }
+      }
+    }
+  }
+}

@@ -15,7 +15,7 @@
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
     "test:rust": "cd src-tauri && cargo test",
-    "test:rust:coverage": "cd src-tauri && cargo tarpaulin --skip-clean --out Lcov --output-dir ../coverage-rust --fail-under 80",
+    "test:rust:coverage": "cd src-tauri && cargo tarpaulin --skip-clean --out Lcov --output-dir ../coverage-rust --fail-under 90",
     "test:rust:nextest": "cd src-tauri && cargo nextest run --profile ci",
     "clippy": "cd src-tauri && cargo clippy --all-targets -- -D warnings",
     "clippy:fix": "cd src-tauri && cargo clippy --fix --allow-dirty --allow-staged -- -D warnings",
