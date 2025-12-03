@@ -82,6 +82,20 @@ impl YAMLStore {
         collection: &Collection,
         filename: &str,
     ) -> YAMLStoreResult<PathBuf> {
+        // Validate filename
+        if filename.trim().is_empty() {
+            return Err(YAMLStoreError::ValidationError(
+                "Filename cannot be empty".to_string(),
+            ));
+        }
+
+        // Reject path separators to prevent directory traversal
+        if filename.contains('/') || filename.contains('\\') {
+            return Err(YAMLStoreError::ValidationError(
+                "Filename cannot contain path separators".to_string(),
+            ));
+        }
+
         let file_path = self.base_path.join(format!("{}.collection.yaml", filename));
         self.save_yaml(&file_path, collection)?;
         Ok(file_path)

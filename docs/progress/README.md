@@ -40,14 +40,15 @@ Arcanine follows a phased development approach with 20 planned phases organized 
 
 - [Phase 4.1](./phase-4.1-completion.md) - Request Storage (YAML)
 - [Phase 4.2](./phase-4.2-completion.md) - Collection File System
+- [Phase 4.3](./phase-4.3-completion.md) - Collection Management Commands
 
 ## Current Status
 
-**Version:** 0.4.2  
-**Latest Completed Phase:** 4.2 - Collection File System  
-**Next Phase:** 4.3 - Collection Import/Export  
-**Total Tests:** 308 (199 frontend + 109 backend)  
-**Coverage:** 95.88% frontend, 90.91% backend
+**Version:** 0.4.3  
+**Latest Completed Phase:** 4.3 - Collection Management Commands  
+**Next Phase:** 4.4 - Frontend Collection UI  
+**Total Tests:** 410 (285 frontend + 125 backend)  
+**Coverage:** 95.88% frontend, 81.96% backend
 
 ## Phase Completion Template
 
