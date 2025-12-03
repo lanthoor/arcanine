@@ -258,95 +258,55 @@ For each phase, ensure:
 
 ### 4.3 File Management Commands
 
-1. Checkout new branch `phase-4.3` from latest `main`
-2. Run all validation steps to ensure base stability
-3. Fix any validation failures and await confirmation before proceeding
-4. Create `load_collection` Tauri command
-5. Create `save_collection` command
-6. Add `create_new_collection` command
-7. Implement `open_collection_dialog` (native file picker)
-8. Add collection validation
-9. Test file commands
-10. Handle permission errors
-11. Test on all platforms
-12. Add error recovery
-13. Write integration tests
-14. Run all validation checks (lint, check, test, coverage) - manual verification required
-15. Update version in `package.json`, `Cargo.toml`, and `tauri.conf.json`
-16. Perform manual validation to ensure everything works as expected
-17. Update documentation and work log (`docs/progress/phase-4.3-completion.md`, etc.)
-18. Commit changes with conventional commit message per CONTRIBUTING.md
-19. Create pull request per CONTRIBUTING.md conventions
-20. Merge after review and approval
+1. Create `load_collection` Tauri command
+2. Create `save_collection` command
+3. Add `create_new_collection` command
+4. Implement `open_collection_dialog` (native file picker)
+5. Add collection validation
+6. Test file commands
+7. Handle permission errors
+8. Test on all platforms
+9. Add error recovery
+10. Write integration tests
 
 ### 4.4 UI Updates for Collections
 
-1. Checkout new branch `phase-4.4` from latest `main`
-2. Run all validation steps to ensure base stability
-3. Fix any validation failures and await confirmation before proceeding
-4. Add "Open Collection" menu item
-5. Add "New Collection" dialog
-6. Show collection name in UI
-7. Update request list from files
-8. Auto-save on changes
-9. Show save status indicator
-10. Handle unsaved changes
-11. Add i18n for dialogs
-12. Apply theming to dialogs
-13. Test full workflow
-14. Run all validation checks (lint, check, test, coverage) - manual verification required
-15. Update version in `package.json`, `Cargo.toml`, and `tauri.conf.json`
-16. Perform manual validation to ensure everything works as expected
-17. Update documentation and work log (`docs/progress/phase-4.4-completion.md`, etc.)
-18. Commit changes with conventional commit message per CONTRIBUTING.md
-19. Push branch to origin
-20. Create pull request per CONTRIBUTING.md conventions
+1. Add "Open Collection" menu item
+2. Add "New Collection" dialog
+3. Show collection name in UI
+4. Update request list from files
+5. Auto-save on changes
+6. Show save status indicator
+7. Handle unsaved changes
+8. Add i18n for dialogs
+9. Apply theming to dialogs
+10. Test full workflow
 
 ### 4.5 Collection Metadata
 
-1. Checkout new branch `phase-4.5` from latest `main`
-2. Run all validation steps to ensure base stability
-3. Fix any validation failures and await confirmation before proceeding
-4. Add collection description field
-5. Support collection version
-6. Add created/modified timestamps
-7. Store author information
-8. Add collection tags
-9. Test metadata handling
-10. Display metadata in UI
-11. Add metadata editor
-12. Apply theming to metadata UI
-13. Add i18n for metadata
-14. Run all validation checks (lint, check, test, coverage) - manual verification required
-15. Update version in `package.json`, `Cargo.toml`, and `tauri.conf.json`
-16. Perform manual validation to ensure everything works as expected
-17. Update documentation and work log (`docs/progress/phase-4.5-completion.md`, etc.)
-18. Commit changes with conventional commit message per CONTRIBUTING.md
-19. Push branch to origin
-20. Create pull request per CONTRIBUTING.md conventions
+1. Add collection description field
+2. Support collection version
+3. Add created/modified timestamps
+4. Store author information
+5. Add collection tags
+6. Test metadata handling
+7. Display metadata in UI
+8. Add metadata editor
+9. Apply theming to metadata UI
+10. Add i18n for metadata
 
 ### 4.6 Collection Validation
 
-1. Checkout new branch `phase-4.6` from latest `main`
-2. Run all validation steps to ensure base stability
-3. Fix any validation failures and await confirmation before proceeding
-4. Implement collection schema validation
-5. Validate request references
-6. Check for circular dependencies
-7. Validate file structure
-8. Add validation error reporting
-9. Test validation logic
-10. Show validation errors in UI
-11. Add auto-fix for common issues
-12. Document validation rules
-13. Write validation tests
-14. Run all validation checks (lint, check, test, coverage) - manual verification required
-15. Update version in `package.json`, `Cargo.toml`, and `tauri.conf.json`
-16. Perform manual validation to ensure everything works as expected
-17. Update documentation and work log (`docs/progress/phase-4.6-completion.md`, etc.)
-18. Commit changes with conventional commit message per CONTRIBUTING.md
-19. Push branch to origin
-20. Create pull request per CONTRIBUTING.md conventions
+1. Implement collection schema validation
+2. Validate request references
+3. Check for circular dependencies
+4. Validate file structure
+5. Add validation error reporting
+6. Test validation logic
+7. Show validation errors in UI
+8. Add auto-fix for common issues
+9. Document validation rules
+10. Write validation tests
 
 ---
 
@@ -354,95 +314,55 @@ For each phase, ensure:
 
 ### 5.1 Variable Data Model
 
-1. Checkout new branch `phase-5.1` from latest `main`
-2. Run all validation steps to ensure base stability
-3. Fix any validation failures and await confirmation before proceeding
-4. Define `Variable` struct (name, value)
-5. Create collection variables map
-6. Add variables to collection model
-7. Implement variable serialization
-8. Add validation for variable names
-9. Test variable storage
-10. Support string values initially
-11. Add variable documentation
-12. Write model tests (95% coverage)
-13. Document variable format
-14. Run all validation checks (lint, check, test, coverage) - manual verification required
-15. Update version in `package.json`, `Cargo.toml`, and `tauri.conf.json`
-16. Perform manual validation to ensure everything works as expected
-17. Update documentation and work log (`docs/progress/phase-5.1-completion.md`, etc.)
-18. Commit changes with conventional commit message per CONTRIBUTING.md
-19. Push branch to origin
-20. Create pull request per CONTRIBUTING.md conventions
+1. Define `Variable` struct (name, value)
+2. Create collection variables map
+3. Add variables to collection model
+4. Implement variable serialization
+5. Add validation for variable names
+6. Test variable storage
+7. Support string values initially
+8. Add variable documentation
+9. Write model tests (95% coverage)
+10. Document variable format
 
 ### 5.2 Variable Resolution Engine
 
-1. Checkout new branch `phase-5.2` from latest `main`
-2. Run all validation steps to ensure base stability
-3. Fix any validation failures and await confirmation before proceeding
-4. Create `VariableResolver` service
-5. Implement `{{variable}}` syntax parsing
-6. Support nested variable references
-7. Handle undefined variables
-8. Add error reporting
-9. Test resolution logic
-10. Test edge cases
-11. Benchmark performance
-12. Write comprehensive tests
-13. Document resolver behavior
-14. Run all validation checks (lint, check, test, coverage) - manual verification required
-15. Update version in `package.json`, `Cargo.toml`, and `tauri.conf.json`
-16. Perform manual validation to ensure everything works as expected
-17. Update documentation and work log (`docs/progress/phase-5.2-completion.md`, etc.)
-18. Commit changes with conventional commit message per CONTRIBUTING.md
-19. Push branch to origin
-20. Create pull request per CONTRIBUTING.md conventions
+1. Create `VariableResolver` service
+2. Implement `{{variable}}` syntax parsing
+3. Support nested variable references
+4. Handle undefined variables
+5. Add error reporting
+6. Test resolution logic
+7. Test edge cases
+8. Benchmark performance
+9. Write comprehensive tests
+10. Document resolver behavior
 
 ### 5.3 Variable Editor UI
 
-1. Checkout new branch `phase-5.3` from latest `main`
-2. Run all validation steps to ensure base stability
-3. Fix any validation failures and await confirmation before proceeding
-4. Create `VariablesPanel.svelte` component
-5. Display variables table
-6. Add variable add/edit/delete
-7. Show variable usage count
-8. Add variable search
-9. Apply theming to panel
-10. Add i18n strings
-11. Test variable operations
-12. Write component tests
-13. Integrate with collection
-14. Run all validation checks (lint, check, test, coverage) - manual verification required
-15. Update version in `package.json`, `Cargo.toml`, and `tauri.conf.json`
-16. Perform manual validation to ensure everything works as expected
-17. Update documentation and work log (`docs/progress/phase-5.3-completion.md`, etc.)
-18. Commit changes with conventional commit message per CONTRIBUTING.md
-19. Push branch to origin
-20. Create pull request per CONTRIBUTING.md conventions
+1. Create `VariablesPanel.svelte` component
+2. Display variables table
+3. Add variable add/edit/delete
+4. Show variable usage count
+5. Add variable search
+6. Apply theming to panel
+7. Add i18n strings
+8. Test variable operations
+9. Write component tests
+10. Integrate with collection
 
 ### 5.4 Variable Integration
 
-1. Checkout new branch `phase-5.4` from latest `main`
-2. Run all validation steps to ensure base stability
-3. Fix any validation failures and await confirmation before proceeding
-4. Resolve variables in URL
-5. Resolve in headers
-6. Resolve in body
-7. Show resolved preview
-8. Test variable resolution
-9. Handle resolution errors
-10. Add resolution indicators
-11. Apply theming to preview
-12. Add i18n for errors
-13. Document variable usage
-14. Run all validation checks (lint, check, test, coverage) - manual verification required
-15. Update version in `package.json`, `Cargo.toml`, and `tauri.conf.json`
-16. Perform manual validation to ensure everything works as expected
-17. Update documentation and work log (`docs/progress/phase-5.4-completion.md`, etc.)
-18. Commit changes with conventional commit message per CONTRIBUTING.md
-19. Push branch to origin
-20. Create pull request per CONTRIBUTING.md conventions
+1. Resolve variables in URL
+2. Resolve in headers
+3. Resolve in body
+4. Show resolved preview
+5. Test variable resolution
+6. Handle resolution errors
+7. Add resolution indicators
+8. Apply theming to preview
+9. Add i18n for errors
+10. Document variable usage
 
 ---
 
@@ -450,72 +370,42 @@ For each phase, ensure:
 
 ### 6.1 Environment Data Model
 
-1. Checkout new branch `phase-6.1` from latest `main`
-2. Run all validation steps to ensure base stability
-3. Fix any validation failures and await confirmation before proceeding
-4. Define `Environment` struct
-5. Add environments to collection
-6. Support environment variables
-7. Implement environment switching
-8. Test environment model
-9. Add default environment
-10. Validate environment data
-11. Write model tests
-12. Document environment format
-13. Support environment inheritance
-14. Run all validation checks (lint, check, test, coverage) - manual verification required
-15. Update version in `package.json`, `Cargo.toml`, and `tauri.conf.json`
-16. Perform manual validation to ensure everything works as expected
-17. Update documentation and work log (`docs/progress/phase-6.1-completion.md`, etc.)
-18. Commit changes with conventional commit message per CONTRIBUTING.md
-19. Push branch to origin
-20. Create pull request per CONTRIBUTING.md conventions
+1. Define `Environment` struct
+2. Add environments to collection
+3. Support environment variables
+4. Implement environment switching
+5. Test environment model
+6. Add default environment
+7. Validate environment data
+8. Write model tests
+9. Document environment format
+10. Support environment inheritance
 
 ### 6.2 Environment Resolution
 
-1. Checkout new branch `phase-6.2` from latest `main`
-2. Run all validation steps to ensure base stability
-3. Fix any validation failures and await confirmation before proceeding
-4. Extend variable resolver for environments
-5. Implement environment precedence
-6. Support collection + environment vars
-7. Test resolution order
-8. Handle conflicts
-9. Add resolution tracing
-10. Test edge cases
-11. Write comprehensive tests
-12. Document resolution rules
-13. Benchmark performance
-14. Run all validation checks (lint, check, test, coverage) - manual verification required
-15. Update version in `package.json`, `Cargo.toml`, and `tauri.conf.json`
-16. Perform manual validation to ensure everything works as expected
-17. Update documentation and work log (`docs/progress/phase-6.2-completion.md`, etc.)
-18. Commit changes with conventional commit message per CONTRIBUTING.md
-19. Push branch to origin
-20. Create pull request per CONTRIBUTING.md conventions
+1. Extend variable resolver for environments
+2. Implement environment precedence
+3. Support collection + environment vars
+4. Test resolution order
+5. Handle conflicts
+6. Add resolution tracing
+7. Test edge cases
+8. Write comprehensive tests
+9. Document resolution rules
+10. Benchmark performance
 
 ### 6.3 Environment UI
 
-1. Checkout new branch `phase-6.3` from latest `main`
-2. Run all validation steps to ensure base stability
-3. Fix any validation failures and await confirmation before proceeding
-4. Create `EnvironmentSelector.svelte`
-5. Add environment dropdown
-6. Create environment editor
-7. Add environment add/delete
-8. Show active environment
-9. Show environment variables
-10. Apply theming to components
-11. Add i18n strings
-12. Test environment switching
-13. Add quick-switch keyboard shortcut
-14. Run all validation checks (lint, check, test, coverage) - manual verification required
-15. Update version in `package.json`, `Cargo.toml`, and `tauri.conf.json`
-16. Perform manual validation to ensure everything works as expected
-17. Update documentation and work log (`docs/progress/phase-6.3-completion.md`, etc.)
-18. Commit changes with conventional commit message per CONTRIBUTING.md
-19. Push branch to origin
-20. Create pull request per CONTRIBUTING.md conventions
+1. Create `EnvironmentSelector.svelte`
+2. Add environment dropdown
+3. Create environment editor
+4. Add environment add/delete
+5. Show active environment
+6. Show environment variables
+7. Apply theming to components
+8. Add i18n strings
+9. Test environment switching
+10. Add quick-switch keyboard shortcut
 
 ---
 
@@ -523,72 +413,42 @@ For each phase, ensure:
 
 ### 7.1 Secrets Storage
 
-1. Checkout new branch `phase-7.1` from latest `main`
-2. Run all validation steps to ensure base stability
-3. Fix any validation failures and await confirmation before proceeding
-4. Define secrets file format (`.secrets.yaml`)
-5. Create gitignore for secrets files
-6. Implement secrets loader
-7. Add secrets to variable resolution
-8. Support environment-specific secrets
-9. Validate secrets structure
-10. Test secrets loading
-11. Handle missing secrets gracefully
-12. Add secrets documentation
-13. Write security tests
-14. Run all validation checks (lint, check, test, coverage) - manual verification required
-15. Update version in `package.json`, `Cargo.toml`, and `tauri.conf.json`
-16. Perform manual validation to ensure everything works as expected
-17. Update documentation and work log (`docs/progress/phase-7.1-completion.md`, etc.)
-18. Commit changes with conventional commit message per CONTRIBUTING.md
-19. Push branch to origin
-20. Create pull request per CONTRIBUTING.md conventions
+1. Define secrets file format (`.secrets.yaml`)
+2. Create gitignore for secrets files
+3. Implement secrets loader
+4. Add secrets to variable resolution
+5. Support environment-specific secrets
+6. Validate secrets structure
+7. Test secrets loading
+8. Handle missing secrets gracefully
+9. Add secrets documentation
+10. Write security tests
 
 ### 7.2 Secrets UI
 
-1. Checkout new branch `phase-7.2` from latest `main`
-2. Run all validation steps to ensure base stability
-3. Fix any validation failures and await confirmation before proceeding
-4. Add secrets indicator in variables panel
-5. Mask secret values in UI
-6. Add "Show/Hide" toggle for secrets
-7. Create secrets editor
-8. Add security warnings
-9. Prevent accidental commits (UI warning)
-10. Apply theming to secrets UI
-11. Add i18n for security messages
-12. Test secrets handling
-13. Add accessibility for masked inputs
-14. Run all validation checks (lint, check, test, coverage) - manual verification required
-15. Update version in `package.json`, `Cargo.toml`, and `tauri.conf.json`
-16. Perform manual validation to ensure everything works as expected
-17. Update documentation and work log (`docs/progress/phase-7.2-completion.md`, etc.)
-18. Commit changes with conventional commit message per CONTRIBUTING.md
-19. Push branch to origin
-20. Create pull request per CONTRIBUTING.md conventions
+1. Add secrets indicator in variables panel
+2. Mask secret values in UI
+3. Add "Show/Hide" toggle for secrets
+4. Create secrets editor
+5. Add security warnings
+6. Prevent accidental commits (UI warning)
+7. Apply theming to secrets UI
+8. Add i18n for security messages
+9. Test secrets handling
+10. Add accessibility for masked inputs
 
 ### 7.3 Template & Documentation
 
-1. Checkout new branch `phase-7.3` from latest `main`
-2. Run all validation steps to ensure base stability
-3. Fix any validation failures and await confirmation before proceeding
-4. Create `.secrets.template.yaml` example
-5. Add README for secrets setup
-6. Document secrets best practices
-7. Add inline help in UI
-8. Create secrets troubleshooting guide
-9. Test template creation
-10. Add i18n for help text
-11. Create video tutorial script
-12. Test documentation clarity
-13. Get user feedback
-14. Run all validation checks (lint, check, test, coverage) - manual verification required
-15. Update version in `package.json`, `Cargo.toml`, and `tauri.conf.json`
-16. Perform manual validation to ensure everything works as expected
-17. Update documentation and work log (`docs/progress/phase-7.3-completion.md`, etc.)
-18. Commit changes with conventional commit message per CONTRIBUTING.md
-19. Push branch to origin
-20. Create pull request per CONTRIBUTING.md conventions
+1. Create `.secrets.template.yaml` example
+2. Add README for secrets setup
+3. Document secrets best practices
+4. Add inline help in UI
+5. Create secrets troubleshooting guide
+6. Test template creation
+7. Add i18n for help text
+8. Create video tutorial script
+9. Test documentation clarity
+10. Get user feedback
 
 ---
 
@@ -596,95 +456,55 @@ For each phase, ensure:
 
 ### 8.1 Folder Data Model
 
-1. Checkout new branch `phase-8.1` from latest `main`
-2. Run all validation steps to ensure base stability
-3. Fix any validation failures and await confirmation before proceeding
-4. Define `Folder` struct with metadata
-5. Add `folder.yaml` format
-6. Support nested folders
-7. Implement folder ordering
-8. Add folder-to-request relationship
-9. Test folder model
-10. Add validation
-11. Support root-level requests
-12. Document structure
-13. Write comprehensive tests
-14. Run all validation checks (lint, check, test, coverage) - manual verification required
-15. Update version in `package.json`, `Cargo.toml`, and `tauri.conf.json`
-16. Perform manual validation to ensure everything works as expected
-17. Update documentation and work log (`docs/progress/phase-8.1-completion.md`, etc.)
-18. Commit changes with conventional commit message per CONTRIBUTING.md
-19. Push branch to origin
-20. Create pull request per CONTRIBUTING.md conventions
+1. Define `Folder` struct with metadata
+2. Add `folder.yaml` format
+3. Support nested folders
+4. Implement folder ordering
+5. Add folder-to-request relationship
+6. Test folder model
+7. Add validation
+8. Support root-level requests
+9. Document structure
+10. Write comprehensive tests
 
 ### 8.2 Folder File Operations
 
-1. Checkout new branch `phase-8.2` from latest `main`
-2. Run all validation steps to ensure base stability
-3. Fix any validation failures and await confirmation before proceeding
-4. Implement folder directory scanning
-5. Create recursive folder loader
-6. Build folder hierarchy tree
-7. Implement folder creation
-8. Add folder deletion
-9. Support folder renaming
-10. Test folder operations
-11. Handle nested folders
-12. Test ordering
-13. Write file system tests
-14. Run all validation checks (lint, check, test, coverage) - manual verification required
-15. Update version in `package.json`, `Cargo.toml`, and `tauri.conf.json`
-16. Perform manual validation to ensure everything works as expected
-17. Update documentation and work log (`docs/progress/phase-8.2-completion.md`, etc.)
-18. Commit changes with conventional commit message per CONTRIBUTING.md
-19. Push branch to origin
-20. Create pull request per CONTRIBUTING.md conventions
+1. Implement folder directory scanning
+2. Create recursive folder loader
+3. Build folder hierarchy tree
+4. Implement folder creation
+5. Add folder deletion
+6. Support folder renaming
+7. Test folder operations
+8. Handle nested folders
+9. Test ordering
+10. Write file system tests
 
 ### 8.3 Collection Tree UI
 
-1. Checkout new branch `phase-8.3` from latest `main`
-2. Run all validation steps to ensure base stability
-3. Fix any validation failures and await confirmation before proceeding
-4. Create `CollectionTree.svelte` component
-5. Render hierarchical folder structure
-6. Add folder expand/collapse
-7. Show requests within folders
-8. Add folder icons
-9. Implement request selection
-10. Apply theming to tree
-11. Add i18n strings
-12. Test tree rendering
-13. Add keyboard navigation
-14. Run all validation checks (lint, check, test, coverage) - manual verification required
-15. Update version in `package.json`, `Cargo.toml`, and `tauri.conf.json`
-16. Perform manual validation to ensure everything works as expected
-17. Update documentation and work log (`docs/progress/phase-8.3-completion.md`, etc.)
-18. Commit changes with conventional commit message per CONTRIBUTING.md
-19. Push branch to origin
-20. Create pull request per CONTRIBUTING.md conventions
+1. Create `CollectionTree.svelte` component
+2. Render hierarchical folder structure
+3. Add folder expand/collapse
+4. Show requests within folders
+5. Add folder icons
+6. Implement request selection
+7. Apply theming to tree
+8. Add i18n strings
+9. Test tree rendering
+10. Add keyboard navigation
 
 ### 8.4 Folder Management
 
-1. Checkout new branch `phase-8.4` from latest `main`
-2. Run all validation steps to ensure base stability
-3. Fix any validation failures and await confirmation before proceeding
-4. Add "New Folder" action
-5. Implement drag-and-drop reordering
-6. Add context menu for folders
-7. Support folder deletion
-8. Add folder rename dialog
-9. Show folder metadata
-10. Test all operations
-11. Add undo/redo
-12. Test with deep nesting
-13. Polish UX
-14. Run all validation checks (lint, check, test, coverage) - manual verification required
-15. Update version in `package.json`, `Cargo.toml`, and `tauri.conf.json`
-16. Perform manual validation to ensure everything works as expected
-17. Update documentation and work log (`docs/progress/phase-8.4-completion.md`, etc.)
-18. Commit changes with conventional commit message per CONTRIBUTING.md
-19. Push branch to origin
-20. Create pull request per CONTRIBUTING.md conventions
+1. Add "New Folder" action
+2. Implement drag-and-drop reordering
+3. Add context menu for folders
+4. Support folder deletion
+5. Add folder rename dialog
+6. Show folder metadata
+7. Test all operations
+8. Add undo/redo
+9. Test with deep nesting
+10. Polish UX
 
 ---
 
@@ -692,95 +512,55 @@ For each phase, ensure:
 
 ### 9.1 Query Parameters
 
-1. Checkout new branch `phase-9.1` from latest `main`
-2. Run all validation steps to ensure base stability
-3. Fix any validation failures and await confirmation before proceeding
-4. Add query params array to request model
-5. Implement query param builder
-6. Create query params editor UI
-7. Support enable/disable per param
-8. Add variable resolution in params
-9. URL encode param values
-10. Apply theming to editor
-11. Add i18n labels
-12. Test param handling
-13. Test edge cases
-14. Run all validation checks (lint, check, test, coverage) - manual verification required
-15. Update version in `package.json`, `Cargo.toml`, and `tauri.conf.json`
-16. Perform manual validation to ensure everything works as expected
-17. Update documentation and work log (`docs/progress/phase-9.1-completion.md`, etc.)
-18. Commit changes with conventional commit message per CONTRIBUTING.md
-19. Push branch to origin
-20. Create pull request per CONTRIBUTING.md conventions
+1. Add query params array to request model
+2. Implement query param builder
+3. Create query params editor UI
+4. Support enable/disable per param
+5. Add variable resolution in params
+6. URL encode param values
+7. Apply theming to editor
+8. Add i18n labels
+9. Test param handling
+10. Test edge cases
 
 ### 9.2 Multiple Body Types
 
-1. Checkout new branch `phase-9.2` from latest `main`
-2. Run all validation steps to ensure base stability
-3. Fix any validation failures and await confirmation before proceeding
-4. Support form-urlencoded body
-5. Support multipart/form-data
-6. Support XML body
-7. Support plain text body
-8. Add body type selector
-9. Create editors for each type
-10. Test each body type
-11. Add syntax highlighting
-12. Apply theming to editors
-13. Add i18n strings
-14. Run all validation checks (lint, check, test, coverage) - manual verification required
-15. Update version in `package.json`, `Cargo.toml`, and `tauri.conf.json`
-16. Perform manual validation to ensure everything works as expected
-17. Update documentation and work log (`docs/progress/phase-9.2-completion.md`, etc.)
-18. Commit changes with conventional commit message per CONTRIBUTING.md
-19. Push branch to origin
-20. Create pull request per CONTRIBUTING.md conventions
+1. Support form-urlencoded body
+2. Support multipart/form-data
+3. Support XML body
+4. Support plain text body
+5. Add body type selector
+6. Create editors for each type
+7. Test each body type
+8. Add syntax highlighting
+9. Apply theming to editors
+10. Add i18n strings
 
 ### 9.3 Authentication (Basic)
 
-1. Checkout new branch `phase-9.3` from latest `main`
-2. Run all validation steps to ensure base stability
-3. Fix any validation failures and await confirmation before proceeding
-4. Add auth type to request model
-5. Implement Bearer token auth
-6. Implement Basic authentication
-7. Add auth configuration UI
-8. Support auth inheritance (collection level)
-9. Test each auth type
-10. Apply theming to auth UI
-11. Add i18n for auth types
-12. Test with real APIs
-13. Document auth setup
-14. Run all validation checks (lint, check, test, coverage) - manual verification required
-15. Update version in `package.json`, `Cargo.toml`, and `tauri.conf.json`
-16. Perform manual validation to ensure everything works as expected
-17. Update documentation and work log (`docs/progress/phase-9.3-completion.md`, etc.)
-18. Commit changes with conventional commit message per CONTRIBUTING.md
-19. Push branch to origin
-20. Create pull request per CONTRIBUTING.md conventions
+1. Add auth type to request model
+2. Implement Bearer token auth
+3. Implement Basic authentication
+4. Add auth configuration UI
+5. Support auth inheritance (collection level)
+6. Test each auth type
+7. Apply theming to auth UI
+8. Add i18n for auth types
+9. Test with real APIs
+10. Document auth setup
 
 ### 9.4 Advanced Headers
 
-1. Checkout new branch `phase-9.4` from latest `main`
-2. Run all validation steps to ensure base stability
-3. Fix any validation failures and await confirmation before proceeding
-4. Add header enable/disable toggle
-5. Support header templates
-6. Add common headers dropdown
-7. Implement header validation
-8. Show header descriptions
-9. Add variable resolution preview
-10. Apply theming to header editor
-11. Add i18n for headers
-12. Test header handling
-13. Add header documentation
-14. Run all validation checks (lint, check, test, coverage) - manual verification required
-15. Update version in `package.json`, `Cargo.toml`, and `tauri.conf.json`
-16. Perform manual validation to ensure everything works as expected
-17. Update documentation and work log (`docs/progress/phase-9.4-completion.md`, etc.)
-18. Commit changes with conventional commit message per CONTRIBUTING.md
-19. Push branch to origin
-20. Create pull request per CONTRIBUTING.md conventions
+1. Add header enable/disable toggle
+2. Support header templates
+3. Add common headers dropdown
+4. Implement header validation
+5. Show header descriptions
+6. Add variable resolution preview
+7. Apply theming to header editor
+8. Add i18n for headers
+9. Test header handling
+10. Add header documentation
 
 ---
 
@@ -788,95 +568,55 @@ For each phase, ensure:
 
 ### 10.1 SQLite History Setup
 
-1. Checkout new branch `phase-10.1` from latest `main`
-2. Run all validation steps to ensure base stability
-3. Fix any validation failures and await confirmation before proceeding
-4. Add sqlx dependency for SQLite
-5. Create database schema
-6. Create `history` table
-7. Add indexes for queries
-8. Implement database initialization
-9. Create connection pool
-10. Test database setup
-11. Handle migrations
-12. Test concurrent access
-13. Write database tests
-14. Run all validation checks (lint, check, test, coverage) - manual verification required
-15. Update version in `package.json`, `Cargo.toml`, and `tauri.conf.json`
-16. Perform manual validation to ensure everything works as expected
-17. Update documentation and work log (`docs/progress/phase-10.1-completion.md`, etc.)
-18. Commit changes with conventional commit message per CONTRIBUTING.md
-19. Push branch to origin
-20. Create pull request per CONTRIBUTING.md conventions
+1. Add sqlx dependency for SQLite
+2. Create database schema
+3. Create `history` table
+4. Add indexes for queries
+5. Implement database initialization
+6. Create connection pool
+7. Test database setup
+8. Handle migrations
+9. Test concurrent access
+10. Write database tests
 
 ### 10.2 History Recording
 
-1. Checkout new branch `phase-10.2` from latest `main`
-2. Run all validation steps to ensure base stability
-3. Fix any validation failures and await confirmation before proceeding
-4. Implement `save_to_history()` function
-5. Capture request details
-6. Capture response data
-7. Store execution timestamp
-8. Add response time and size
-9. Compress large responses
-10. Test history saving
-11. Handle save errors
-12. Test with many requests
-13. Benchmark performance
-14. Run all validation checks (lint, check, test, coverage) - manual verification required
-15. Update version in `package.json`, `Cargo.toml`, and `tauri.conf.json`
-16. Perform manual validation to ensure everything works as expected
-17. Update documentation and work log (`docs/progress/phase-10.2-completion.md`, etc.)
-18. Commit changes with conventional commit message per CONTRIBUTING.md
-19. Push branch to origin
-20. Create pull request per CONTRIBUTING.md conventions
+1. Implement `save_to_history()` function
+2. Capture request details
+3. Capture response data
+4. Store execution timestamp
+5. Add response time and size
+6. Compress large responses
+7. Test history saving
+8. Handle save errors
+9. Test with many requests
+10. Benchmark performance
 
 ### 10.3 History Retrieval
 
-1. Checkout new branch `phase-10.3` from latest `main`
-2. Run all validation steps to ensure base stability
-3. Fix any validation failures and await confirmation before proceeding
-4. Implement `get_history()` with pagination
-5. Add filtering by request
-6. Add filtering by date range
-7. Add filtering by status code
-8. Add search functionality
-9. Order by timestamp
-10. Test retrieval queries
-11. Test pagination
-12. Optimize query performance
-13. Write query tests
-14. Run all validation checks (lint, check, test, coverage) - manual verification required
-15. Update version in `package.json`, `Cargo.toml`, and `tauri.conf.json`
-16. Perform manual validation to ensure everything works as expected
-17. Update documentation and work log (`docs/progress/phase-10.3-completion.md`, etc.)
-18. Commit changes with conventional commit message per CONTRIBUTING.md
-19. Push branch to origin
-20. Create pull request per CONTRIBUTING.md conventions
+1. Implement `get_history()` with pagination
+2. Add filtering by request
+3. Add filtering by date range
+4. Add filtering by status code
+5. Add search functionality
+6. Order by timestamp
+7. Test retrieval queries
+8. Test pagination
+9. Optimize query performance
+10. Write query tests
 
 ### 10.4 History UI
 
-1. Checkout new branch `phase-10.4` from latest `main`
-2. Run all validation steps to ensure base stability
-3. Fix any validation failures and await confirmation before proceeding
-4. Create `HistoryPanel.svelte` component
-5. Display history list
-6. Show request and response summary
-7. Add history filters
-8. Add date range picker
-9. Implement "rerun from history" action
-10. Add clear history button
-11. Apply theming to panel
-12. Add i18n strings
-13. Test history UI
-14. Run all validation checks (lint, check, test, coverage) - manual verification required
-15. Update version in `package.json`, `Cargo.toml`, and `tauri.conf.json`
-16. Perform manual validation to ensure everything works as expected
-17. Update documentation and work log (`docs/progress/phase-10.4-completion.md`, etc.)
-18. Commit changes with conventional commit message per CONTRIBUTING.md
-19. Push branch to origin
-20. Create pull request per CONTRIBUTING.md conventions
+1. Create `HistoryPanel.svelte` component
+2. Display history list
+3. Show request and response summary
+4. Add history filters
+5. Add date range picker
+6. Implement "rerun from history" action
+7. Add clear history button
+8. Apply theming to panel
+9. Add i18n strings
+10. Test history UI
 
 ---
 
@@ -884,141 +624,81 @@ For each phase, ensure:
 
 ### 11.1 Deno Runtime Integration
 
-1. Checkout new branch `phase-11.1` from latest `main`
-2. Run all validation steps to ensure base stability
-3. Fix any validation failures and await confirmation before proceeding
-4. Add deno_core dependency
-5. Initialize V8 isolate
-6. Create sandboxed runtime
-7. Configure security (no FS/net)
-8. Set memory limits
-9. Set execution timeout (30s)
-10. Test basic script execution
-11. Test timeout enforcement
-12. Test security restrictions
-13. Benchmark performance
-14. Run all validation checks (lint, check, test, coverage) - manual verification required
-15. Update version in `package.json`, `Cargo.toml`, and `tauri.conf.json`
-16. Perform manual validation to ensure everything works as expected
-17. Update documentation and work log (`docs/progress/phase-11.1-completion.md`, etc.)
-18. Commit changes with conventional commit message per CONTRIBUTING.md
-19. Push branch to origin
-20. Create pull request per CONTRIBUTING.md conventions
+1. Add deno_core dependency
+2. Initialize V8 isolate
+3. Create sandboxed runtime
+4. Configure security (no FS/net)
+5. Set memory limits
+6. Set execution timeout (30s)
+7. Test basic script execution
+8. Test timeout enforcement
+9. Test security restrictions
+10. Benchmark performance
 
 ### 11.2 Script API - Core
 
-1. Checkout new branch `phase-11.2` from latest `main`
-2. Run all validation steps to ensure base stability
-3. Fix any validation failures and await confirmation before proceeding
-4. Expose `env.get()` function
-5. Expose `env.set()` function
-6. Expose `console.log()`
-7. Expose `console.error()`
-8. Expose `crypto.randomUUID()`
-9. Test API availability
-10. Test variable access
-11. Test console output capture
-12. Document script API
-13. Write API tests
-14. Run all validation checks (lint, check, test, coverage) - manual verification required
-15. Update version in `package.json`, `Cargo.toml`, and `tauri.conf.json`
-16. Perform manual validation to ensure everything works as expected
-17. Update documentation and work log (`docs/progress/phase-11.2-completion.md`, etc.)
-18. Commit changes with conventional commit message per CONTRIBUTING.md
-19. Push branch to origin
-20. Create pull request per CONTRIBUTING.md conventions
+1. Expose `env.get()` function
+2. Expose `env.set()` function
+3. Expose `console.log()`
+4. Expose `console.error()`
+5. Expose `crypto.randomUUID()`
+6. Test API availability
+7. Test variable access
+8. Test console output capture
+9. Document script API
+10. Write API tests
 
 ### 11.3 Pre-request Scripts
 
-1. Checkout new branch `phase-11.3` from latest `main`
-2. Run all validation steps to ensure base stability
-3. Fix any validation failures and await confirmation before proceeding
-4. Add pre-request script field to model
-5. Execute script before request
-6. Allow request modification
-7. Capture console output
-8. Handle script errors
-9. Test script execution
-10. Test request modification
-11. Test error handling
-12. Add script examples
-13. Write comprehensive tests
-14. Run all validation checks (lint, check, test, coverage) - manual verification required
-15. Update version in `package.json`, `Cargo.toml`, and `tauri.conf.json`
-16. Perform manual validation to ensure everything works as expected
-17. Update documentation and work log (`docs/progress/phase-11.3-completion.md`, etc.)
-18. Commit changes with conventional commit message per CONTRIBUTING.md
-19. Push branch to origin
-20. Create pull request per CONTRIBUTING.md conventions
+1. Add pre-request script field to model
+2. Execute script before request
+3. Allow request modification
+4. Capture console output
+5. Handle script errors
+6. Test script execution
+7. Test request modification
+8. Test error handling
+9. Add script examples
+10. Write comprehensive tests
 
 ### 11.4 Post-response Scripts
 
-1. Checkout new branch `phase-11.4` from latest `main`
-2. Run all validation steps to ensure base stability
-3. Fix any validation failures and await confirmation before proceeding
-4. Add post-response script field
-5. Execute script after response
-6. Expose response object to script
-7. Allow variable extraction
-8. Capture script output
-9. Test script execution
-10. Test variable setting
-11. Test with real responses
-12. Add script examples
-13. Write integration tests
-14. Run all validation checks (lint, check, test, coverage) - manual verification required
-15. Update version in `package.json`, `Cargo.toml`, and `tauri.conf.json`
-16. Perform manual validation to ensure everything works as expected
-17. Update documentation and work log (`docs/progress/phase-11.4-completion.md`, etc.)
-18. Commit changes with conventional commit message per CONTRIBUTING.md
-19. Push branch to origin
-20. Create pull request per CONTRIBUTING.md conventions
+1. Add post-response script field
+2. Execute script after response
+3. Expose response object to script
+4. Allow variable extraction
+5. Capture script output
+6. Test script execution
+7. Test variable setting
+8. Test with real responses
+9. Add script examples
+10. Write integration tests
 
 ### 11.5 Test Assertions
 
-1. Checkout new branch `phase-11.5` from latest `main`
-2. Run all validation steps to ensure base stability
-3. Fix any validation failures and await confirmation before proceeding
-4. Expose `assert()` function
-5. Add tests array to request model
-6. Execute test scripts after response
-7. Collect test results
-8. Show pass/fail status
-9. Display assertion messages
-10. Test assertion execution
-11. Test multiple assertions
-12. Create test examples
-13. Write testing tests
-14. Run all validation checks (lint, check, test, coverage) - manual verification required
-15. Update version in `package.json`, `Cargo.toml`, and `tauri.conf.json`
-16. Perform manual validation to ensure everything works as expected
-17. Update documentation and work log (`docs/progress/phase-11.5-completion.md`, etc.)
-18. Commit changes with conventional commit message per CONTRIBUTING.md
-19. Push branch to origin
-20. Create pull request per CONTRIBUTING.md conventions
+1. Expose `assert()` function
+2. Add tests array to request model
+3. Execute test scripts after response
+4. Collect test results
+5. Show pass/fail status
+6. Display assertion messages
+7. Test assertion execution
+8. Test multiple assertions
+9. Create test examples
+10. Write testing tests
 
 ### 11.6 Script Editor UI
 
-1. Checkout new branch `phase-11.6` from latest `main`
-2. Run all validation steps to ensure base stability
-3. Fix any validation failures and await confirmation before proceeding
-4. Create `ScriptEditor.svelte` component
-5. Integrate Monaco editor
-6. Add syntax highlighting
-7. Show available API reference
-8. Display script execution results
-9. Show console output
-10. Display test results
-11. Apply theming to editor
-12. Add i18n strings
-13. Test editor functionality
-14. Run all validation checks (lint, check, test, coverage) - manual verification required
-15. Update version in `package.json`, `Cargo.toml`, and `tauri.conf.json`
-16. Perform manual validation to ensure everything works as expected
-17. Update documentation and work log (`docs/progress/phase-11.6-completion.md`, etc.)
-18. Commit changes with conventional commit message per CONTRIBUTING.md
-19. Push branch to origin
-20. Create pull request per CONTRIBUTING.md conventions
+1. Create `ScriptEditor.svelte` component
+2. Integrate Monaco editor
+3. Add syntax highlighting
+4. Show available API reference
+5. Display script execution results
+6. Show console output
+7. Display test results
+8. Apply theming to editor
+9. Add i18n strings
+10. Test editor functionality
 
 ---
 
@@ -1026,72 +706,42 @@ For each phase, ensure:
 
 ### 12.1 Enhanced Response Handling
 
-1. Checkout new branch `phase-12.1` from latest `main`
-2. Run all validation steps to ensure base stability
-3. Fix any validation failures and await confirmation before proceeding
-4. Implement JSON response parser
-5. Add JSON tree viewer
-6. Implement XML response parser
-7. Add XML tree viewer
-8. Support HTML response viewing
-9. Add image preview for image responses
-10. Handle binary responses
-11. Test each response type
-12. Add response search
-13. Write comprehensive tests
-14. Run all validation checks (lint, check, test, coverage) - manual verification required
-15. Update version in `package.json`, `Cargo.toml`, and `tauri.conf.json`
-16. Perform manual validation to ensure everything works as expected
-17. Update documentation and work log (`docs/progress/phase-12.1-completion.md`, etc.)
-18. Commit changes with conventional commit message per CONTRIBUTING.md
-19. Push branch to origin
-20. Create pull request per CONTRIBUTING.md conventions
+1. Implement JSON response parser
+2. Add JSON tree viewer
+3. Implement XML response parser
+4. Add XML tree viewer
+5. Support HTML response viewing
+6. Add image preview for image responses
+7. Handle binary responses
+8. Test each response type
+9. Add response search
+10. Write comprehensive tests
 
 ### 12.2 Response Utilities
 
-1. Checkout new branch `phase-12.2` from latest `main`
-2. Run all validation steps to ensure base stability
-3. Fix any validation failures and await confirmation before proceeding
-4. Add "Copy response" button
-5. Add "Save to file" option
-6. Implement response formatting
-7. Add pretty-print toggle
-8. Show raw vs formatted
-9. Add response size calculation
-10. Apply theming to viewer
-11. Add i18n strings
-12. Test all utilities
-13. Polish UX
-14. Run all validation checks (lint, check, test, coverage) - manual verification required
-15. Update version in `package.json`, `Cargo.toml`, and `tauri.conf.json`
-16. Perform manual validation to ensure everything works as expected
-17. Update documentation and work log (`docs/progress/phase-12.2-completion.md`, etc.)
-18. Commit changes with conventional commit message per CONTRIBUTING.md
-19. Push branch to origin
-20. Create pull request per CONTRIBUTING.md conventions
+1. Add "Copy response" button
+2. Add "Save to file" option
+3. Implement response formatting
+4. Add pretty-print toggle
+5. Show raw vs formatted
+6. Add response size calculation
+7. Apply theming to viewer
+8. Add i18n strings
+9. Test all utilities
+10. Polish UX
 
 ### 12.3 Response Statistics
 
-1. Checkout new branch `phase-12.3` from latest `main`
-2. Run all validation steps to ensure base stability
-3. Fix any validation failures and await confirmation before proceeding
-4. Display response time prominently
-5. Show response size
-6. Add header count
-7. Calculate time breakdown (DNS, connect, etc.)
-8. Show status code explanation
-9. Add response time chart (history)
-10. Test statistics display
-11. Apply theming to stats
-12. Add i18n labels
-13. Create stats documentation
-14. Run all validation checks (lint, check, test, coverage) - manual verification required
-15. Update version in `package.json`, `Cargo.toml`, and `tauri.conf.json`
-16. Perform manual validation to ensure everything works as expected
-17. Update documentation and work log (`docs/progress/phase-12.3-completion.md`, etc.)
-18. Commit changes with conventional commit message per CONTRIBUTING.md
-19. Push branch to origin
-20. Create pull request per CONTRIBUTING.md conventions
+1. Display response time prominently
+2. Show response size
+3. Add header count
+4. Calculate time breakdown (DNS, connect, etc.)
+5. Show status code explanation
+6. Add response time chart (history)
+7. Test statistics display
+8. Apply theming to stats
+9. Add i18n labels
+10. Create stats documentation
 
 ---
 
@@ -1099,95 +749,55 @@ For each phase, ensure:
 
 ### 13.1 Postman Import
 
-1. Checkout new branch `phase-13.1` from latest `main`
-2. Run all validation steps to ensure base stability
-3. Fix any validation failures and await confirmation before proceeding
-4. Create Postman v2.1 parser
-5. Map collection structure
-6. Convert request format
-7. Import variables
-8. Convert scripts (basic)
-9. Test collection import
-10. Handle import errors
-11. Add import UI dialog
-12. Test with real collections
-13. Document import process
-14. Run all validation checks (lint, check, test, coverage) - manual verification required
-15. Update version in `package.json`, `Cargo.toml`, and `tauri.conf.json`
-16. Perform manual validation to ensure everything works as expected
-17. Update documentation and work log (`docs/progress/phase-13.1-completion.md`, etc.)
-18. Commit changes with conventional commit message per CONTRIBUTING.md
-19. Push branch to origin
-20. Create pull request per CONTRIBUTING.md conventions
+1. Create Postman v2.1 parser
+2. Map collection structure
+3. Convert request format
+4. Import variables
+5. Convert scripts (basic)
+6. Test collection import
+7. Handle import errors
+8. Add import UI dialog
+9. Test with real collections
+10. Document import process
 
 ### 13.2 Export to Postman
 
-1. Checkout new branch `phase-13.2` from latest `main`
-2. Run all validation steps to ensure base stability
-3. Fix any validation failures and await confirmation before proceeding
-4. Implement Postman collection generator
-5. Map Arcanine to Postman format
-6. Convert scripts
-7. Export variables
-8. Generate valid Postman JSON
-9. Test export functionality
-10. Add export UI
-11. Test round-trip conversion
-12. Apply i18n to export
-13. Document export process
-14. Run all validation checks (lint, check, test, coverage) - manual verification required
-15. Update version in `package.json`, `Cargo.toml`, and `tauri.conf.json`
-16. Perform manual validation to ensure everything works as expected
-17. Update documentation and work log (`docs/progress/phase-13.2-completion.md`, etc.)
-18. Commit changes with conventional commit message per CONTRIBUTING.md
-19. Push branch to origin
-20. Create pull request per CONTRIBUTING.md conventions
+1. Implement Postman collection generator
+2. Map Arcanine to Postman format
+3. Convert scripts
+4. Export variables
+5. Generate valid Postman JSON
+6. Test export functionality
+7. Add export UI
+8. Test round-trip conversion
+9. Apply i18n to export
+10. Document export process
 
 ### 13.3 cURL Import/Export
 
-1. Checkout new branch `phase-13.3` from latest `main`
-2. Run all validation steps to ensure base stability
-3. Fix any validation failures and await confirmation before proceeding
-4. Parse cURL command syntax
-5. Extract method, URL, headers, body
-6. Create request from cURL
-7. Generate cURL from request
-8. Add import UI
-9. Add export button
-10. Test import/export
-11. Handle edge cases
-12. Add i18n strings
-13. Document cURL support
-14. Run all validation checks (lint, check, test, coverage) - manual verification required
-15. Update version in `package.json`, `Cargo.toml`, and `tauri.conf.json`
-16. Perform manual validation to ensure everything works as expected
-17. Update documentation and work log (`docs/progress/phase-13.3-completion.md`, etc.)
-18. Commit changes with conventional commit message per CONTRIBUTING.md
-19. Push branch to origin
-20. Create pull request per CONTRIBUTING.md conventions
+1. Parse cURL command syntax
+2. Extract method, URL, headers, body
+3. Create request from cURL
+4. Generate cURL from request
+5. Add import UI
+6. Add export button
+7. Test import/export
+8. Handle edge cases
+9. Add i18n strings
+10. Document cURL support
 
 ### 13.4 OpenAPI Import (Basic)
 
-1. Checkout new branch `phase-13.4` from latest `main`
-2. Run all validation steps to ensure base stability
-3. Fix any validation failures and await confirmation before proceeding
-4. Parse OpenAPI 3.x YAML/JSON
-5. Extract paths and operations
-6. Generate requests from spec
-7. Create folder structure from tags
-8. Add servers as environments
-9. Test spec parsing
-10. Add import dialog
-11. Test with real specs
-12. Add i18n for import
-13. Document OpenAPI import
-14. Run all validation checks (lint, check, test, coverage) - manual verification required
-15. Update version in `package.json`, `Cargo.toml`, and `tauri.conf.json`
-16. Perform manual validation to ensure everything works as expected
-17. Update documentation and work log (`docs/progress/phase-13.4-completion.md`, etc.)
-18. Commit changes with conventional commit message per CONTRIBUTING.md
-19. Push branch to origin
-20. Create pull request per CONTRIBUTING.md conventions
+1. Parse OpenAPI 3.x YAML/JSON
+2. Extract paths and operations
+3. Generate requests from spec
+4. Create folder structure from tags
+5. Add servers as environments
+6. Test spec parsing
+7. Add import dialog
+8. Test with real specs
+9. Add i18n for import
+10. Document OpenAPI import
 
 ---
 
@@ -1195,49 +805,29 @@ For each phase, ensure:
 
 ### 14.1 GraphQL Support
 
-1. Checkout new branch `phase-14.1` from latest `main`
-2. Run all validation steps to ensure base stability
-3. Fix any validation failures and await confirmation before proceeding
-4. Add GraphQL body type to model
-5. Create GraphQL request format
-6. Implement query execution
-7. Support variables in query
-8. Add schema introspection
-9. Create GraphQL editor UI
-10. Test GraphQL requests
-11. Apply theming to editor
-12. Add i18n strings
-13. Test with real GraphQL APIs
-14. Run all validation checks (lint, check, test, coverage) - manual verification required
-15. Update version in `package.json`, `Cargo.toml`, and `tauri.conf.json`
-16. Perform manual validation to ensure everything works as expected
-17. Update documentation and work log (`docs/progress/phase-14.1-completion.md`, etc.)
-18. Commit changes with conventional commit message per CONTRIBUTING.md
-19. Push branch to origin
-20. Create pull request per CONTRIBUTING.md conventions
+1. Add GraphQL body type to model
+2. Create GraphQL request format
+3. Implement query execution
+4. Support variables in query
+5. Add schema introspection
+6. Create GraphQL editor UI
+7. Test GraphQL requests
+8. Apply theming to editor
+9. Add i18n strings
+10. Test with real GraphQL APIs
 
 ### 14.2 WebSocket Support (Basic)
 
-1. Checkout new branch `phase-14.2` from latest `main`
-2. Run all validation steps to ensure base stability
-3. Fix any validation failures and await confirmation before proceeding
-4. Add WebSocket connection type
-5. Implement connection handler
-6. Support sending messages
-7. Display received messages
-8. Show connection status
-9. Create WebSocket UI panel
-10. Test connections
-11. Handle disconnections
-12. Apply theming to panel
-13. Add i18n strings
-14. Run all validation checks (lint, check, test, coverage) - manual verification required
-15. Update version in `package.json`, `Cargo.toml`, and `tauri.conf.json`
-16. Perform manual validation to ensure everything works as expected
-17. Update documentation and work log (`docs/progress/phase-14.2-completion.md`, etc.)
-18. Commit changes with conventional commit message per CONTRIBUTING.md
-19. Push branch to origin
-20. Create pull request per CONTRIBUTING.md conventions
+1. Add WebSocket connection type
+2. Implement connection handler
+3. Support sending messages
+4. Display received messages
+5. Show connection status
+6. Create WebSocket UI panel
+7. Test connections
+8. Handle disconnections
+9. Apply theming to panel
+10. Add i18n strings
 
 ---
 
@@ -1245,118 +835,68 @@ For each phase, ensure:
 
 ### 15.1 Performance Optimization
 
-1. Checkout new branch `phase-15.1` from latest `main`
-2. Run all validation steps to ensure base stability
-3. Fix any validation failures and await confirmation before proceeding
-4. Benchmark collection loading
-5. Optimize YAML parsing
-6. Add virtual scrolling for large lists
-7. Implement lazy loading
-8. Cache parsed responses
-9. Optimize request execution
-10. Profile memory usage
-11. Reduce bundle size
-12. Test with large collections (1000+ requests)
-13. Document performance characteristics
-14. Run all validation checks (lint, check, test, coverage) - manual verification required
-15. Update version in `package.json`, `Cargo.toml`, and `tauri.conf.json`
-16. Perform manual validation to ensure everything works as expected
-17. Update documentation and work log (`docs/progress/phase-15.1-completion.md`, etc.)
-18. Commit changes with conventional commit message per CONTRIBUTING.md
-19. Push branch to origin
-20. Create pull request per CONTRIBUTING.md conventions
+1. Benchmark collection loading
+2. Optimize YAML parsing
+3. Add virtual scrolling for large lists
+4. Implement lazy loading
+5. Cache parsed responses
+6. Optimize request execution
+7. Profile memory usage
+8. Reduce bundle size
+9. Test with large collections (1000+ requests)
+10. Document performance characteristics
 
 ### 15.2 Enhanced Theming
 
-1. Checkout new branch `phase-15.2` from latest `main`
-2. Run all validation steps to ensure base stability
-3. Fix any validation failures and await confirmation before proceeding
-4. Add more theme options (custom colors)
-5. Support high contrast mode
-6. Add theme presets (Ocean, Forest, etc.)
-7. Implement smooth transitions
-8. Test themes on all components
-9. Add theme export/import
-10. Persist custom themes
-11. Test accessibility
-12. Add theme documentation
-13. Get design feedback
-14. Run all validation checks (lint, check, test, coverage) - manual verification required
-15. Update version in `package.json`, `Cargo.toml`, and `tauri.conf.json`
-16. Perform manual validation to ensure everything works as expected
-17. Update documentation and work log (`docs/progress/phase-15.2-completion.md`, etc.)
-18. Commit changes with conventional commit message per CONTRIBUTING.md
-19. Push branch to origin
-20. Create pull request per CONTRIBUTING.md conventions
+1. Add more theme options (custom colors)
+2. Support high contrast mode
+3. Add theme presets (Ocean, Forest, etc.)
+4. Implement smooth transitions
+5. Test themes on all components
+6. Add theme export/import
+7. Persist custom themes
+8. Test accessibility
+9. Add theme documentation
+10. Get design feedback
 
 ### 15.3 I18n Expansion
 
-1. Checkout new branch `phase-15.3` from latest `main`
-2. Run all validation steps to ensure base stability
-3. Fix any validation failures and await confirmation before proceeding
-4. Add Spanish translation (es.json)
-5. Add French translation (fr.json)
-6. Add German translation (de.json)
-7. Add Japanese translation (ja.json)
-8. Test RTL language support preparation
-9. Add translation coverage tool
-10. Test with each language
-11. Document translation contribution
-12. Add language-specific formats (dates, numbers)
-13. Get native speaker review
-14. Run all validation checks (lint, check, test, coverage) - manual verification required
-15. Update version in `package.json`, `Cargo.toml`, and `tauri.conf.json`
-16. Perform manual validation to ensure everything works as expected
-17. Update documentation and work log (`docs/progress/phase-15.3-completion.md`, etc.)
-18. Commit changes with conventional commit message per CONTRIBUTING.md
-19. Push branch to origin
-20. Create pull request per CONTRIBUTING.md conventions
+1. Add Spanish translation (es.json)
+2. Add French translation (fr.json)
+3. Add German translation (de.json)
+4. Add Japanese translation (ja.json)
+5. Test RTL language support preparation
+6. Add translation coverage tool
+7. Test with each language
+8. Document translation contribution
+9. Add language-specific formats (dates, numbers)
+10. Get native speaker review
 
 ### 15.4 Accessibility
 
-1. Checkout new branch `phase-15.4` from latest `main`
-2. Run all validation steps to ensure base stability
-3. Fix any validation failures and await confirmation before proceeding
-4. Add ARIA labels throughout
-5. Implement keyboard navigation
-6. Add focus indicators
-7. Support screen readers
-8. Test with NVDA/JAWS
-9. Add skip navigation links
-10. Test color contrast (WCAG AAA)
-11. Add keyboard shortcuts panel
-12. Test with accessibility tools
-13. Document accessibility features
-14. Run all validation checks (lint, check, test, coverage) - manual verification required
-15. Update version in `package.json`, `Cargo.toml`, and `tauri.conf.json`
-16. Perform manual validation to ensure everything works as expected
-17. Update documentation and work log (`docs/progress/phase-15.4-completion.md`, etc.)
-18. Commit changes with conventional commit message per CONTRIBUTING.md
-19. Push branch to origin
-20. Create pull request per CONTRIBUTING.md conventions
+1. Add ARIA labels throughout
+2. Implement keyboard navigation
+3. Add focus indicators
+4. Support screen readers
+5. Test with NVDA/JAWS
+6. Add skip navigation links
+7. Test color contrast (WCAG AAA)
+8. Add keyboard shortcuts panel
+9. Test with accessibility tools
+10. Document accessibility features
 
 ### 15.5 Error Handling & UX
 
-1. Checkout new branch `phase-15.5` from latest `main`
-2. Run all validation steps to ensure base stability
-3. Fix any validation failures and await confirmation before proceeding
-4. Improve error messages
-5. Add user-friendly error dialogs
-6. Implement error recovery
-7. Add helpful error suggestions
-8. Handle network failures gracefully
-9. Show loading states consistently
-10. Add progress indicators
-11. Test all error paths
-12. Apply theming to errors
-13. Add i18n for errors
-14. Run all validation checks (lint, check, test, coverage) - manual verification required
-15. Update version in `package.json`, `Cargo.toml`, and `tauri.conf.json`
-16. Perform manual validation to ensure everything works as expected
-17. Update documentation and work log (`docs/progress/phase-15.5-completion.md`, etc.)
-18. Commit changes with conventional commit message per CONTRIBUTING.md
-19. Push branch to origin
-20. Create pull request per CONTRIBUTING.md conventions
+1. Improve error messages
+2. Add user-friendly error dialogs
+3. Implement error recovery
+4. Add helpful error suggestions
+5. Handle network failures gracefully
+6. Show loading states consistently
+7. Add progress indicators
+8. Test all error paths
+9. Apply theming to errors
+10. Add i18n for errors
 
 ---
 
@@ -1364,95 +904,55 @@ For each phase, ensure:
 
 ### 16.1 Advanced Authentication
 
-1. Checkout new branch `phase-16.1` from latest `main`
-2. Run all validation steps to ensure base stability
-3. Fix any validation failures and await confirmation before proceeding
-4. Implement OAuth 2.0 auth
-5. Support API Key auth
-6. Support Digest auth
-7. Add AWS Signature V4
-8. Create auth configuration UI
-9. Support auth inheritance (folder-level)
-10. Test each auth type
-11. Apply theming to auth UI
-12. Add i18n strings
-13. Document auth methods
-14. Run all validation checks (lint, check, test, coverage) - manual verification required
-15. Update version in `package.json`, `Cargo.toml`, and `tauri.conf.json`
-16. Perform manual validation to ensure everything works as expected
-17. Update documentation and work log (`docs/progress/phase-16.1-completion.md`, etc.)
-18. Commit changes with conventional commit message per CONTRIBUTING.md
-19. Push branch to origin
-20. Create pull request per CONTRIBUTING.md conventions
+1. Implement OAuth 2.0 auth
+2. Support API Key auth
+3. Support Digest auth
+4. Add AWS Signature V4
+5. Create auth configuration UI
+6. Support auth inheritance (folder-level)
+7. Test each auth type
+8. Apply theming to auth UI
+9. Add i18n strings
+10. Document auth methods
 
 ### 16.2 Request Chaining
 
-1. Checkout new branch `phase-16.2` from latest `main`
-2. Run all validation steps to ensure base stability
-3. Fix any validation failures and await confirmation before proceeding
-4. Support response variable extraction
-5. Implement token refresh workflow
-6. Add request dependencies
-7. Show chain execution order
-8. Handle chain failures
-9. Test chained workflows
-10. Add chain visualization
-11. Apply theming to chain UI
-12. Add i18n for chains
-13. Document chaining
-14. Run all validation checks (lint, check, test, coverage) - manual verification required
-15. Update version in `package.json`, `Cargo.toml`, and `tauri.conf.json`
-16. Perform manual validation to ensure everything works as expected
-17. Update documentation and work log (`docs/progress/phase-16.2-completion.md`, etc.)
-18. Commit changes with conventional commit message per CONTRIBUTING.md
-19. Push branch to origin
-20. Create pull request per CONTRIBUTING.md conventions
+1. Support response variable extraction
+2. Implement token refresh workflow
+3. Add request dependencies
+4. Show chain execution order
+5. Handle chain failures
+6. Test chained workflows
+7. Add chain visualization
+8. Apply theming to chain UI
+9. Add i18n for chains
+10. Document chaining
 
 ### 16.3 Bulk Operations
 
-1. Checkout new branch `phase-16.3` from latest `main`
-2. Run all validation steps to ensure base stability
-3. Fix any validation failures and await confirmation before proceeding
-4. Implement "Run folder" command
-5. Add parallel execution option
-6. Show bulk progress indicator
-7. Aggregate bulk results
-8. Add stop on failure option
-9. Test folder execution
-10. Test parallel vs sequential
-11. Apply theming to bulk UI
-12. Add i18n strings
-13. Document bulk operations
-14. Run all validation checks (lint, check, test, coverage) - manual verification required
-15. Update version in `package.json`, `Cargo.toml`, and `tauri.conf.json`
-16. Perform manual validation to ensure everything works as expected
-17. Update documentation and work log (`docs/progress/phase-16.3-completion.md`, etc.)
-18. Commit changes with conventional commit message per CONTRIBUTING.md
-19. Push branch to origin
-20. Create pull request per CONTRIBUTING.md conventions
+1. Implement "Run folder" command
+2. Add parallel execution option
+3. Show bulk progress indicator
+4. Aggregate bulk results
+5. Add stop on failure option
+6. Test folder execution
+7. Test parallel vs sequential
+8. Apply theming to bulk UI
+9. Add i18n strings
+10. Document bulk operations
 
 ### 16.4 Search & Filtering
 
-1. Checkout new branch `phase-16.4` from latest `main`
-2. Run all validation steps to ensure base stability
-3. Fix any validation failures and await confirmation before proceeding
-4. Implement global search
-5. Search in request names
-6. Search in URLs
-7. Search in bodies
-8. Add filter by method
-9. Add filter by status
-10. Add saved search filters
-11. Test search performance
-12. Apply theming to search
-13. Add i18n for search
-14. Run all validation checks (lint, check, test, coverage) - manual verification required
-15. Update version in `package.json`, `Cargo.toml`, and `tauri.conf.json`
-16. Perform manual validation to ensure everything works as expected
-17. Update documentation and work log (`docs/progress/phase-16.4-completion.md`, etc.)
-18. Commit changes with conventional commit message per CONTRIBUTING.md
-19. Push branch to origin
-20. Create pull request per CONTRIBUTING.md conventions
+1. Implement global search
+2. Search in request names
+3. Search in URLs
+4. Search in bodies
+5. Add filter by method
+6. Add filter by status
+7. Add saved search filters
+8. Test search performance
+9. Apply theming to search
+10. Add i18n for search
 
 ---
 
@@ -1460,72 +960,42 @@ For each phase, ensure:
 
 ### 17.1 File Watcher
 
-1. Checkout new branch `phase-17.1` from latest `main`
-2. Run all validation steps to ensure base stability
-3. Fix any validation failures and await confirmation before proceeding
-4. Add notify dependency
-5. Create FileWatcher service
-6. Watch collection directory
-7. Detect file changes
-8. Detect new/deleted files
-9. Debounce rapid changes
-10. Test file watching
-11. Handle watcher errors
-12. Add OS-specific optimizations
-13. Write watcher tests
-14. Run all validation checks (lint, check, test, coverage) - manual verification required
-15. Update version in `package.json`, `Cargo.toml`, and `tauri.conf.json`
-16. Perform manual validation to ensure everything works as expected
-17. Update documentation and work log (`docs/progress/phase-17.1-completion.md`, etc.)
-18. Commit changes with conventional commit message per CONTRIBUTING.md
-19. Push branch to origin
-20. Create pull request per CONTRIBUTING.md conventions
+1. Add notify dependency
+2. Create FileWatcher service
+3. Watch collection directory
+4. Detect file changes
+5. Detect new/deleted files
+6. Debounce rapid changes
+7. Test file watching
+8. Handle watcher errors
+9. Add OS-specific optimizations
+10. Write watcher tests
 
 ### 17.2 Auto-Reload
 
-1. Checkout new branch `phase-17.2` from latest `main`
-2. Run all validation steps to ensure base stability
-3. Fix any validation failures and await confirmation before proceeding
-4. Implement collection reload on change
-5. Preserve UI state during reload
-6. Show reload notification
-7. Handle merge conflicts
-8. Add manual reload button
-9. Test auto-reload
-10. Apply theming to notifications
-11. Add i18n for reload messages
-12. Test concurrent edits
-13. Document collaboration workflow
-14. Run all validation checks (lint, check, test, coverage) - manual verification required
-15. Update version in `package.json`, `Cargo.toml`, and `tauri.conf.json`
-16. Perform manual validation to ensure everything works as expected
-17. Update documentation and work log (`docs/progress/phase-17.2-completion.md`, etc.)
-18. Commit changes with conventional commit message per CONTRIBUTING.md
-19. Push branch to origin
-20. Create pull request per CONTRIBUTING.md conventions
+1. Implement collection reload on change
+2. Preserve UI state during reload
+3. Show reload notification
+4. Handle merge conflicts
+5. Add manual reload button
+6. Test auto-reload
+7. Apply theming to notifications
+8. Add i18n for reload messages
+9. Test concurrent edits
+10. Document collaboration workflow
 
 ### 17.3 Git Integration Helpers
 
-1. Checkout new branch `phase-17.3` from latest `main`
-2. Run all validation steps to ensure base stability
-3. Fix any validation failures and await confirmation before proceeding
-4. Add .gitignore template
-5. Create commit message helpers
-6. Show git status in UI (optional)
-7. Add conflict resolution helpers
-8. Document git workflows
-9. Test with real repos
-10. Apply theming to git UI
-11. Add i18n for git messages
-12. Create git tutorial
-13. Get team feedback
-14. Run all validation checks (lint, check, test, coverage) - manual verification required
-15. Update version in `package.json`, `Cargo.toml`, and `tauri.conf.json`
-16. Perform manual validation to ensure everything works as expected
-17. Update documentation and work log (`docs/progress/phase-17.3-completion.md`, etc.)
-18. Commit changes with conventional commit message per CONTRIBUTING.md
-19. Push branch to origin
-20. Create pull request per CONTRIBUTING.md conventions
+1. Add .gitignore template
+2. Create commit message helpers
+3. Show git status in UI (optional)
+4. Add conflict resolution helpers
+5. Document git workflows
+6. Test with real repos
+7. Apply theming to git UI
+8. Add i18n for git messages
+9. Create git tutorial
+10. Get team feedback
 
 ---
 
@@ -1533,72 +1003,42 @@ For each phase, ensure:
 
 ### 18.1 Comprehensive Testing
 
-1. Checkout new branch `phase-18.1` from latest `main`
-2. Run all validation steps to ensure base stability
-3. Fix any validation failures and await confirmation before proceeding
-4. Audit unit test coverage (target 90%)
-5. Write missing unit tests
-6. Add integration tests
-7. Add end-to-end tests
-8. Test on macOS
-9. Test on Windows
-10. Test on Linux
-11. Test with real APIs
-12. Test error scenarios
-13. Achieve coverage targets
-14. Run all validation checks (lint, check, test, coverage) - manual verification required
-15. Update version in `package.json`, `Cargo.toml`, and `tauri.conf.json`
-16. Perform manual validation to ensure everything works as expected
-17. Update documentation and work log (`docs/progress/phase-18.1-completion.md`, etc.)
-18. Commit changes with conventional commit message per CONTRIBUTING.md
-19. Push branch to origin
-20. Create pull request per CONTRIBUTING.md conventions
+1. Audit unit test coverage (target 90%)
+2. Write missing unit tests
+3. Add integration tests
+4. Add end-to-end tests
+5. Test on macOS
+6. Test on Windows
+7. Test on Linux
+8. Test with real APIs
+9. Test error scenarios
+10. Achieve coverage targets
 
 ### 18.2 Manual QA
 
-1. Checkout new branch `phase-18.2` from latest `main`
-2. Run all validation steps to ensure base stability
-3. Fix any validation failures and await confirmation before proceeding
-4. Create QA checklist
-5. Test all features manually
-6. Test theme switching
-7. Test i18n switching
-8. Test import/export workflows
-9. Test with large collections
-10. Test performance
-11. Get beta user feedback
-12. Fix identified bugs
-13. Document known issues
-14. Run all validation checks (lint, check, test, coverage) - manual verification required
-15. Update version in `package.json`, `Cargo.toml`, and `tauri.conf.json`
-16. Perform manual validation to ensure everything works as expected
-17. Update documentation and work log (`docs/progress/phase-18.2-completion.md`, etc.)
-18. Commit changes with conventional commit message per CONTRIBUTING.md
-19. Push branch to origin
-20. Create pull request per CONTRIBUTING.md conventions
+1. Create QA checklist
+2. Test all features manually
+3. Test theme switching
+4. Test i18n switching
+5. Test import/export workflows
+6. Test with large collections
+7. Test performance
+8. Get beta user feedback
+9. Fix identified bugs
+10. Document known issues
 
 ### 18.3 Documentation
 
-1. Checkout new branch `phase-18.3` from latest `main`
-2. Run all validation steps to ensure base stability
-3. Fix any validation failures and await confirmation before proceeding
-4. Complete user guide
-5. Write API documentation
-6. Create video tutorials
-7. Add inline help system
-8. Write troubleshooting guide
-9. Document keyboard shortcuts
-10. Create FAQ
-11. Write contribution guide
-12. Review all docs
-13. Get documentation feedback
-14. Run all validation checks (lint, check, test, coverage) - manual verification required
-15. Update version in `package.json`, `Cargo.toml`, and `tauri.conf.json`
-16. Perform manual validation to ensure everything works as expected
-17. Update documentation and work log (`docs/progress/phase-18.3-completion.md`, etc.)
-18. Commit changes with conventional commit message per CONTRIBUTING.md
-19. Push branch to origin
-20. Create pull request per CONTRIBUTING.md conventions
+1. Complete user guide
+2. Write API documentation
+3. Create video tutorials
+4. Add inline help system
+5. Write troubleshooting guide
+6. Document keyboard shortcuts
+7. Create FAQ
+8. Write contribution guide
+9. Review all docs
+10. Get documentation feedback
 
 ---
 
@@ -1606,49 +1046,29 @@ For each phase, ensure:
 
 ### 19.1 Build & Package
 
-1. Checkout new branch `phase-19.1` from latest `main`
-2. Run all validation steps to ensure base stability
-3. Fix any validation failures and await confirmation before proceeding
-4. Configure production builds
-5. Optimize bundle size
-6. Set up code signing (macOS)
-7. Create Windows installer
-8. Create Linux packages (.deb, AppImage)
-9. Test builds on each platform
-10. Create release scripts
-11. Set up auto-updater
-12. Test update mechanism
-13. Document build process
-14. Run all validation checks (lint, check, test, coverage) - manual verification required
-15. Update version in `package.json`, `Cargo.toml`, and `tauri.conf.json`
-16. Perform manual validation to ensure everything works as expected
-17. Update documentation and work log (`docs/progress/phase-19.1-completion.md`, etc.)
-18. Commit changes with conventional commit message per CONTRIBUTING.md
-19. Push branch to origin
-20. Create pull request per CONTRIBUTING.md conventions
+1. Configure production builds
+2. Optimize bundle size
+3. Set up code signing (macOS)
+4. Create Windows installer
+5. Create Linux packages (.deb, AppImage)
+6. Test builds on each platform
+7. Create release scripts
+8. Set up auto-updater
+9. Test update mechanism
+10. Document build process
 
 ### 19.2 Release
 
-1. Checkout new branch `phase-19.2` from latest `main`
-2. Run all validation steps to ensure base stability
-3. Fix any validation failures and await confirmation before proceeding
-4. Create CHANGELOG.md
-5. Write release notes
-6. Update version numbers
-7. Tag v1.0.0 release
-8. Build release artifacts
-9. Create GitHub release
-10. Upload binaries
-11. Update website/docs
-12. Announce release
-13. Monitor feedback
-14. Run all validation checks (lint, check, test, coverage) - manual verification required
-15. Update version in `package.json`, `Cargo.toml`, and `tauri.conf.json`
-16. Perform manual validation to ensure everything works as expected
-17. Update documentation and work log (`docs/progress/phase-19.2-completion.md`, etc.)
-18. Commit changes with conventional commit message per CONTRIBUTING.md
-19. Push branch to origin
-20. Create pull request per CONTRIBUTING.md conventions
+1. Create CHANGELOG.md
+2. Write release notes
+3. Update version numbers
+4. Tag v1.0.0 release
+5. Build release artifacts
+6. Create GitHub release
+7. Upload binaries
+8. Update website/docs
+9. Announce release
+10. Monitor feedback
 
 ---
 

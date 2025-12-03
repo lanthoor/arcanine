@@ -48,12 +48,61 @@ The Memory Bank consists of core files and optional context files, all in Markdo
    - Completed phases index
    - Current status and metrics
 
-8. `docs/architecture/*.md`
-   - System architecture details
-   - Key technical decisions
-   - Design patterns in use
-   - Component relationships
-   - Feature-specific documentation
+8. `.cline/memory-bank/phase-start.md`
+   - Phase startup validation steps
+   - Pre-commit checks and requirements
+   - Stable baseline procedures
+
+9. `.cline/memory-bank/phase-end.md`
+   - Phase completion validation steps
+   - Version update procedures
+   - Documentation and PR requirements
+
+### Optional Context Files
+
+Reference these architecture and design documents as needed for specific features:
+
+1. `docs/architecture/data-models.md`
+   - Request, Response, Collection model specifications
+   - Validation rules and builder patterns
+   - Serialization/deserialization details
+
+2. `docs/architecture/collection-structure.md`
+   - File organization and naming conventions
+   - Folder hierarchy and ordering system
+   - Best practices and examples
+
+3. `docs/architecture/yaml-schema.md`
+   - Complete YAML format specification
+   - Collection, folder, request, environment schemas
+   - Authentication and body type definitions
+
+4. `docs/architecture/theming.md`
+   - CSS custom properties and theme system
+   - Light/dark mode implementation
+   - WCAG compliance and accessibility
+
+5. `docs/architecture/i18n.md`
+   - Internationalization architecture
+   - Translation system and stores
+   - Supported languages and formatting utilities
+
+6. `docs/architecture/arcanine-collection.json`
+   - JSON Schema definition
+   - Collection format validation rules
+
+7. `docs/architecture/authentication.md` (Planned Phase 9)
+   - Authentication methods and configuration
+   - OAuth, Bearer, Basic, API Key, AWS SigV4
+
+8. `docs/architecture/scripting.md` (Planned Phase 11)
+   - Deno runtime integration
+   - Pre-request and post-response scripts
+   - Test assertions
+
+9. `docs/architecture/import-export.md` (Planned Phase 13)
+   - Format conversion and migration
+   - Postman, Insomnia, cURL, OpenAPI support
 
 ### Additional Context
 Create additional files/folders within memory-bank/ when they help organize:
