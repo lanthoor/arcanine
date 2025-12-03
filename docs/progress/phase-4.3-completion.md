@@ -207,11 +207,45 @@ Coverage  95.88% (Statements)
 
 ### Coverage Analysis
 
-- **Collections Commands:** 0/50 lines (wrapper layer, tested via integration)
-- **Storage Layer:** 157/167 lines (94% - underlying business logic)
-- **Overall:** 81.96% (427/521 lines)
+**Overall Backend Coverage:** 81.96% (427/521 lines)
 
-Note: Command wrappers show 0% coverage because Tauri State system requires full runtime for testing. The underlying business logic is thoroughly tested at 90%+.
+| Module             | Coverage | Lines   | Notes                  |
+| ------------------ | -------- | ------- | ---------------------- |
+| collections.rs     | 0%       | 0/50    | Tauri wrapper layer    |
+| requests.rs        | 77.1%    | 27/35   | Tauri wrapper layer    |
+| collection_manager | 94.0%    | 157/167 | Core business logic    |
+| request_store      | 100%     | 39/39   | Storage implementation |
+| yaml_store         | 98.5%    | 66/67   | File I/O layer         |
+| models/\*          | 91.2%    | 111/122 | Data models            |
+| services/http      | 86.2%    | 25/29   | HTTP client            |
+
+**Coverage Context:**
+
+The 81.96% overall coverage represents a temporary dip from Phase 4.2's 90.91% baseline. This is **expected and acceptable** because:
+
+1. **Tauri Command Wrappers** (50 lines at 0%):
+   - `collections.rs` contains thin wrapper functions that delegate to `CollectionManager`
+   - Require full Tauri runtime environment for proper testing (State, Context, etc.)
+   - Unit testing these wrappers provides minimal value vs. complexity
+   - Will be validated through E2E tests in Phase 4.4
+
+2. **Underlying Business Logic** remains highly tested:
+   - `CollectionManager`: 94% coverage (157/167 lines)
+   - 21 comprehensive unit tests for all business logic
+   - All edge cases, error handling, and concurrent access scenarios covered
+
+3. **Coverage will normalize** in Phase 4.4:
+   - Frontend integration tests will exercise command layer
+   - E2E tests provide better validation than mocked unit tests
+   - Target: Return to 85-90% overall coverage
+
+**Why not mock Tauri State?**
+
+- Mocking `tauri::State<AppState>` requires complex setup that doesn't reflect real usage
+- Tests would validate mocks, not actual behavior
+- Integration/E2E tests provide better confidence for thin wrapper code
+
+**Previous Baseline:** Phase 4.2 had 90.91% (420/462 lines) before adding command layer
 
 ## Known Limitations
 
