@@ -1,6 +1,6 @@
 [package]
 name = "arcanine"
-version = "0.4.2"
+version = "0.4.3"
 description = "A Tauri App"
 authors = ["you"]
 edition = "2021"
@@ -33,4 +33,3 @@ chrono = "0.4"
 [dev-dependencies]
 wiremock = "0.6"
 tempfile = "3.8"
-

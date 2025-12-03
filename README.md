@@ -30,8 +30,8 @@ Built for developers who value **version control**, **offline capability**, and 
 ✅ **Secure** - Local-only data storage  
 ✅ **Team-friendly** - Share via Git repositories
 
-**Current Status**: Phase 4.2 Complete - Collection File System ✅  
-**Version**: 0.4.2
+**Current Status**: Phase 4.3 Complete - Collection Management Commands ✅  
+**Version**: 0.4.3
 
 ## Features
 
@@ -44,12 +44,13 @@ Built for developers who value **version control**, **offline capability**, and 
 - ✅ **Internationalization**: 5 languages (English, Spanish, French, German, Japanese)
 - ✅ **File Storage**: YAML-based with atomic writes
 - ✅ **Collection Manager**: File watching, O(1) indexing, auto-reload
+- ✅ **Collection Commands**: 7 Tauri commands for full CRUD operations
 - ✅ **Tabbed Interface**: Multiple requests with response caching
-- ✅ **Testing**: 308 tests with 95.88% frontend, 90.91% backend coverage
+- ✅ **Testing**: 410 tests with 95.88% frontend, 81.96% backend coverage
 
 ### In Development ⏳
 
-- ⏳ **File Management**: Native file picker, collection operations (Phase 4.3)
+- ⏳ **Collection UI**: Frontend collection management interface (Phase 4.4)
 - ⏳ **Variables**: Collection and environment variables with {{syntax}} (Phase 5)
 - ⏳ **Environments**: Multiple environments with switching (Phase 6)
 - ⏳ **Folders**: Hierarchical folder organization (Phase 8)
