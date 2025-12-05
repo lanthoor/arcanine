@@ -269,7 +269,7 @@ The project is organized into 20 phases, grouped into 4 major milestones. See [e
 
 ### Development Metrics
 
-- **Test Coverage**: ≥90% (currently: 95.88% frontend, 90.91% backend)
+- **Test Coverage**: ≥90% (currently: 95.88% frontend, 81.96% backend)
 - **Performance**: App startup < 1 second
 - **Bundle Size**: < 50MB installed
 - **Memory Usage**: < 150MB idle
@@ -374,9 +374,9 @@ See [CONTRIBUTING.md](../../CONTRIBUTING.md) for development guidelines and [exe
 
 ## Project Status
 
-**Current Version**: 0.4.2  
-**Current Phase**: 4.2 Complete (Collection File System)  
-**Next Phase**: 4.3 (File Management Commands)
+**Current Version**: 0.4.3  
+**Current Phase**: 4.3 Complete (Collection Management Commands)  
+**Next Phase**: 4.4 (UI Updates for Collections)
 
 For detailed progress tracking, see [docs/progress/summary.md](../progress/summary.md).
 

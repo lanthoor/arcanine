@@ -14,7 +14,7 @@ Before committing any changes, **ALWAYS** run the following validation steps in 
 
 1. **Frontend Linting**: `npm run lint`
 2. **Frontend Type Check**: `npm run check`
-3. **Frontend Tests**: `npm run test:run`
+3. **Frontend Tests**: `npm run test`
 4. **Frontend Coverage**: `npm run test:coverage` (verify 75%+ coverage)
 5. **Rust Formatting**: `cd src-tauri && cargo fmt --check`
 6. **Rust Linting**: `cd src-tauri && cargo clippy -- -D warnings`
@@ -256,7 +256,7 @@ For each phase, ensure:
 10. Write comprehensive tests
 11. Run all validation checks (lint, check, test, coverage), update version, documentation and work log
 
-### 4.3 File Management Commands
+### 4.3 File Management Commands ✅
 
 1. Create `load_collection` Tauri command
 2. Create `save_collection` command

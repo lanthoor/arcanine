@@ -68,7 +68,7 @@ Built for developers who value **version control**, **offline capability**, and 
 
 ## Installation
 
-**Note**: Arcanine is currently in active development (Phase 4.2). Binary releases will be available at V1.0.
+**Note**: Arcanine is currently in active development (Phase 4.4). Binary releases will be available at V1.0.
 
 ### Development Build
 
