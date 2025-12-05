@@ -4,8 +4,9 @@ pub mod services;
 pub mod storage;
 
 use commands::collections::{
-    create_new_collection, delete_collection, list_collections, load_collection,
-    open_collection_dialog, save_collection, validate_collection, AppState,
+    create_new_collection, delete_collection, delete_request_from_collection, list_collections,
+    load_collection, load_requests_from_collection, open_collection_dialog, save_collection,
+    save_request_to_collection, update_request_in_collection, validate_collection, AppState,
 };
 use commands::requests::{delete_request, execute_request, list_requests, save_request};
 use services::http::HTTPService;
@@ -38,6 +39,7 @@ pub fn run() {
         .manage(request_store)
         .manage(app_state)
         .plugin(tauri_plugin_opener::init())
+        .plugin(tauri_plugin_dialog::init())
         .invoke_handler(tauri::generate_handler![
             greet,
             execute_request,
@@ -50,7 +52,11 @@ pub fn run() {
             open_collection_dialog,
             list_collections,
             delete_collection,
-            validate_collection
+            validate_collection,
+            save_request_to_collection,
+            load_requests_from_collection,
+            delete_request_from_collection,
+            update_request_in_collection
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

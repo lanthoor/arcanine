@@ -1,15 +1,18 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { invoke } from '@tauri-apps/api/core';
-  import RequestList from '$lib/components/RequestList.svelte';
+  import CollectionRequestList from '$lib/components/collection/CollectionRequestList.svelte';
   import RequestEditor from '$lib/components/RequestEditor.svelte';
   import ResponseViewer from '$lib/components/ResponseViewer.svelte';
   import BottomToolbar from '$lib/components/BottomToolbar.svelte';
   import TabBar from '$lib/components/TabBar.svelte';
+  import CollectionMenu from '$lib/components/collection/CollectionMenu.svelte';
+  import SaveStatusIndicator from '$lib/components/collection/SaveStatusIndicator.svelte';
   import { t } from '$lib/i18n';
   import { uiStore } from '$lib/stores/ui';
   import { tabStore } from '$lib/stores/tabs';
   import { responseStore } from '$lib/stores/responses';
+  import { collectionStore } from '$lib/stores/collections.svelte';
   import type { CachedResponse } from '$lib/stores/responses';
 
   type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'HEAD' | 'OPTIONS';
@@ -17,15 +20,6 @@
   type Header = {
     key: string;
     value: string;
-  };
-
-  type Request = {
-    id: string;
-    name: string;
-    method: HttpMethod;
-    url: string;
-    headers?: Header[];
-    body?: string;
   };
 
   type EditorRequest = {
@@ -53,103 +47,109 @@
     time_ms: number;
   };
 
-  // Sample requests for demonstration
-  let requests = $state<Request[]>([
-    {
-      id: '1',
-      name: 'Get Users',
-      method: 'GET',
-      url: 'https://jsonplaceholder.typicode.com/users',
-    },
-    {
-      id: '2',
-      name: 'Create User',
-      method: 'POST',
-      url: 'https://jsonplaceholder.typicode.com/users',
-      headers: [{ key: 'Content-Type', value: 'application/json' }],
-      body: '{\n  "name": "John Doe",\n  "email": "john@example.com"\n}',
-    },
-    {
-      id: '3',
-      name: 'Update User',
-      method: 'PUT',
-      url: 'https://jsonplaceholder.typicode.com/users/1',
-      headers: [{ key: 'Content-Type', value: 'application/json' }],
-      body: '{\n  "name": "Jane Doe",\n  "email": "jane@example.com"\n}',
-    },
-    {
-      id: '4',
-      name: 'Delete User',
-      method: 'DELETE',
-      url: 'https://jsonplaceholder.typicode.com/users/1',
-    },
-    {
-      id: '5',
-      name: 'Patch User',
-      method: 'PATCH',
-      url: 'https://jsonplaceholder.typicode.com/users/1',
-      headers: [{ key: 'Content-Type', value: 'application/json' }],
-      body: '{\n  "email": "newemail@example.com"\n}',
-    },
-  ]);
-
   // UI and tab state
   const ui = $derived($uiStore);
   const tabs = $derived($tabStore);
   const responses = $derived($responseStore);
+  const collections = $derived(collectionStore.collections);
 
-  let selectedId = $state<string | null>('1');
+  let selectedRequestId = $state<string | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  let selectedCollectionIndex = 0;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  let selectedRequestIndex = 0;
 
-  // Active tab request
-  const activeTabRequest = $derived(
-    tabs.activeTabId
-      ? requests.find((r) => r.id === tabs.tabs.find((t) => t.id === tabs.activeTabId)?.requestId)
-      : undefined
-  );
+  // Active tab request derived from collection
+  const activeTabRequest = $derived.by(() => {
+    if (!tabs.activeTabId) return undefined;
+
+    // Parse the tab's requestId to get collection and request indices
+    const tab = tabs.tabs.find((t) => t.id === tabs.activeTabId);
+    if (!tab?.requestId) return undefined;
+
+    const [collIdx, reqIdx] = tab.requestId.split('-').map(Number);
+    const collection = collections[collIdx];
+    const request = collection?.requests[reqIdx];
+
+    if (!request) return undefined;
+
+    // Convert to EditorRequest format
+    return {
+      id: tab.requestId,
+      name: request.name,
+      method: request.method as HttpMethod,
+      url: request.url,
+      headers: request.headers
+        ? Object.entries(request.headers).map(([key, value]) => ({ key, value }))
+        : [],
+      body: request.body,
+    };
+  });
 
   // Get cached response for active tab
-  const activeTabResponse = $derived(activeTabRequest ? responses[activeTabRequest.id] : undefined);
-
-  // Sync selectedId with active tab
-  $effect(() => {
-    if (activeTabRequest) {
-      selectedId = activeTabRequest.id;
-    }
-  });
+  const activeTabResponse = $derived(
+    activeTabRequest ? responses[activeTabRequest.id!] : undefined
+  );
 
   // Request execution state
   let isLoading = $state(false);
   let executionError = $state<string | null>(null);
 
-  function handleSelect(request: Request) {
-    selectedId = request.id;
-    // Open request in a new tab
-    tabStore.openTab(request.id, request.name);
+  function handleSelectRequest(collectionIndex: number, requestIndex: number) {
+    selectedCollectionIndex = collectionIndex;
+    selectedRequestIndex = requestIndex;
+    const collection = collections[collectionIndex];
+    const request = collection?.requests[requestIndex];
+    if (request) {
+      const requestId = `${collectionIndex}-${requestIndex}`;
+      selectedRequestId = requestId;
+      // Open request in a new tab
+      tabStore.openTab(requestId, request.name);
+    }
   }
 
-  function handleNewRequest() {
-    const newId = String(Date.now());
-    const newRequest: Request = {
-      id: newId,
-      name: 'New Request',
-      method: 'GET',
-      url: 'https://jsonplaceholder.typicode.com/',
-    };
-    requests = [...requests, newRequest];
-    selectedId = newId;
-    tabStore.openTab(newId, newRequest.name);
+  function handleNewRequest(collectionIndex: number) {
+    const collection = collections[collectionIndex];
+    if (!collection) return;
+
+    const newRequestIndex = collection.requests.length;
+
+    // Add a new request to the collection
+    collectionStore
+      .addRequest(collectionIndex, {
+        name: 'New Request',
+        method: 'GET',
+        url: 'https://api.example.com/',
+        headers: {},
+        body: '',
+      })
+      .then(() => {
+        // Open the newly created request in a tab
+        const requestId = `${collectionIndex}-${newRequestIndex}`;
+        selectedRequestId = requestId;
+        tabStore.openTab(requestId, 'New Request');
+      })
+      .catch((error) => {
+        console.error('Failed to add request:', error);
+      });
   }
 
-  function handleDelete(request: Request) {
-    requests = requests.filter((r) => r.id !== request.id);
+  function handleDeleteRequest(collectionIndex: number, requestIndex: number) {
+    const collection = collections[collectionIndex];
+    const request = collection?.requests[requestIndex];
+    if (!request) return;
+
     // Close the tab if it's open
-    const tab = tabs.tabs.find((t) => t.requestId === request.id);
+    const requestId = `${collectionIndex}-${requestIndex}`;
+    const tab = tabs.tabs.find((t) => t.requestId === requestId);
     if (tab) {
       tabStore.closeTab(tab.id);
     }
-    if (selectedId === request.id) {
-      selectedId = requests.length > 0 ? requests[0].id : null;
-    }
+
+    // Delete the request from the collection
+    collectionStore.deleteRequest(collectionIndex, requestIndex).catch((error) => {
+      console.error('Failed to delete request:', error);
+    });
   }
 
   function convertHeadersToRecord(headers?: Header[]): Record<string, string> {
@@ -169,22 +169,57 @@
     return Object.entries(record).map(([key, value]) => ({ key, value }));
   }
 
-  async function handleSubmit(updatedRequest: EditorRequest) {
-    // Update the request in the list
-    const requestId = activeTabRequest?.id;
-    if (requestId) {
-      requests = requests.map((r) =>
-        r.id === requestId ? { ...updatedRequest, id: requestId } : r
-      );
+  async function handleChange(updatedRequest: EditorRequest) {
+    // Autosave the request changes without executing
+    if (updatedRequest.id && activeTabRequest) {
+      const [collIdx, reqIdx] = updatedRequest.id.split('-').map(Number);
+      if (!isNaN(collIdx) && !isNaN(reqIdx)) {
+        const collection = collections[collIdx];
+        if (collection && collection.requests[reqIdx]) {
+          // Update the request in the collection
+          await collectionStore.updateRequest(collIdx, reqIdx, {
+            name: updatedRequest.name,
+            method: updatedRequest.method,
+            url: updatedRequest.url,
+            headers: convertHeadersToRecord(updatedRequest.headers),
+            body: updatedRequest.body,
+          });
 
-      // Update tab name if request name changed
-      if (updatedRequest.name !== activeTabRequest?.name) {
-        tabStore.updateTabName(requestId, updatedRequest.name);
+          // Update tab name if request name changed
+          if (updatedRequest.name !== activeTabRequest.name) {
+            tabStore.updateTabName(updatedRequest.id, updatedRequest.name);
+          }
+        }
+      }
+    }
+  }
+
+  async function handleSubmit(updatedRequest: EditorRequest) {
+    // Update the request in the collection if it exists
+    if (updatedRequest.id && activeTabRequest) {
+      const [collIdx, reqIdx] = updatedRequest.id.split('-').map(Number);
+      if (!isNaN(collIdx) && !isNaN(reqIdx)) {
+        const collection = collections[collIdx];
+        if (collection && collection.requests[reqIdx]) {
+          // Update the request in the collection
+          await collectionStore.updateRequest(collIdx, reqIdx, {
+            name: updatedRequest.name,
+            method: updatedRequest.method,
+            url: updatedRequest.url,
+            headers: convertHeadersToRecord(updatedRequest.headers),
+            body: updatedRequest.body,
+          });
+
+          // Update tab name if request name changed
+          if (updatedRequest.name !== activeTabRequest.name) {
+            tabStore.updateTabName(updatedRequest.id, updatedRequest.name);
+          }
+        }
       }
     }
 
     // Execute the request
-    await executeRequest(updatedRequest, requestId);
+    await executeRequest(updatedRequest, updatedRequest.id);
   }
 
   async function executeRequest(request: EditorRequest, requestId?: string) {
@@ -272,24 +307,31 @@
 
 <main class="app-layout">
   <aside class="sidebar" class:collapsed={ui.sidebarCollapsed}>
-    <RequestList
-      {requests}
-      bind:selectedId
-      onselect={handleSelect}
-      onnewrequest={handleNewRequest}
-      ondelete={handleDelete}
+    <div class="sidebar-header">
+      <CollectionMenu />
+    </div>
+    <CollectionRequestList
+      bind:selectedRequestId
+      onSelectRequest={handleSelectRequest}
+      onNewRequest={handleNewRequest}
+      onDeleteRequest={handleDeleteRequest}
     />
   </aside>
 
   <div class="main-content">
-    <TabBar
-      tabs={tabs.tabs}
-      activeTabId={tabs.activeTabId}
-      onSelectTab={(tabId) => {
-        tabStore.setActiveTab(tabId);
-      }}
-      onCloseTab={tabStore.closeTab}
-    />
+    <div class="main-header">
+      <TabBar
+        tabs={tabs.tabs}
+        activeTabId={tabs.activeTabId}
+        onSelectTab={(tabId) => {
+          tabStore.setActiveTab(tabId);
+        }}
+        onCloseTab={tabStore.closeTab}
+      />
+      <div class="header-actions">
+        <SaveStatusIndicator />
+      </div>
+    </div>
 
     <div
       class="content-area"
@@ -298,7 +340,12 @@
     >
       {#if activeTabRequest}
         <div class="editor-panel">
-          <RequestEditor request={activeTabRequest} onsubmit={handleSubmit} loading={isLoading} />
+          <RequestEditor
+            request={activeTabRequest}
+            onsubmit={handleSubmit}
+            onchange={handleChange}
+            loading={isLoading}
+          />
         </div>
 
         <div class="response-panel">
@@ -389,6 +436,8 @@
     transition:
       width 0.3s ease,
       min-width 0.3s ease;
+    display: flex;
+    flex-direction: column;
   }
 
   .sidebar.collapsed {
@@ -397,12 +446,33 @@
     border-right: none;
   }
 
+  .sidebar-header {
+    padding: var(--spacing-md);
+    border-bottom: 1px solid var(--color-border);
+    background-color: var(--color-surface);
+  }
+
   .main-content {
     flex: 1;
     overflow: hidden;
     display: flex;
     flex-direction: column;
     background-color: var(--color-background);
+  }
+
+  .main-header {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--color-border);
+    background-color: var(--color-surface);
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: 0 var(--spacing-md);
+    margin-left: auto;
   }
 
   .content-area {

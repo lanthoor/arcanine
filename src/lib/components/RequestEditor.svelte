@@ -20,10 +20,11 @@
   type Props = {
     request?: Request;
     onsubmit?: (request: Request) => void;
+    onchange?: (request: Request) => void;
     loading?: boolean;
   };
 
-  let { request = $bindable(), onsubmit, loading = false }: Props = $props();
+  let { request = $bindable(), onsubmit, onchange, loading = false }: Props = $props();
 
   // Active tab state
   let activeTab = $state<'headers' | 'body'>('headers');
@@ -39,6 +40,10 @@
   let urlError = $state('');
   let bodyError = $state('');
 
+  // Autosave state
+  let autosaveTimeout: ReturnType<typeof setTimeout> | null = null;
+  const AUTOSAVE_DELAY = 1000; // 1 second debounce
+
   // Update form state when request prop changes
   $effect(() => {
     if (request) {
@@ -50,6 +55,47 @@
       urlError = '';
       bodyError = '';
     }
+  });
+
+  // Autosave effect - triggers when form fields change
+  $effect(() => {
+    // Track dependencies
+    const currentName = name;
+    const currentMethod = method;
+    const currentUrl = url;
+    const currentHeaders = headers;
+    const currentBody = body;
+
+    // Skip if no request ID (not saved yet)
+    if (!request?.id || !onchange) return;
+
+    // Debounce the autosave
+    if (autosaveTimeout) {
+      clearTimeout(autosaveTimeout);
+    }
+
+    autosaveTimeout = setTimeout(() => {
+      const validHeaders = currentHeaders.filter(
+        (h) => h.key.trim() !== '' && h.value.trim() !== ''
+      );
+
+      const updatedRequest: Request = {
+        id: request.id,
+        name: currentName.trim(),
+        method: currentMethod,
+        url: currentUrl.trim(),
+        headers: validHeaders.length > 0 ? validHeaders : undefined,
+        body: currentBody.trim() || undefined,
+      };
+
+      onchange(updatedRequest);
+    }, AUTOSAVE_DELAY);
+
+    return () => {
+      if (autosaveTimeout) {
+        clearTimeout(autosaveTimeout);
+      }
+    };
   });
 
   // HTTP methods with colors

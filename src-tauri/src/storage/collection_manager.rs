@@ -480,7 +480,7 @@ impl CollectionManager {
     }
 
     /// Add a collection to the in-memory index
-    fn add_to_index(&self, path: &Path, collection: &Collection) {
+    pub fn add_to_index(&self, path: &Path, collection: &Collection) {
         // Add collection to collection index
         if let Ok(mut collection_index) = self.collection_index.write() {
             collection_index.insert(path.to_path_buf(), collection.clone());

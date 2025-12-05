@@ -5,6 +5,7 @@
 
 use crate::models::Collection;
 use crate::storage::CollectionManager;
+use serde::{Deserialize, Serialize};
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
 use tauri::State;
@@ -12,6 +13,13 @@ use tauri::State;
 /// Shared application state containing the collection manager
 pub struct AppState {
     pub collection_manager: Arc<CollectionManager>,
+}
+
+/// Response for create_new_collection command
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct CreateCollectionResponse {
+    pub collection: Collection,
+    pub path: String,
 }
 
 /// Sanitize a collection name to create a safe filename
@@ -77,13 +85,10 @@ pub async fn load_collection(
 ) -> Result<Collection, String> {
     let path_buf = PathBuf::from(&path);
 
-    // Validate path is within collections directory
-    let validated_path =
-        validate_path_in_collections(&path_buf, &state.collection_manager.base_path)?;
-
+    // Load collection from any path (not restricted to collections directory)
     state
         .collection_manager
-        .load_collection(&validated_path)
+        .load_collection(&path_buf)
         .map_err(|e| format!("Failed to load collection: {}", e))
 }
 
@@ -138,36 +143,61 @@ pub async fn save_collection(
 ///
 /// # Arguments
 /// * `name` - Display name for the collection
+/// * `base_path` - Parent directory where collection folder will be created
 /// * `state` - Application state containing the collection manager
 ///
 /// # Returns
-/// * `Ok((Collection, String))` - New collection and its file path
+/// * `Ok(CreateCollectionResponse)` - New collection and its file path
 /// * `Err(String)` - Error message if creation fails
 ///
 /// # Example
 /// ```typescript
-/// const [collection, path] = await invoke('create_new_collection', {
-///   name: 'My API'
+/// const result = await invoke('create_new_collection', {
+///   name: 'My API',
+///   basePath: '/path/to/collections'
 /// });
 /// ```
 #[tauri::command]
 pub async fn create_new_collection(
     name: String,
+    base_path: String,
     state: State<'_, AppState>,
-) -> Result<(Collection, String), String> {
+) -> Result<CreateCollectionResponse, String> {
+    use std::fs;
+
     // Create new collection with metadata
     let collection = Collection::new(name.clone());
 
-    // Generate filename from name (kebab-case) with validation
-    let filename = sanitize_filename(&name)?;
+    // Generate folder name from collection name (kebab-case) with validation
+    let folder_name = sanitize_filename(&name)?;
 
-    // Save the collection
-    let path = state
+    // Create the collection folder path: <base_path>/<folder_name>
+    let base_path_buf = PathBuf::from(&base_path);
+    let collection_folder = base_path_buf.join(&folder_name);
+
+    // Create the folder if it doesn't exist
+    fs::create_dir_all(&collection_folder)
+        .map_err(|e| format!("Failed to create collection folder: {}", e))?;
+
+    // Create the collection.yaml file path
+    let collection_file = collection_folder.join("collection.yaml");
+
+    // Save the collection to the file
+    let yaml_content = serde_yaml::to_string(&collection)
+        .map_err(|e| format!("Failed to serialize collection: {}", e))?;
+
+    fs::write(&collection_file, yaml_content)
+        .map_err(|e| format!("Failed to write collection file: {}", e))?;
+
+    // Update the collection manager's index
+    state
         .collection_manager
-        .save_collection(&collection, &filename)
-        .map_err(|e| format!("Failed to create collection: {}", e))?;
+        .add_to_index(&collection_file, &collection);
 
-    Ok((collection, path.to_string_lossy().to_string()))
+    Ok(CreateCollectionResponse {
+        collection,
+        path: collection_file.to_string_lossy().to_string(),
+    })
 }
 
 /// Open a native file picker dialog to select a collection file
@@ -296,6 +326,278 @@ pub async fn validate_collection(
     }
 
     Ok((fixed_collection, issues))
+}
+
+/// Save a request as a separate file in the collection folder
+///
+/// # Arguments
+/// * `collection_path` - Path to the collection file
+/// * `request` - The request to save
+/// * `request_name` - Name for the request file (will be sanitized)
+/// * `state` - Application state
+///
+/// # Returns
+/// * `Ok(String)` - Path to the saved request file
+/// * `Err(String)` - Error message if saving fails
+#[tauri::command]
+pub async fn save_request_to_collection(
+    collection_path: String,
+    request: crate::models::Request,
+    request_name: String,
+    _state: State<'_, AppState>,
+) -> Result<String, String> {
+    use std::fs;
+
+    let collection_path_buf = PathBuf::from(&collection_path);
+
+    // Determine the collection folder based on the file structure
+    let collection_folder = if collection_path.ends_with("/collection.yaml") {
+        // New format: /path/to/collection-name/collection.yaml
+        // Use the parent directory (the collection folder)
+        collection_path_buf
+            .parent()
+            .ok_or_else(|| "Invalid collection path".to_string())?
+            .to_path_buf()
+    } else if collection_path.ends_with(".collection.yaml") {
+        // Old format: /path/to/collection-name.collection.yaml
+        // Extract the collection name and create a folder beside it
+        let file_stem = collection_path_buf
+            .file_stem()
+            .and_then(|s| s.to_str())
+            .ok_or_else(|| "Invalid collection filename".to_string())?
+            .replace(".collection", "");
+
+        let parent = collection_path_buf
+            .parent()
+            .ok_or_else(|| "Invalid collection path".to_string())?;
+
+        let folder = parent.join(&file_stem);
+
+        // Create the folder if it doesn't exist
+        fs::create_dir_all(&folder)
+            .map_err(|e| format!("Failed to create collection folder: {}", e))?;
+
+        folder
+    } else {
+        return Err("Unsupported collection file format".to_string());
+    };
+
+    // Sanitize the request name to create a safe filename
+    let filename = sanitize_filename(&request_name)?;
+
+    // Create the request file path: <collection_folder>/<sanitized-name>.request.yaml
+    let request_file = collection_folder.join(format!("{}.request.yaml", filename));
+
+    // Serialize the request to YAML
+    let yaml_content = serde_yaml::to_string(&request)
+        .map_err(|e| format!("Failed to serialize request: {}", e))?;
+
+    // Write to file
+    fs::write(&request_file, yaml_content)
+        .map_err(|e| format!("Failed to write request file: {}", e))?;
+
+    Ok(request_file.to_string_lossy().to_string())
+}
+
+/// Load all requests from a collection folder
+///
+/// # Arguments
+/// * `collection_path` - Path to the collection file
+/// * `state` - Application state
+///
+/// # Returns
+/// * `Ok(Vec<Request>)` - All requests found in the collection folder
+/// * `Err(String)` - Error message if loading fails
+#[tauri::command]
+pub async fn load_requests_from_collection(
+    collection_path: String,
+    _state: State<'_, AppState>,
+) -> Result<Vec<crate::models::Request>, String> {
+    use std::fs;
+
+    let collection_path_buf = PathBuf::from(&collection_path);
+
+    // Determine the collection folder based on the file structure
+    let collection_folder = if collection_path.ends_with("/collection.yaml") {
+        // New format: /path/to/collection-name/collection.yaml
+        collection_path_buf
+            .parent()
+            .ok_or_else(|| "Invalid collection path".to_string())?
+            .to_path_buf()
+    } else if collection_path.ends_with(".collection.yaml") {
+        // Old format: /path/to/collection-name.collection.yaml
+        // Check if a folder exists beside it
+        let file_stem = collection_path_buf
+            .file_stem()
+            .and_then(|s| s.to_str())
+            .ok_or_else(|| "Invalid collection filename".to_string())?
+            .replace(".collection", "");
+
+        let parent = collection_path_buf
+            .parent()
+            .ok_or_else(|| "Invalid collection path".to_string())?;
+
+        parent.join(&file_stem)
+    } else {
+        return Err("Unsupported collection file format".to_string());
+    };
+
+    let mut requests = Vec::new();
+
+    // Read all .request.yaml files in the collection folder (if it exists)
+    if collection_folder.is_dir() {
+        let entries = fs::read_dir(&collection_folder)
+            .map_err(|e| format!("Failed to read collection folder: {}", e))?;
+
+        for entry in entries {
+            let entry = entry.map_err(|e| format!("Failed to read directory entry: {}", e))?;
+            let path = entry.path();
+
+            // Check if it's a request file
+            if path.extension().and_then(|s| s.to_str()) == Some("yaml")
+                && path
+                    .file_name()
+                    .and_then(|s| s.to_str())
+                    .map(|s| s.ends_with(".request.yaml"))
+                    .unwrap_or(false)
+            {
+                // Load the request
+                let content = fs::read_to_string(&path)
+                    .map_err(|e| format!("Failed to read request file: {}", e))?;
+
+                let request: crate::models::Request = serde_yaml::from_str(&content)
+                    .map_err(|e| format!("Failed to parse request file: {}", e))?;
+
+                requests.push(request);
+            }
+        }
+    }
+
+    Ok(requests)
+}
+
+/// Delete a request file from a collection folder
+///
+/// # Arguments
+/// * `collection_path` - Path to the collection file
+/// * `request_name` - Name of the request file (sanitized filename)
+/// * `state` - Application state
+///
+/// # Returns
+/// * `Ok(())` - Request deleted successfully
+/// * `Err(String)` - Error message if deletion fails
+#[tauri::command]
+pub async fn delete_request_from_collection(
+    collection_path: String,
+    request_name: String,
+    _state: State<'_, AppState>,
+) -> Result<(), String> {
+    use std::fs;
+
+    let collection_path_buf = PathBuf::from(&collection_path);
+
+    // Determine the collection folder based on the file structure
+    let collection_folder = if collection_path.ends_with("/collection.yaml") {
+        collection_path_buf
+            .parent()
+            .ok_or_else(|| "Invalid collection path".to_string())?
+            .to_path_buf()
+    } else if collection_path.ends_with(".collection.yaml") {
+        let file_stem = collection_path_buf
+            .file_stem()
+            .and_then(|s| s.to_str())
+            .ok_or_else(|| "Invalid collection filename".to_string())?
+            .replace(".collection", "");
+
+        let parent = collection_path_buf
+            .parent()
+            .ok_or_else(|| "Invalid collection path".to_string())?;
+
+        parent.join(&file_stem)
+    } else {
+        return Err("Unsupported collection file format".to_string());
+    };
+
+    // Sanitize the request name
+    let filename = sanitize_filename(&request_name)?;
+
+    // Build the request file path
+    let request_file = collection_folder.join(format!("{}.request.yaml", filename));
+
+    // Delete the file if it exists
+    if request_file.exists() {
+        fs::remove_file(&request_file)
+            .map_err(|e| format!("Failed to delete request file: {}", e))?;
+    }
+
+    Ok(())
+}
+
+/// Update a request file in a collection folder
+///
+/// # Arguments
+/// * `collection_path` - Path to the collection file
+/// * `request_name` - Name of the request file (sanitized filename)
+/// * `request` - Updated request data
+/// * `state` - Application state
+///
+/// # Returns
+/// * `Ok(String)` - Path to the updated request file
+/// * `Err(String)` - Error message if update fails
+#[tauri::command]
+pub async fn update_request_in_collection(
+    collection_path: String,
+    request_name: String,
+    request: crate::models::Request,
+    _state: State<'_, AppState>,
+) -> Result<String, String> {
+    use std::fs;
+
+    let collection_path_buf = PathBuf::from(&collection_path);
+
+    // Determine the collection folder based on the file structure
+    let collection_folder = if collection_path.ends_with("/collection.yaml") {
+        collection_path_buf
+            .parent()
+            .ok_or_else(|| "Invalid collection path".to_string())?
+            .to_path_buf()
+    } else if collection_path.ends_with(".collection.yaml") {
+        let file_stem = collection_path_buf
+            .file_stem()
+            .and_then(|s| s.to_str())
+            .ok_or_else(|| "Invalid collection filename".to_string())?
+            .replace(".collection", "");
+
+        let parent = collection_path_buf
+            .parent()
+            .ok_or_else(|| "Invalid collection path".to_string())?;
+
+        let folder = parent.join(&file_stem);
+
+        // Create the folder if it doesn't exist
+        fs::create_dir_all(&folder)
+            .map_err(|e| format!("Failed to create collection folder: {}", e))?;
+
+        folder
+    } else {
+        return Err("Unsupported collection file format".to_string());
+    };
+
+    // Sanitize the request name
+    let filename = sanitize_filename(&request_name)?;
+
+    // Build the request file path
+    let request_file = collection_folder.join(format!("{}.request.yaml", filename));
+
+    // Serialize the request to YAML
+    let yaml_content = serde_yaml::to_string(&request)
+        .map_err(|e| format!("Failed to serialize request: {}", e))?;
+
+    // Write to file
+    fs::write(&request_file, yaml_content)
+        .map_err(|e| format!("Failed to write request file: {}", e))?;
+
+    Ok(request_file.to_string_lossy().to_string())
 }
 
 #[cfg(test)]
