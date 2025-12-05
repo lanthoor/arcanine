@@ -126,7 +126,9 @@ describe('Collections Store', () => {
         path: '/path/to/loaded.yaml',
       };
 
-      mockInvoke.mockResolvedValueOnce(mockCollection);
+      mockInvoke
+        .mockResolvedValueOnce(mockCollection) // load_collection
+        .mockResolvedValueOnce([]); // load_requests_from_collection
 
       await collectionStore.loadCollection('/path/to/loaded.yaml');
 
@@ -143,7 +145,9 @@ describe('Collections Store', () => {
         path: '/path/to/loaded.yaml',
       };
 
-      mockInvoke.mockResolvedValueOnce(mockCollection);
+      mockInvoke
+        .mockResolvedValueOnce(mockCollection) // load_collection
+        .mockResolvedValueOnce([]); // load_requests_from_collection
 
       await collectionStore.loadCollection('/path/to/loaded.yaml');
 
@@ -187,14 +191,16 @@ describe('Collections Store', () => {
     });
 
     it('should update save status to saving then saved', async () => {
-      const mockCollection = {
-        name: 'Test',
-        requests: [],
-        metadata: {},
+      const mockResult = {
+        collection: {
+          name: 'Test',
+          requests: [],
+          metadata: {},
+        },
         path: '/path/to/test.yaml',
       };
 
-      mockInvoke.mockResolvedValueOnce(mockCollection).mockResolvedValueOnce('/path/to/test.yaml');
+      mockInvoke.mockResolvedValueOnce(mockResult).mockResolvedValueOnce('/path/to/test.yaml');
 
       await collectionStore.createCollection('Test', '/test/path');
 
@@ -209,14 +215,16 @@ describe('Collections Store', () => {
     });
 
     it('should clear dirty flag after save', async () => {
-      const mockCollection = {
-        name: 'Test',
-        requests: [],
-        metadata: {},
+      const mockResult = {
+        collection: {
+          name: 'Test',
+          requests: [],
+          metadata: {},
+        },
         path: '/path/to/test.yaml',
       };
 
-      mockInvoke.mockResolvedValueOnce(mockCollection).mockResolvedValueOnce('/path/to/test.yaml');
+      mockInvoke.mockResolvedValueOnce(mockResult).mockResolvedValueOnce('/path/to/test.yaml');
 
       await collectionStore.createCollection('Test', '/test/path');
       collectionStore.markDirty();
@@ -238,15 +246,17 @@ describe('Collections Store', () => {
     });
 
     it('should handle save errors', async () => {
-      const mockCollection = {
-        name: 'Test',
-        requests: [],
-        metadata: {},
+      const mockResult = {
+        collection: {
+          name: 'Test',
+          requests: [],
+          metadata: {},
+        },
         path: '/path/to/test.yaml',
       };
 
       mockInvoke
-        .mockResolvedValueOnce(mockCollection)
+        .mockResolvedValueOnce(mockResult)
         .mockRejectedValueOnce(new Error('Permission denied'));
 
       await collectionStore.createCollection('Test', '/test/path');
@@ -258,14 +268,16 @@ describe('Collections Store', () => {
 
   describe('markDirty and auto-save', () => {
     it('should set dirty flag when markDirty is called', async () => {
-      const mockCollection = {
-        name: 'Test',
-        requests: [],
-        metadata: {},
+      const mockResult = {
+        collection: {
+          name: 'Test',
+          requests: [],
+          metadata: {},
+        },
         path: '/path/to/test.yaml',
       };
 
-      mockInvoke.mockResolvedValueOnce(mockCollection);
+      mockInvoke.mockResolvedValueOnce(mockResult);
 
       await collectionStore.createCollection('Test', '/test/path');
 
@@ -277,14 +289,16 @@ describe('Collections Store', () => {
     it('should schedule auto-save when markDirty is called', async () => {
       vi.useFakeTimers();
 
-      const mockCollection = {
-        name: 'Test',
-        requests: [],
-        metadata: {},
+      const mockResult = {
+        collection: {
+          name: 'Test',
+          requests: [],
+          metadata: {},
+        },
         path: '/path/to/test.yaml',
       };
 
-      mockInvoke.mockResolvedValueOnce(mockCollection).mockResolvedValueOnce('/path/to/test.yaml');
+      mockInvoke.mockResolvedValueOnce(mockResult).mockResolvedValueOnce('/path/to/test.yaml');
 
       await collectionStore.createCollection('Test', '/test/path');
 
@@ -307,14 +321,16 @@ describe('Collections Store', () => {
     it('should debounce multiple markDirty calls', async () => {
       vi.useFakeTimers();
 
-      const mockCollection = {
-        name: 'Test',
-        requests: [],
-        metadata: {},
+      const mockResult = {
+        collection: {
+          name: 'Test',
+          requests: [],
+          metadata: {},
+        },
         path: '/path/to/test.yaml',
       };
 
-      mockInvoke.mockResolvedValueOnce(mockCollection).mockResolvedValue('/path/to/test.yaml');
+      mockInvoke.mockResolvedValueOnce(mockResult).mockResolvedValue('/path/to/test.yaml');
 
       await collectionStore.createCollection('Test', '/test/path');
 

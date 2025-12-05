@@ -406,13 +406,21 @@ pub async fn save_request_to_collection(
 /// * `state` - Application state
 ///
 /// # Returns
-/// * `Ok(Vec<Request>)` - All requests found in the collection folder
+/// * `Ok(Vec<RequestWithFilename>)` - All requests found in the collection folder with their filenames
 /// * `Err(String)` - Error message if loading fails
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct RequestWithFilename {
+    #[serde(flatten)]
+    pub request: crate::models::Request,
+    #[serde(rename = "_filename")]
+    pub filename: String,
+}
+
 #[tauri::command]
 pub async fn load_requests_from_collection(
     collection_path: String,
     _state: State<'_, AppState>,
-) -> Result<Vec<crate::models::Request>, String> {
+) -> Result<Vec<RequestWithFilename>, String> {
     use std::fs;
 
     let collection_path_buf = PathBuf::from(&collection_path);
@@ -461,6 +469,13 @@ pub async fn load_requests_from_collection(
                     .map(|s| s.ends_with(".request.yaml"))
                     .unwrap_or(false)
             {
+                // Extract the filename (without .request.yaml extension)
+                let filename = path
+                    .file_stem()
+                    .and_then(|s| s.to_str())
+                    .map(|s| s.replace(".request", ""))
+                    .ok_or_else(|| "Invalid request filename".to_string())?;
+
                 // Load the request
                 let content = fs::read_to_string(&path)
                     .map_err(|e| format!("Failed to read request file: {}", e))?;
@@ -468,7 +483,7 @@ pub async fn load_requests_from_collection(
                 let request: crate::models::Request = serde_yaml::from_str(&content)
                     .map_err(|e| format!("Failed to parse request file: {}", e))?;
 
-                requests.push(request);
+                requests.push(RequestWithFilename { request, filename });
             }
         }
     }
